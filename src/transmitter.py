@@ -24,7 +24,8 @@
 # self.eirp - effective isotropic radiated power
 # self.polarisation - broadcast polarisation
 # self.tzero - broadcast beginning time
-# self.pulsefreq - pulse frequency (if 0, continuous)
+# self.pulseduration - pulse duration (if 0, does not transmit)
+# self.pulseinterval - pulse interval (if 0, continuous)
 # self.tend - broadcast end time
 
 ###########
@@ -38,6 +39,9 @@
 # calc_eirp - calculate effective isotropic radiated power
 # broadcast(time,dt) - determine if transmitter is transmitting
 
+from numpy import pi,mod
+
+fourpi = 4.0*pi
 
 class Transmitter(Agent):
 
@@ -45,6 +49,27 @@ class Transmitter(Agent):
         Agent.__init__(position,velocity,starposition,starmass,semimaj,mean_anomaly)
 
         self.type="Transmitter"
+        self.broadcast = false
 
+        self.calc_eirp()
 
+    def calc_eirp(self):
+        """Calculate effective isotropic radiated power"""
+
+        self.eirp = self.power*(fourpi)/self.solidangle
+
+    def broadcast(time,dt):
+        """Is transmitter broadcasting or not?"""
+
+        # period of pulse = pulse duration + pulse interval
+        period = self.pulseduration + self.pulseinterval
+
+        # How many pulse cycles have elapsed (real value)
+        nperiods = time/period
+        
+        # fraction of time pulse is on during a cycle
+        onfrac = self.pulseduration/period
+
+        # Pulse is on if remainder of nperiods is less than onfrac
+        self.broadcast = mod(nperiods) < onfrac
 

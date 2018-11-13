@@ -53,7 +53,7 @@ class Agent(Object):
         
         unitr = self.pos.unit()
 
-        velmag = sqrt(self.mstar/self.a)
+        velmag = sqrt(self.mstar/self.a) # TODO - units of velocity?
 
         self.vel.x = cos(inc)*cos(self.meananom)
         self.vel.y = cos(inc)*sin(self.meananom)

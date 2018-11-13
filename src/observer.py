@@ -17,9 +17,8 @@
 # self.numin - minimum frequency
 # self.numax - maximum frequency
 # self.nchannels - number of channels in observation
-# self.fov - field of view (opening angle)
+# self.openingangle - field of view opening angle
 # self.n - target direction vector
-
 
 ###########
 # Methods:
@@ -40,8 +39,28 @@ class Observer(Agent):
 
         self.type = "Observer"
 
-
-    def slew_to_target(time,dt):
+    def slew_to_target(self,time,dt, newtarget):
         """Move observer to target direction"""
+        self.n = newtarget
+
+
+    def observe_transmitter(self,time,dt,transmitter):
+        """Attempt to observe a transmitter (returns true or false)"""
+
+        # Is transmitter beam illuminating observer?
+        separation = transmitter.pos.subtract(self.pos)
+        unitsep = separation.unit()
+
+        nt_dot_r = transmitter.n.dot.(unitsep)
+        observer_illuminated = nt_dot_r < cos(transmitter.solidangle)
+
+        # Is transmitter in observer field of view?
+        no_dot_r = self.n.dot(unitsep)
+        in_observer_field = no_dot_r < cos(observer.openingangle)
+        
+        # Is signal powerful enough?
+        signal_powerful_enough = transmitter.eirp > observer.sensitivity
+
+        return observer_illuminated && in_observer_field && signal_powerful_enough
 
 
