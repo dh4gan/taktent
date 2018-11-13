@@ -13,10 +13,19 @@ The Code
 The code is composed of five classes: 
 
 `Vector3D` - a 3D cartesian vector class
+
 `Agent` - a generic agent base class
+
 `Transmitter(Agent)` - a transmitting civilisation
+
 `Observer(Agent)` - an observing civilisation
+
 `Population` - a class that defines the combined population of Transmitters and Observers
+
+The Name
+---------
+
+The name "tak-tent" comes from the Scots for "pay attention"
 
 
 
