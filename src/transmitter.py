@@ -17,6 +17,7 @@
 
 # self.nu - central frequency of broadcast
 # self.bandwidth - bandwidth of broadcast
+# self.openingangle - opening angle of broadcast
 # self.solidangle - solid angle of broadcast
 # self.n - direction vector of broadcast (Vector3D)
 
@@ -34,12 +35,13 @@
 
 # Inherited from agent.py
 # orbit(mstar,a) - move transmitter in orbit around a star at starpos
+# plot(self,radius) - plot transmitter and its beam
 
 # set_broadcast_direction - set self.n
 # calc_eirp - calculate effective isotropic radiated power
 # broadcast(time,dt) - determine if transmitter is transmitting
 
-from numpy import pi,mod
+from numpy import pi,mod,arctan2
 
 fourpi = 4.0*pi
 
@@ -50,7 +52,10 @@ class Transmitter(Agent):
 
         self.type="Transmitter"
         self.broadcast = false
-
+        
+        # opening angle = fraction of solid angle (opening angle = pi if solid angle = 4 pi)
+        self.openingangle = 0.25*self.solidangle
+        
         self.calc_eirp()
 
     def calc_eirp(self):
@@ -72,4 +77,27 @@ class Transmitter(Agent):
 
         # Pulse is on if remainder of nperiods is less than onfrac
         self.broadcast = mod(nperiods) < onfrac
+
+
+    def plot(self,radius,wedge_length):
+        """Plot transmitter and transmitter beam"""
+
+        # Plot circle at location of transmitter
+        circle = Agent.plot(radius)
+
+        # Now plot wedge representing beam
+        # central angular direction
+        thetamid = arctan2(self.n.y,self.n.x)
+
+        if(thetamid <0.0):
+            thetamid = 2.0*pi + thetamid
+        
+        if (self.broadcast):
+            broadcast_distance = wedge_length
+        else:
+            broadcast_distance = 0
+        
+        wedge = Wedge((self.pos.x,self.pos.y), broadcast_distance, thetamid-self.openingangle, thetamid+self.openingangle )
+
+        return circle, wedge
 

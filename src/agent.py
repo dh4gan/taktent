@@ -16,9 +16,11 @@
 # Methods:
 ###########
 
-# orbit(time) - move transmitter in orbit around host star
+# orbit(time) - move agent in orbit around host star
+# plot - return patches suitable for a matplotlib plot
 
 from numpy import sin,cos,pi,sqrt
+from matplotlib.patches import Circle
 
 piby2 = 0.5*pi
 
@@ -60,5 +62,10 @@ class Agent(Object):
         self.vel.z = -sin(inc)
 
         self.vel = self.vel.scalarmult(velmag)
+
+    def plot(self,radius):
+        '''Returns a patch for plotting agent's position on a matplotlib figure'''
+        return Circle(self.pos.x, self.pos.y, radius=radius)
+
 
 

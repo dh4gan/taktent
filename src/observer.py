@@ -29,6 +29,7 @@
 
 # slew_to_target(time,dt) - move target direction vector
 # observe_transmitter(time,dt,transmitter) - attempt to detect transmitter
+# plot - plot observer and its field of view
 
 
 class Observer(Agent):
@@ -63,4 +64,26 @@ class Observer(Agent):
 
         return observer_illuminated && in_observer_field && signal_powerful_enough
 
+
+    def plot(self,radius,wedge_length):
+        """Plot observer and observer fov"""
+        
+        # Plot circle at location of transmitter
+        circle = Agent.plot(radius)
+        
+        # Now plot wedge representing beam
+        # central angular direction
+        thetamid = arctan2(self.n.y,self.n.x)
+        
+        if(thetamid <0.0):
+            thetamid = 2.0*pi + thetamid
+        
+        if (self.broadcast):
+            beam_distance = wedge_length
+        else:
+            beam_distance = 0
+    
+        wedge = Wedge((self.pos.x,self.pos.y), beam_distance, thetamid-self.openingangle, thetamid+self.openingangle )
+        
+    return circle, wedge
 
