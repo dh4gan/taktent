@@ -10,6 +10,9 @@
 # self.mstar - host star mass
 # self.a - semimajor axis of orbit around host star
 # self.meananom - mean anomaly
+# self.n - target direction vector
+# self.openingangle - opening angle along target vector (either transmitting or receiving)
+
 
 
 ###########
@@ -65,7 +68,29 @@ class Agent(Object):
 
     def plot(self,radius):
         '''Returns a patch for plotting agent's position on a matplotlib figure'''
-        return Circle(self.pos.x, self.pos.y, radius=radius)
+        return
+
+    def plot(self,radius,wedge_length):
+        """return matplotlib.patches for agent's position, and target vector (with opening angle)"""
+        
+        # Plot circle at location of agent
+        circle = Circle(self.pos.x, self.pos.y, radius=radius)
+        
+        # Now plot wedge representing width of target vector
+        # central angular direction
+        thetamid = arctan2(self.n.y,self.n.x)
+        
+        if(thetamid <0.0):
+            thetamid = 2.0*pi + thetamid
+    
+        if (self.broadcast):
+            distance = wedge_length
+        else:
+            distance = 0
+    
+                wedge = Wedge((self.pos.x,self.pos.y), distance, thetamid-self.openingangle, thetamid+self.openingangle )
+
+        return circle, wedge
 
 
 

@@ -79,25 +79,4 @@ class Transmitter(Agent):
         self.broadcast = mod(nperiods) < onfrac
 
 
-    def plot(self,radius,wedge_length):
-        """Plot transmitter and transmitter beam"""
-
-        # Plot circle at location of transmitter
-        circle = Agent.plot(radius)
-
-        # Now plot wedge representing beam
-        # central angular direction
-        thetamid = arctan2(self.n.y,self.n.x)
-
-        if(thetamid <0.0):
-            thetamid = 2.0*pi + thetamid
-        
-        if (self.broadcast):
-            broadcast_distance = wedge_length
-        else:
-            broadcast_distance = 0
-        
-        wedge = Wedge((self.pos.x,self.pos.y), broadcast_distance, thetamid-self.openingangle, thetamid+self.openingangle )
-
-        return circle, wedge
 
