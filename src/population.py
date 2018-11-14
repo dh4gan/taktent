@@ -10,12 +10,12 @@
 
 # Methods
 
-# generate_transmitters - create a population of Transmitter objects
-# generate_observer_at_origin - creates a single Observer at origin
-# generate_observers - generate a population of Observer objects
-# define_observation_strategies - defines observation survey for all Observer objects
-# define_transmitter_strategies - defines transmissions for all Transmitter objects
-# conduct_observations - goes through each Observer object and attempts to observe Transmitters
+# generate_transmitters - create a population of Transmitter objects TODO
+# generate_observer_at_origin - creates a single Observer at origin TODO
+# generate_observers - generate a population of Observer objects TODO
+# define_observation_strategies - defines observation survey for all Observer objects TODO
+# define_transmitter_strategies - defines transmissions for all Transmitter objects TODO
+# conduct_observations - goes through each Observer object and attempts to observe Transmitters TODO
 # plot - plots entire population of Agents (Observers & Transmitters)
 
 class Population(Object):
@@ -27,6 +27,11 @@ class Population(Object):
         self.time = t
 
 
+    def generate_observer_at_origin(self):
+        """Place a single observer object at co-ordinates (0.0,0.0,0.0)"""
+        origin = vector.Vector3D(0.0,0.0,0.0)
+        
+        self.agents.append(Observer(origin,origin)
 
     def plot(self, markersize, wedge_length):
         """Plot all agents in the system"""

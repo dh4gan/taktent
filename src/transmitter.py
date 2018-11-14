@@ -49,7 +49,7 @@ class Transmitter(Agent):
 
     def __init__(position,velocity,starposition,starmass,semimaj,mean_anomaly)
         Agent.__init__(position,velocity,starposition,starmass,semimaj,mean_anomaly)
-
+        # TODO finish transmitter constructor
         self.type="Transmitter"
         self.broadcast = false
         

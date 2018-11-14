@@ -37,7 +37,7 @@ class Observer(Agent):
     def __init__(position,velocity,starposition,starmass,semimaj,mean_anomaly)
         """Initialises an Observer object"""
         Agent.__init__(position,velocity,starposition,starmass,semimaj,mean_anomaly)
-
+        # TODO finish observer constructor
         self.type = "Observer"
 
     def slew_to_target(self,time,dt, newtarget):
