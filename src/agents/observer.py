@@ -34,11 +34,17 @@ from agents.agent import Agent as Parent
 
 class Observer(Parent):
     
-    def __init__(self,position,velocity,direction_vector,openangle, starposition,starmass,semimaj,mean_anomaly):
+    def __init__(self,position,velocity,direction_vector,openangle, starposition,starmass,semimaj,mean_anomaly, sensitive, nu_min, nu_max, N_chan):
         """Initialises an Observer object"""
         Parent.__init__(self,position,velocity,direction_vector,openangle,starposition,starmass,semimaj,mean_anomaly)
         # TODO finish observer constructor
         self.type = "Observer"
+    
+        self.sensitivity = sensitive
+        self.nu_min = numin
+        self.nu_max = numax
+        self.nchannels = N_chan
+    
 
     def slew_to_target(self,time,dt, newtarget):
         """Move observer to target direction"""

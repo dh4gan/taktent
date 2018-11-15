@@ -80,9 +80,16 @@ class Agent:
         """return matplotlib.patches for agent's position, and target vector (with opening angle)"""
         
         # Plot circle at location of agent
+        # Colour-coded by agent type
         
+        if self.type=="Transmitter":
+            colour = 'blue'
+        elif self.type=="Observer":
+            colour='green'
+        else:
+            colour='black'
         
-        circle = Circle((self.pos.x, self.pos.y), radius)
+        circle = Circle((self.pos.x, self.pos.y), radius, color=colour)
         
         # Now plot wedge representing width of target vector
         # central angular direction
@@ -91,13 +98,7 @@ class Agent:
         if(thetamid <0.0):
             thetamid = 2.0*pi + thetamid
     
-        if (self.active):
-            distance = wedge_length
-        else:
-            distance = 0
-    
-        print (self.active, self.pos.x, self.pos.y, radius, distance, 180.0*(thetamid-self.openingangle)/pi, 180.0*(thetamid+self.openingangle)/pi)
-        wedge = Wedge((self.pos.x,self.pos.y), distance, 180.0*(thetamid-self.openingangle)/pi, 180.0*(thetamid+self.openingangle)/pi )
+        wedge = Wedge((self.pos.x,self.pos.y), wedge_length, 180.0*(thetamid-self.openingangle)/pi, 180.0*(thetamid+self.openingangle)/pi ,color=colour,width=0.75*wedge_length, alpha=0.3)
 
         return circle, wedge
 

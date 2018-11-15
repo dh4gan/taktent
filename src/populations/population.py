@@ -35,7 +35,6 @@ class Population:
         """add Agent object to Population"""
         self.agents.append(agent)
 
-
     def generate_observer_at_origin(self,observe_direction,openangle ):
         """Place a single observer object at co-ordinates (0.0,0.0,0.0)"""
         origin = vector.Vector3D(0.0,0.0,0.0)
@@ -50,11 +49,11 @@ class Population:
         ax1.set_ylim(-ymax,ymax)
         
         for agent in self.agents:
-
-            print ("Plotting ",agent)
             circle, wedge = agent.plot(markersize,wedge_length)
             ax1.add_patch(circle)
-            ax1.add_patch(wedge)
+            
+            # If actively transmitting/receiving, plot transmission/reception beam
+            if(agent.active): ax1.add_patch(wedge)
 
         plt.show()
 
