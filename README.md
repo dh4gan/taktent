@@ -8,7 +8,7 @@ The Code
 
 The code contains several packages defining six fundamental classes: 
 
-*`agents/`
+### `agents/`
 
 `Vector3D` - a 3D cartesian vector class
 
@@ -18,11 +18,11 @@ The code contains several packages defining six fundamental classes:
 
         `Observer(Agent)` - an observing civilisation
  
-*`strategies/`
+### `strategies/`
 
 `Strategy` - a class that defines the pointing behaviour of an agent as a function of time
 
-*`population/`
+### `population/`
 
 `Population` - a class that defines the combined population of Transmitters and Observers
 
