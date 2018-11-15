@@ -34,28 +34,44 @@ from agents.agent import Agent as Parent
 
 class Observer(Parent):
     
-    def __init__(self,position,velocity,direction_vector,openangle, starposition,starmass,semimaj,mean_anomaly, sensitive, nu_min, nu_max, N_chan):
+    def __init__(self,position=None,velocity=None,direction_vector=None,openingangle=None, starposition=None,starmass=None,semimaj=None,mean_anomaly=None, sensitivity=None, nu_min=None, nu_max=None, nchannels=None):
         """Initialises an Observer object"""
         Parent.__init__(self,position,velocity,direction_vector,openangle,starposition,starmass,semimaj,mean_anomaly)
         # TODO finish observer constructor
         self.type = "Observer"
     
-        self.sensitivity = sensitive
-        self.nu_min = numin
-        self.nu_max = numax
-        self.nchannels = N_chan
+        self.sensitivity = sensitivity
+        self.nu_min = nu_min
+        self.nu_max = nu_max
+        self.nchannels = nchannels
     
 
     def slew_to_target(self,time,dt, newtarget):
         """Move observer to target direction"""
         self.n = newtarget
 
+    def calculate_doppler_drift(self,time,dt,transmitter):
+        """Calculates doppler shift of signal"""
+    
+        # Calculate relative velocity
+        relative_velocity = transmitter.velocity.subtract(self.velocity)
+    
+        relative_position = transmitter.position.subtract(self.position)
+    
+        # radial velocity
+        radial_velocity = relative_velocity.dot(relative_position)
+    
+        # frequency shift
+        delta_freq = -freq*radial_velocity/transmitter.broadcastspeed
+
+        return delta_freq
+    
 
     def observe_transmitter(self,time,dt,transmitter):
         """Attempt to observe a transmitter (returns true or false)"""
 
         # Is transmitter beam illuminating observer?
-        separation = transmitter.pos.subtract(self.pos)
+        separation = transmitter.position.subtract(self.position)
         unitsep = separation.unit()
 
         nt_dot_r = transmitter.n.dot(unitsep)
@@ -73,6 +89,14 @@ class Observer(Parent):
         
         delay_time = time - separation/transmitter.broadcastspeed
         transmitter_broadcasting = transmitter.broadcast(delay_time)
+        
+        # Is signal in frequency range after Doppler drifting?
+        delta_freq = calculate_doppler_drift(time,dt,transmitter)
+        
+        freqmin = transmitter.nu -0.5*transmitter.bandwidth + delta_freq
+        freqmax = transmitter.nu +0.5*transmitter.bandwidth + delta_freq
+
+        in_frequency_range = freqmin> self.nu_min or freqmax < self.nu_max
 
         return observer_illuminated and in_observer_field and signal_powerful_enough
 

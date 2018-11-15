@@ -4,12 +4,12 @@
 # Attributes:
 ###############
 
-# self.pos - position (Vector3D)
-# self.vel - velocity (Vector3D)
+# self.position - position (Vector3D)
+# self.velocity - velocity (Vector3D)
 # self.starpos - host star position (Vector3D)
 # self.mstar - host star mass
 # self.a - semimajor axis of orbit around host star
-# self.meananom - mean anomaly
+# self.mean_anomaly - mean anomaly
 # self.n - target direction vector
 # self.openingangle - opening angle along target vector (either transmitting or receiving)
 
@@ -29,18 +29,18 @@ piby2 = 0.5*pi
 
 class Agent:
     
-    def __init__(self, position,velocity,direction_vector, open,starposition,starmass,semimaj,mean_anomaly):
+    def __init__(self, position=None,velocity=None,direction_vector=None, openingangle=None,starposition=None,starmass=None,semimaj=None,mean_anomaly=None):
         """Defines a generic Agent in the simulation"""
     
         self.type = "Agent"
-        self.pos = position
-        self.vel = velocity
+        self.position = position
+        self.velocity = velocity
         self.n = direction_vector
         self.openingangle = open
         self.starpos = starposition
         self.mstar = starmass
         self.a = semimaj
-        self.meananom = mean_anomaly
+        self.mean_anomaly = mean_anomaly
         
         self.active = True
     
@@ -54,27 +54,23 @@ class Agent:
 
         inc = piby2 - self.inc
 
-        self.meananom = self.meananom + self.period*dt
+        self.mean_anomaly = self.mean_anomaly + self.period*dt
 
-        self.pos.x = self.a*sin(inc)*cos(self.meananom)
-        self.pos.y = self.a*sin(inc)*sin(self.meananom)
-        self.pos.z = self.a*cos(inc)
+        self.position.x = self.a*sin(inc)*cos(self.mean_anomaly)
+        self.position.y = self.a*sin(inc)*sin(self.mean_anomaly)
+        self.position.z = self.a*cos(inc)
         
-        self.pos = self.pos.add(self.starpos)
+        self.position = self.position.add(self.starpos)
         
-        unitr = self.pos.unit()
+        unitr = self.position.unit()
 
         velmag = sqrt(self.mstar/self.a) # TODO - units of velocity?
 
-        self.vel.x = cos(inc)*cos(self.meananom)
-        self.vel.y = cos(inc)*sin(self.meananom)
-        self.vel.z = -sin(inc)
+        self.velocity.x = cos(inc)*cos(self.mean_anomaly)
+        self.velocity.y = cos(inc)*sin(self.mean_anomaly)
+        self.velocity.z = -sin(inc)
 
-        self.vel = self.vel.scalarmult(velmag)
-
-    def plot(self,radius):
-        '''Returns a patch for plotting agent's position on a matplotlib figure'''
-        return
+        self.velocity = self.velocity.scalarmult(velmag)
 
     def plot(self,radius,wedge_length):
         """return matplotlib.patches for agent's position, and target vector (with opening angle)"""
@@ -89,7 +85,7 @@ class Agent:
         else:
             colour='black'
         
-        circle = Circle((self.pos.x, self.pos.y), radius, color=colour)
+        circle = Circle((self.position.x, self.position.y), radius, color=colour)
         
         # Now plot wedge representing width of target vector
         # central angular direction
@@ -98,7 +94,7 @@ class Agent:
         if(thetamid <0.0):
             thetamid = 2.0*pi + thetamid
     
-        wedge = Wedge((self.pos.x,self.pos.y), wedge_length, 180.0*(thetamid-self.openingangle)/pi, 180.0*(thetamid+self.openingangle)/pi ,color=colour,width=0.75*wedge_length, alpha=0.3)
+        wedge = Wedge((self.position.x,self.position.y), wedge_length, 180.0*(thetamid-self.openingangle)/pi, 180.0*(thetamid+self.openingangle)/pi ,color=colour,width=0.75*wedge_length, alpha=0.3)
 
         return circle, wedge
 

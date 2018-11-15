@@ -24,10 +24,11 @@
 # self.power - broadcast power
 # self.eirp - effective isotropic radiated power
 # self.polarisation - broadcast polarisation
-# self.tzero - broadcast beginning time
+# self.tbegin - broadcast beginning time
+# self.tend - broadcast end time
 # self.pulseduration - pulse duration (if 0, does not transmit)
 # self.pulseinterval - pulse interval (if 0, continuous)
-# self.tend - broadcast end time
+
 
 ###########
 # Methods:
@@ -49,7 +50,7 @@ c = 2.99e8 # speed of light in ms-1
 
 class Transmitter(Parent):
 
-    def __init__(self,position,velocity,direction_vector, openangle, starposition,starmass,semimaj,mean_anomaly, freq,band, solidangle, power):
+    def __init__(self,position=None,velocity=None,direction_vector=None, openangle=None, starposition=None,starmass=None,semimaj=None,mean_anomaly=None, freq=None,band=None, solidangle=None, power=None, polarisation=None, tbegin=None, tend=None, pulseduration=None,pulseinterval=None):
         Parent.__init__(self,position,velocity,direction_vector,openangle,starposition,starmass,semimaj,mean_anomaly)
         # TODO finish transmitter constructor
         self.type="Transmitter"
@@ -58,6 +59,11 @@ class Transmitter(Parent):
         self.bandwidth = band
         self.solidangle = solidangle
         self.power = power
+        self.polarisation = polarisation
+        self.tbegin = tbegin
+        self.tend = tend
+        self.pulseduration = pulseduration
+        self.pulseinterval = pulseinterval
         
         self.broadcastspeed = c # assume transmissions move at lightspeed by default
         
