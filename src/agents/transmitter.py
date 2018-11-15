@@ -52,7 +52,7 @@ class Transmitter(Parent):
 
     def __init__(self,position=None,velocity=None,direction_vector=None, openangle=None, starposition=None,starmass=None,semimaj=None,mean_anomaly=None, freq=None,band=None, solidangle=None, power=None, polarisation=None, tbegin=None, tend=None, pulseduration=None,pulseinterval=None):
         Parent.__init__(self,position,velocity,direction_vector,openangle,starposition,starmass,semimaj,mean_anomaly)
-        # TODO finish transmitter constructor
+        
         self.type="Transmitter"
         
         self.nu = freq
@@ -77,20 +77,26 @@ class Transmitter(Parent):
 
         self.eirp = self.power*(fourpi)/self.solidangle
 
-    def broadcast(time,dt):
+    def broadcast(self,time,dt):
         """Is transmitter broadcasting or not?"""
 
-        # period of pulse = pulse duration + pulse interval
-        period = self.pulseduration + self.pulseinterval
 
-        # How many pulse cycles have elapsed (real value)
-        nperiods = time/period
+        # If pulse interval not defined or zero, pulse always on
+
+        if(self.pulseinterval==None or self.pulseinterval==0):
+            self.active=True
+        else:
+            # period of pulse = pulse duration + pulse interval
+            period = self.pulseduration + self.pulseinterval
+
+            # How many pulse cycles have elapsed (real value)
+            nperiods = time/period
         
-        # fraction of time pulse is on during a cycle
-        onfrac = self.pulseduration/period
+            # fraction of time pulse is on during a cycle
+            onfrac = self.pulseduration/period
 
-        # Pulse is on if remainder of nperiods is less than onfrac
-        self.active = mod(nperiods) < onfrac
+            # Pulse is on if remainder of nperiods is less than onfrac
+            self.active = mod(nperiods) < onfrac
 
 
 

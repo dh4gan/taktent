@@ -56,7 +56,7 @@ class Vector3D(object):
 
     def unit(self):
         """Returns unit vector"""
-        return self.scalarmult(1.0/self.mag)
+        return self.scalarmult(1.0/self.mag())
 
 # Scalar Product
             

@@ -31,13 +31,14 @@
 # observe_transmitter(time,dt,transmitter) - attempt to detect transmitter
 
 from agents.agent import Agent as Parent
+from numpy import sin,cos, arccos
 
 class Observer(Parent):
     
     def __init__(self,position=None,velocity=None,direction_vector=None,openingangle=None, starposition=None,starmass=None,semimaj=None,mean_anomaly=None, sensitivity=None, nu_min=None, nu_max=None, nchannels=None):
         """Initialises an Observer object"""
-        Parent.__init__(self,position,velocity,direction_vector,openangle,starposition,starmass,semimaj,mean_anomaly)
-        # TODO finish observer constructor
+        Parent.__init__(self,position,velocity,direction_vector,openingangle,starposition,starmass,semimaj,mean_anomaly)
+        
         self.type = "Observer"
     
         self.sensitivity = sensitivity
@@ -62,7 +63,7 @@ class Observer(Parent):
         radial_velocity = relative_velocity.dot(relative_position)
     
         # frequency shift
-        delta_freq = -freq*radial_velocity/transmitter.broadcastspeed
+        delta_freq = -transmitter.nu*radial_velocity/transmitter.broadcastspeed
 
         return delta_freq
     
@@ -75,29 +76,39 @@ class Observer(Parent):
         unitsep = separation.unit()
 
         nt_dot_r = transmitter.n.dot(unitsep)
-        observer_illuminated = nt_dot_r < cos(transmitter.solidangle)
+        observer_illuminated = arccos(nt_dot_r) < transmitter.openingangle
 
         # Is transmitter in observer field of view?
         no_dot_r = self.n.dot(unitsep)
-        in_observer_field = no_dot_r < cos(observer.openingangle)
+        print(self.n)
+        print(unitsep)
+        print (arccos(no_dot_r), self.openingangle)
+        in_observer_field = arccos(no_dot_r) < self.openingangle
         
         # Is signal powerful enough?
-        signal_powerful_enough = transmitter.eirp > observer.sensitivity
+        if(self.sensitivity==None):
+            signal_powerful_enough =True
+        else:
+            signal_powerful_enough = transmitter.eirp > self.sensitivity
         
         # Is transmitter actively broadcasting?
         # Must take into account time delays
         
-        delay_time = time - separation/transmitter.broadcastspeed
-        transmitter_broadcasting = transmitter.broadcast(delay_time)
+        delay_time = time - separation.mag()/transmitter.broadcastspeed
+        transmitter_broadcasting = transmitter.broadcast(delay_time,dt)
         
         # Is signal in frequency range after Doppler drifting?
-        delta_freq = calculate_doppler_drift(time,dt,transmitter)
+        delta_freq = self.calculate_doppler_drift(time,dt,transmitter)
         
         freqmin = transmitter.nu -0.5*transmitter.bandwidth + delta_freq
         freqmax = transmitter.nu +0.5*transmitter.bandwidth + delta_freq
 
-        in_frequency_range = freqmin> self.nu_min or freqmax < self.nu_max
+        if(self.nu_min==None or self.nu_max==None):
+            in_frequency_range = True
+        else:
+            in_frequency_range = freqmin> self.nu_min or freqmax < self.nu_max
 
+        print (observer_illuminated, in_observer_field, signal_powerful_enough)
         return observer_illuminated and in_observer_field and signal_powerful_enough
 
   

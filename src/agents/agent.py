@@ -33,10 +33,11 @@ class Agent:
         """Defines a generic Agent in the simulation"""
     
         self.type = "Agent"
+        
         self.position = position
         self.velocity = velocity
         self.n = direction_vector
-        self.openingangle = open
+        self.openingangle = openingangle
         self.starpos = starposition
         self.mstar = starmass
         self.a = semimaj
