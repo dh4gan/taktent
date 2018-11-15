@@ -18,7 +18,12 @@
 # conduct_observations - goes through each Observer object and attempts to observe Transmitters TODO
 # plot - plots entire population of Agents (Observers & Transmitters)
 
-class Population(Object):
+import agents.observer as observer
+import agents.vector as vector
+
+import matplotlib.pyplot as plt
+
+class Population:
 
     def __init__(self,t):
         """Constructor for a group of agents"""
@@ -26,21 +31,28 @@ class Population(Object):
         self.agents = []
         self.time = t
 
+    def add_agent(self, agent):
+        """add Agent object to Population"""
+        self.agents.append(agent)
 
-    def generate_observer_at_origin(self):
+
+    def generate_observer_at_origin(self,observe_direction,openangle ):
         """Place a single observer object at co-ordinates (0.0,0.0,0.0)"""
         origin = vector.Vector3D(0.0,0.0,0.0)
         
-        self.agents.append(Observer(origin,origin)
+        self.agents.append(observer.Observer(origin,origin,observe_direction,openangle,origin,0.0,0.0,0.0))
 
-    def plot(self, markersize, wedge_length):
+    def plot(self, markersize, wedge_length,xmax,ymax):
         """Plot all agents in the system"""
         fig1 = plt.figure()
         ax1 = fig1.add_subplot(111)
+        ax1.set_xlim(-xmax,xmax)
+        ax1.set_ylim(-ymax,ymax)
         
         for agent in self.agents:
 
-            circle, wedge = agent.plot(self,wedge_length)
+            print ("Plotting ",agent)
+            circle, wedge = agent.plot(markersize,wedge_length)
             ax1.add_patch(circle)
             ax1.add_patch(wedge)
 

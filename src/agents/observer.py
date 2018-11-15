@@ -29,14 +29,14 @@
 
 # slew_to_target(time,dt) - move target direction vector
 # observe_transmitter(time,dt,transmitter) - attempt to detect transmitter
-# plot - plot observer and its field of view
 
+from agents.agent import Agent as Parent
 
-class Observer(Agent):
+class Observer(Parent):
     
-    def __init__(position,velocity,starposition,starmass,semimaj,mean_anomaly)
+    def __init__(self,position,velocity,direction_vector,openangle, starposition,starmass,semimaj,mean_anomaly):
         """Initialises an Observer object"""
-        Agent.__init__(position,velocity,starposition,starmass,semimaj,mean_anomaly)
+        Parent.__init__(self,position,velocity,direction_vector,openangle,starposition,starmass,semimaj,mean_anomaly)
         # TODO finish observer constructor
         self.type = "Observer"
 
@@ -52,7 +52,7 @@ class Observer(Agent):
         separation = transmitter.pos.subtract(self.pos)
         unitsep = separation.unit()
 
-        nt_dot_r = transmitter.n.dot.(unitsep)
+        nt_dot_r = transmitter.n.dot(unitsep)
         observer_illuminated = nt_dot_r < cos(transmitter.solidangle)
 
         # Is transmitter in observer field of view?
@@ -62,8 +62,8 @@ class Observer(Agent):
         # Is signal powerful enough?
         signal_powerful_enough = transmitter.eirp > observer.sensitivity
 
-        return observer_illuminated && in_observer_field && signal_powerful_enough
-
+#return observer_illuminated && in_observer_field && signal_powerful_enough
+        return observer_illuminated
 
   
 

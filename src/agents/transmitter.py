@@ -42,16 +42,21 @@
 # broadcast(time,dt) - determine if transmitter is transmitting
 
 from numpy import pi,mod,arctan2
+from agents.agent import Agent as Parent
 
 fourpi = 4.0*pi
 
-class Transmitter(Agent):
+class Transmitter(Parent):
 
-    def __init__(position,velocity,starposition,starmass,semimaj,mean_anomaly)
-        Agent.__init__(position,velocity,starposition,starmass,semimaj,mean_anomaly)
+    def __init__(self,position,velocity,direction_vector, openangle, starposition,starmass,semimaj,mean_anomaly, freq,band, solidangle, power):
+        Parent.__init__(self,position,velocity,direction_vector,openangle,starposition,starmass,semimaj,mean_anomaly)
         # TODO finish transmitter constructor
         self.type="Transmitter"
-        self.broadcast = false
+        
+        self.nu = freq
+        self.bandwidth = band
+        self.solidangle = solidangle
+        self.power = power
         
         # opening angle = fraction of solid angle (opening angle = pi if solid angle = 4 pi)
         self.openingangle = 0.25*self.solidangle

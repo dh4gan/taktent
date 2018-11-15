@@ -22,26 +22,32 @@
 # orbit(time) - move agent in orbit around host star
 # plot - return patches suitable for a matplotlib plot
 
-from numpy import sin,cos,pi,sqrt
-from matplotlib.patches import Circle
+from numpy import sin,cos,pi,sqrt, arctan2
+from matplotlib.patches import Circle, Wedge
 
 piby2 = 0.5*pi
 
-class Agent(Object):
-    """Defines a generic Agent in the simulation"""
-
-    def __init__(self, position,velocity,starposition,starmass,semimaj,mean_anomaly):
+class Agent:
+    
+    def __init__(self, position,velocity,direction_vector, open,starposition,starmass,semimaj,mean_anomaly):
+        """Defines a generic Agent in the simulation"""
     
         self.type = "Agent"
         self.pos = position
         self.vel = velocity
+        self.n = direction_vector
+        self.openingangle = open
         self.starpos = starposition
         self.mstar = starmass
         self.a = semimaj
         self.meananom = mean_anomaly
+        
+        self.active = True
     
-        self.period = sqrt(self.a*self.a*self.a/self.mstar)
-
+        try:
+            self.period = sqrt(self.a*self.a*self.a/self.mstar)
+        except ZeroDivisionError:
+            self.period = 0.0
 
     def orbit(self,dt):
         """Moves agent in orbit around host star"""
@@ -74,7 +80,9 @@ class Agent(Object):
         """return matplotlib.patches for agent's position, and target vector (with opening angle)"""
         
         # Plot circle at location of agent
-        circle = Circle(self.pos.x, self.pos.y, radius=radius)
+        
+        
+        circle = Circle((self.pos.x, self.pos.y), radius)
         
         # Now plot wedge representing width of target vector
         # central angular direction
@@ -83,12 +91,13 @@ class Agent(Object):
         if(thetamid <0.0):
             thetamid = 2.0*pi + thetamid
     
-        if (self.broadcast):
+        if (self.active):
             distance = wedge_length
         else:
             distance = 0
     
-                wedge = Wedge((self.pos.x,self.pos.y), distance, thetamid-self.openingangle, thetamid+self.openingangle )
+        print (self.active, self.pos.x, self.pos.y, radius, distance, 180.0*(thetamid-self.openingangle)/pi, 180.0*(thetamid+self.openingangle)/pi)
+        wedge = Wedge((self.pos.x,self.pos.y), distance, 180.0*(thetamid-self.openingangle)/pi, 180.0*(thetamid+self.openingangle)/pi )
 
         return circle, wedge
 
