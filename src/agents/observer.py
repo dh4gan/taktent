@@ -61,9 +61,14 @@ class Observer(Parent):
         
         # Is signal powerful enough?
         signal_powerful_enough = transmitter.eirp > observer.sensitivity
+        
+        # Is transmitter actively broadcasting?
+        # Must take into account time delays
+        
+        delay_time = time - separation/transmitter.broadcastspeed
+        transmitter_broadcasting = transmitter.broadcast(delay_time)
 
-#return observer_illuminated && in_observer_field && signal_powerful_enough
-        return observer_illuminated
+        return observer_illuminated and in_observer_field and signal_powerful_enough
 
   
 

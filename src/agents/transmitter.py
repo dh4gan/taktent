@@ -45,6 +45,7 @@ from numpy import pi,mod,arctan2
 from agents.agent import Agent as Parent
 
 fourpi = 4.0*pi
+c = 2.99e8 # speed of light in ms-1
 
 class Transmitter(Parent):
 
@@ -57,6 +58,8 @@ class Transmitter(Parent):
         self.bandwidth = band
         self.solidangle = solidangle
         self.power = power
+        
+        self.broadcastspeed = c # assume transmissions move at lightspeed by default
         
         # opening angle = fraction of solid angle (opening angle = pi if solid angle = 4 pi)
         self.openingangle = 0.25*self.solidangle
@@ -81,7 +84,7 @@ class Transmitter(Parent):
         onfrac = self.pulseduration/period
 
         # Pulse is on if remainder of nperiods is less than onfrac
-        self.broadcast = mod(nperiods) < onfrac
+        self.active = mod(nperiods) < onfrac
 
 
 
