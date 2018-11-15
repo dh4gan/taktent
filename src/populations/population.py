@@ -20,7 +20,7 @@
 
 import agents.observer as observer
 import agents.vector as vector
-
+from numpy import zeros
 import matplotlib.pyplot as plt
 
 class Population:
@@ -44,20 +44,20 @@ class Population:
         self.agents.append(observer.Observer(origin,origin,observe_direction,openangle,origin,0.0,0.0,0.0))
 
 
-    def conduct_observations(self):
+    def conduct_observations(self,time,dt):
         """Loop through all Observers and attempt to observe all Transmitters"""
 
-        success = np.zeros(self.nagents,self.nagents)
+        success = zeros((self.nagents,self.nagents))
         
         for i in range(self.nagents):
             
-            if agents[i].type=="Observer":
+            if self.agents[i].type=="Observer":
 
-                for j in range(len(agents)):
+                for j in range(self.nagents):
                     if (i==j): continue
                 
-                    if agents[j].type=="Transmitter":
-                        observed = agents[i].observe(time,dt,agents[j])
+                    if self.agents[j].type=="Transmitter":
+                        observed = self.agents[i].observe_transmitter(time,dt,self.agents[j])
                     if(observed):
                             success[i,j]=1
 
