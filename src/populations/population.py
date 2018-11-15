@@ -11,11 +11,11 @@
 # Methods
 
 # generate_transmitters - create a population of Transmitter objects TODO
-# generate_observer_at_origin - creates a single Observer at origin TODO
+# generate_observer_at_origin - creates a single Observer at origin
 # generate_observers - generate a population of Observer objects TODO
 # define_observation_strategies - defines observation survey for all Observer objects TODO
 # define_transmitter_strategies - defines transmissions for all Transmitter objects TODO
-# conduct_observations - goes through each Observer object and attempts to observe Transmitters TODO
+# conduct_observations - goes through each Observer object and attempts to observe Transmitters
 # plot - plots entire population of Agents (Observers & Transmitters)
 
 import agents.observer as observer
@@ -34,12 +34,34 @@ class Population:
     def add_agent(self, agent):
         """add Agent object to Population"""
         self.agents.append(agent)
+    
+        self.nagents = len(self.agents)
 
     def generate_observer_at_origin(self,observe_direction,openangle ):
         """Place a single observer object at co-ordinates (0.0,0.0,0.0)"""
         origin = vector.Vector3D(0.0,0.0,0.0)
         
         self.agents.append(observer.Observer(origin,origin,observe_direction,openangle,origin,0.0,0.0,0.0))
+
+
+    def conduct_observations(self):
+        """Loop through all Observers and attempt to observe all Transmitters"""
+
+        success = np.zeros(self.nagents,self.nagents)
+        
+        for i in range(self.nagents):
+            
+            if agents[i].type=="Observer":
+
+                for j in range(len(agents)):
+                    if (i==j): continue
+                
+                    if agents[j].type=="Transmitter":
+                        observed = agents[i].observe(time,dt,agents[j])
+                    if(observed):
+                            success[i,j]=1
+
+        return success
 
     def plot(self, markersize, wedge_length,xmax,ymax):
         """Plot all agents in the system"""
