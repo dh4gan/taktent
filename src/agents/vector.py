@@ -30,6 +30,10 @@ class Vector3D(object):
         return s
 
 # Vector addition
+
+    def copy(self):
+        '''Return a copy of vector3D object'''
+        return Vector3D (self.x, self.y, self.z)
             
     def add(self,other):
         """ Adds another vector"""
