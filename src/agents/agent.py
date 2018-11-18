@@ -4,11 +4,11 @@
 # Attributes:
 ###############
 
-# self.position - position (Vector3D)
-# self.velocity - velocity (Vector3D)
-# self.starpos - host star position (Vector3D)
+# self.position - position (Vector3D)               (units: pc)
+# self.velocity - velocity (Vector3D)               (units: km s-1)
+# self.starpos - host star position (Vector3D)      (units: pc)
 # self.mstar - host star mass
-# self.a - semimajor axis of orbit around host star
+# self.a - semimajor axis of orbit around host star  (units: AU)
 # self.mean_anomaly - mean anomaly
 # self.n - target direction vector
 # self.openingangle - opening angle along target vector (either transmitting or receiving)
@@ -28,9 +28,12 @@ from uuid import uuid4
 
 piby2 = 0.5*pi
 
+AU_to_pc = 1.0/206265.0
+AUyr_to_kms = 1.496e8/(3.15e7)
+
 class Agent:
     
-    def __init__(self, position=None,velocity=None,strategy=None,direction_vector=None, openingangle=None,starposition=None,starmass=None,semimaj=None,mean_anomaly=None):
+    def __init__(self, position=None,velocity=None,strategy=None,direction_vector=None, openingangle=None,starposition=None,starmass=None,semimaj=None,inc=None,mean_anomaly=None):
         """Defines a generic Agent in the simulation"""
     
         self.type = "Agent"
@@ -39,13 +42,14 @@ class Agent:
         self.position = position
         self.velocity = velocity
         
-        self.strategy=None
+        self.strategy=strategy
         
         self.n = direction_vector
         self.openingangle = openingangle
-        self.starpos = starposition
+        self.starposition = starposition
         self.mstar = starmass
         self.a = semimaj
+        self.inc = inc
         self.mean_anomaly = mean_anomaly
         
         self.active = True
@@ -55,22 +59,44 @@ class Agent:
         except ZeroDivisionError:
             self.period = 0.0
 
-    def orbit(self,dt):
+
+    def update(self,time,dt):
+        '''Update position, velocity and direction vector of Agent'''
+        self.orbit(time,dt)
+        
+        self.strategy.update(time,dt)
+         
+        if(self.strategy.current_target != None):
+            self.n = self.strategy.current_target
+        
+    
+    def apply_strategy(self):
+        '''Apply current phase of strategy'''
+    
+        self.n
+
+    def orbit(self,time,dt):
         """Moves agent in orbit around host star"""
 
+        if(self.mean_anomaly is None):
+            return
         inc = piby2 - self.inc
 
+
         self.mean_anomaly = self.mean_anomaly + self.period*dt
+
 
         self.position.x = self.a*sin(inc)*cos(self.mean_anomaly)
         self.position.y = self.a*sin(inc)*sin(self.mean_anomaly)
         self.position.z = self.a*cos(inc)
         
-        self.position = self.position.add(self.starpos)
+        
+        self.position = self.position.scalarmult(AU_to_pc)
+        self.position = self.position.add(self.starposition)
         
         unitr = self.position.unit()
 
-        velmag = sqrt(self.mstar/self.a) # TODO - units of velocity?
+        velmag = sqrt(self.mstar/self.a)*AUyr_to_kms
 
         self.velocity.x = cos(inc)*cos(self.mean_anomaly)
         self.velocity.y = cos(inc)*sin(self.mean_anomaly)
@@ -103,6 +129,10 @@ class Agent:
         wedge = Wedge((self.position.x,self.position.y), wedge_length, 180.0*(thetamid-self.openingangle)/pi, 180.0*(thetamid+self.openingangle)/pi ,color=colour,width=0.75*wedge_length, alpha=0.3)
 
         return circle, wedge
+
+
+
+
 
 
 

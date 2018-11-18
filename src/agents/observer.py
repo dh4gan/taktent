@@ -35,9 +35,9 @@ from numpy import sin,cos, arccos
 
 class Observer(Parent):
     
-    def __init__(self,position=None,velocity=None,strategy=None, direction_vector=None,openingangle=None, starposition=None,starmass=None,semimaj=None,mean_anomaly=None, sensitivity=None, nu_min=None, nu_max=None, nchannels=None):
+    def __init__(self,position=None,velocity=None,strategy=None, direction_vector=None,openingangle=None, starposition=None,starmass=None,semimaj=None,inc=None,mean_anomaly=None, sensitivity=None, nu_min=None, nu_max=None, nchannels=None):
         """Initialises an Observer object"""
-        Parent.__init__(self,position,velocity,strategy,direction_vector,openingangle,starposition,starmass,semimaj,mean_anomaly)
+        Parent.__init__(self,position,velocity,strategy,direction_vector,openingangle,starposition,starmass,semimaj,inc,mean_anomaly)
         
         self.type = "Observer"
     
@@ -45,6 +45,8 @@ class Observer(Parent):
         self.nu_min = nu_min
         self.nu_max = nu_max
         self.nchannels = nchannels
+    
+    def update(self,time,dt): Parent.update(self,time,dt)
     
 
     def slew_to_target(self,time,dt, newtarget):
@@ -80,9 +82,7 @@ class Observer(Parent):
 
         # Is transmitter in observer field of view?
         no_dot_r = self.n.dot(unitsep)
-        print(self.n)
-        print(unitsep)
-        print (arccos(no_dot_r), self.openingangle)
+    
         in_observer_field = arccos(no_dot_r) < self.openingangle
         
         # Is signal powerful enough?
@@ -108,7 +108,6 @@ class Observer(Parent):
         else:
             in_frequency_range = freqmin> self.nu_min or freqmax < self.nu_max
 
-        print (observer_illuminated, in_observer_field, signal_powerful_enough)
         return observer_illuminated and in_observer_field and signal_powerful_enough
 
   

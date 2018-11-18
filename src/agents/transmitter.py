@@ -50,8 +50,8 @@ c = 2.99e8 # speed of light in ms-1
 
 class Transmitter(Parent):
 
-    def __init__(self,position=None,velocity=None,strategy=None,direction_vector=None, openangle=None, starposition=None,starmass=None,semimaj=None,mean_anomaly=None, freq=None,band=None, solidangle=None, power=None, polarisation=None, tbegin=None, tend=None, pulseduration=None,pulseinterval=None):
-        Parent.__init__(self,position,velocity,strategy,direction_vector,openangle,starposition,starmass,semimaj,mean_anomaly)
+    def __init__(self,position=None,velocity=None,strategy=None,direction_vector=None, openangle=None, starposition=None,starmass=None,semimaj=None,inc=None,mean_anomaly=None, freq=None,band=None, solidangle=None, power=None, polarisation=None, tbegin=None, tend=None, pulseduration=None,pulseinterval=None):
+        Parent.__init__(self,position,velocity,strategy,direction_vector,openangle,starposition,starmass,semimaj,inc,mean_anomaly)
         
         self.type="Transmitter"
         
@@ -71,6 +71,8 @@ class Transmitter(Parent):
         self.openingangle = 0.25*self.solidangle
         
         self.calc_eirp()
+
+    def update(self,time,dt): Parent.update(self,time,dt)
 
     def calc_eirp(self):
         """Calculate effective isotropic radiated power"""
