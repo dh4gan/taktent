@@ -40,9 +40,13 @@ class Population:
     def generate_observer_at_origin(self,observe_direction,openangle,strategy):
         """Place a single observer object at co-ordinates (0.0,0.0,0.0)"""
         origin = vector.Vector3D(0.0,0.0,0.0)
-        
+        print (strategy)
         self.agents.append(observer.Observer(origin,origin,strategy,observe_direction,openangle,origin,0.0,0.0,0.0))
 
+    def update_agents(self,time,dt):
+        '''Update the properties of all Agent Objects in the Population'''
+        for agent in self.agents:
+            agent.update(time,dt)
 
     def conduct_observations(self,time,dt):
         """Loop through all Observers and attempt to observe all Transmitters"""

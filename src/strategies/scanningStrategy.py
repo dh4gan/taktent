@@ -12,19 +12,26 @@
 # add_target_to_list - add a given target vector to strategy
 # convert_locations_to_targets - take a set of 3D position vectors, turn them into direction vectors
 
+from agents import vector
 from strategies.strategy import Strategy as Parent
+
+
 
 class scanningStrategy(Parent):
 
     def __init__(self, targetfunction=None):
+        Parent.__init__(self)
         
         self.targetfunction = targetfunction
     
-    def update(self,time):
+    
+    
+    
+    def update(self,time,dt):
         '''Call scanning function that defines target at time t'''
 
-        Parent.update(time)
-
-        return self.targetfunction(time)
+        Parent.update(self,time,dt)
+        
+        self.current_target= self.targetfunction(time)
 
 

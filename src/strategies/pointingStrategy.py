@@ -19,6 +19,7 @@ class pointingStrategy(Parent):
 
     def __init__(self):
 
+        Parent.__init__(self)
         self.targetlist = []
         self.tbegin = []
         self.tend = []
@@ -26,15 +27,15 @@ class pointingStrategy(Parent):
         self.ntargets = len(self.targetlist)
     
     
-    def update(self,time):
+    def update(self,time,dt):
         '''Update pointing'''
         
-        Parent.update(time)
+        Parent.update(self,time,dt)
     
         ibegin = next((t for t in tbegin if t>time), None)
         iend =  next((t for t in tend if t>time),None)
 
-        return self.targetlist[ibegin]
+        self.current_target= self.targetlist[ibegin]
 
     
     def add_target(self, targetvector, tbegin, tend):

@@ -10,6 +10,7 @@ class Strategy:
     def __init__(self):
     
         self.ID = str(uuid4())
+        self.current_target = None
 
     def update(self, time,dt):
         '''Update the strategy to its current time'''
