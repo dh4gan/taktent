@@ -37,11 +37,11 @@ class Population:
     
         self.nagents = len(self.agents)
 
-    def generate_observer_at_origin(self,observe_direction,openangle ):
+    def generate_observer_at_origin(self,observe_direction,openangle,strategy):
         """Place a single observer object at co-ordinates (0.0,0.0,0.0)"""
         origin = vector.Vector3D(0.0,0.0,0.0)
         
-        self.agents.append(observer.Observer(origin,origin,observe_direction,openangle,origin,0.0,0.0,0.0))
+        self.agents.append(observer.Observer(origin,origin,strategy,observe_direction,openangle,origin,0.0,0.0,0.0))
 
 
     def conduct_observations(self,time,dt):
