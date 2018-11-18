@@ -1,5 +1,6 @@
 from agents import *
 from populations.population import *
+from strategies import *
 from numpy import pi
 
 # test code imports key classes, makes a transmitter and an observer object, and plots them
@@ -21,21 +22,24 @@ ymax = 20
 time = 0.0
 dt = 0.1
 
+strat = strategy.Strategy()
+
 transmitter_dir = vector.Vector3D(0.0,1.0,0.0)
 observer_dir = vector.Vector3D(1.0,0.0,0.0).unit()
 
 popn = Population(time)
 
-tran = transmitter.Transmitter(transmitter_pos,transmitter_vel,transmitter_dir,openangle,transmitter_pos, 1.0,1.0,1.0,freq,band,solidangle,power)
+tran = transmitter.Transmitter(transmitter_pos,transmitter_vel,strat,transmitter_dir,openangle,transmitter_pos, 1.0,1.0,1.0,freq,band,solidangle,power)
 
 tran.active = False
 
-popn.generate_observer_at_origin(observer_dir,openangle)
+popn.generate_observer_at_origin(observer_dir,openangle,strategy)
 popn.add_agent(tran)
 
 success = popn.conduct_observations(time,dt)
 
 print (success)
+print (tran.ID[0:3])
 
 popn.plot(markersize,wedge_length, xmax,ymax)
 
