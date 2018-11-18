@@ -35,9 +35,9 @@ from numpy import sin,cos, arccos
 
 class Observer(Parent):
     
-    def __init__(self,position=None,velocity=None,direction_vector=None,openingangle=None, starposition=None,starmass=None,semimaj=None,mean_anomaly=None, sensitivity=None, nu_min=None, nu_max=None, nchannels=None):
+    def __init__(self,position=None,velocity=None,strategy=None, direction_vector=None,openingangle=None, starposition=None,starmass=None,semimaj=None,mean_anomaly=None, sensitivity=None, nu_min=None, nu_max=None, nchannels=None):
         """Initialises an Observer object"""
-        Parent.__init__(self,position,velocity,direction_vector,openingangle,starposition,starmass,semimaj,mean_anomaly)
+        Parent.__init__(self,position,velocity,strategy,direction_vector,openingangle,starposition,starmass,semimaj,mean_anomaly)
         
         self.type = "Observer"
     

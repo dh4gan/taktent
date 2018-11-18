@@ -24,18 +24,23 @@
 
 from numpy import sin,cos,pi,sqrt, arctan2
 from matplotlib.patches import Circle, Wedge
+from uuid import uuid4
 
 piby2 = 0.5*pi
 
 class Agent:
     
-    def __init__(self, position=None,velocity=None,direction_vector=None, openingangle=None,starposition=None,starmass=None,semimaj=None,mean_anomaly=None):
+    def __init__(self, position=None,velocity=None,strategy=None,direction_vector=None, openingangle=None,starposition=None,starmass=None,semimaj=None,mean_anomaly=None):
         """Defines a generic Agent in the simulation"""
     
         self.type = "Agent"
+        self.ID = str(uuid4())
         
         self.position = position
         self.velocity = velocity
+        
+        self.strategy=None
+        
         self.n = direction_vector
         self.openingangle = openingangle
         self.starpos = starposition
