@@ -25,11 +25,11 @@ import matplotlib.pyplot as plt
 
 class Population:
 
-    def __init__(self,t):
+    def __init__(self,time):
         """Constructor for a group of agents"""
 
         self.agents = []
-        self.time = t
+        self.time = time
 
     def add_agent(self, agent):
         """add Agent object to Population"""
@@ -40,23 +40,28 @@ class Population:
     def generate_observer_at_origin(self,observe_direction,openangle,strategy):
         """Place a single observer object at co-ordinates (0.0,0.0,0.0)"""
         origin = vector.Vector3D(0.0,0.0,0.0)
-        print (strategy)
-        self.agents.append(observer.Observer(origin,origin,strategy,observe_direction,openangle,origin,0.0,0.0,0.0))
+        
+        self.agents.append(observer.Observer(origin, origin, strategy, observe_direction, openangle, origin, 0.0, 0.0, 0.0))
 
 
     def define_agent_strategies(self,strategy,agentType):
+        """Define strategies of agents in the population (where they are type agentType)"""
         for agent in self.agents:
-            if(agent.type==agentType or if agentType=None):
+            if(agent.type==agentType or agentType==None):
                 agent.define_strategy(strategy)
 
     def define_transmitter_strategies(self,strategy):
+        """Define strategies of transmitters"""
         self.define_agent_strategies(self,strategy,"Transmitter")
     
     def define_observation_strategies(self,strategy):
+        """Define strategies of observers"""
         self.define_agent_strategies(self,strategy,"Observer")
     
     def update_agents(self,time,dt):
         '''Update the properties of all Agent Objects in the Population'''
+        
+        self.time = time
         for agent in self.agents:
             agent.update(time,dt)
 
@@ -79,7 +84,7 @@ class Population:
 
         return success
 
-    def plot(self, markersize, wedge_length,xmax,ymax):
+    def plot(self, markersize, wedge_length,xmax,ymax, filename=None):
         """Plot all agents in the system"""
         fig1 = plt.figure()
         ax1 = fig1.add_subplot(111)
@@ -93,6 +98,13 @@ class Population:
             # If actively transmitting/receiving, plot transmission/reception beam
             if(agent.active): ax1.add_patch(wedge)
 
-        plt.show()
+        # Add time to plots TODO
+        #ax1.annotate(self.time)
+        
+        
+        if(filename==None):
+            plt.show()
+        else:
+            fig1.savefig(filename)
 
 

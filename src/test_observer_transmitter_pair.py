@@ -57,6 +57,7 @@ popn.generate_observer_at_origin(observer_dir,openangle,strat_obs)
 popn.add_agent(tran)
 
 
+
 # Define plot limits
 
 markersize = 0.5
@@ -67,13 +68,16 @@ ymax = 20
 time = 0.0
 dt = 0.1
 
+popn.update_agents(time,dt)
 
 # Test run multiple steps
 for i  in range(nsteps):
 
+    print ("Time: ",time)
     success = popn.conduct_observations(time,dt)
 
-    popn.plot(markersize,wedge_length, xmax,ymax)
+    outputfile = 'population_'+str(i).zfill(3)+'.png'
+    popn.plot(markersize,wedge_length, xmax,ymax, outputfile)
     popn.update_agents(time,dt)
 
     time = time+dt

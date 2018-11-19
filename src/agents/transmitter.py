@@ -50,8 +50,9 @@ c = 2.99e8 # speed of light in ms-1
 
 class Transmitter(Parent):
 
-    def __init__(self,position=None,velocity=None,strategy=None,direction_vector=None, openangle=None, starposition=None,starmass=None,semimaj=None,inc=None,mean_anomaly=None, freq=None,band=None, solidangle=None, power=None, polarisation=None, tbegin=None, tend=None, pulseduration=None,pulseinterval=None):
-        Parent.__init__(self,position,velocity,strategy,direction_vector,openangle,starposition,starmass,semimaj,inc,mean_anomaly)
+    def __init__(self,position=None, velocity=None, strategy=None, direction_vector=None, openangle=None, starposition=None, starmass=None, semimajoraxis=None, inc=None, mean_anomaly=None, freq=None,band=None, solidangle=None, power=None, polarisation=None, tbegin=None, tend=None, pulseduration=None,pulseinterval=None):
+        
+        Parent.__init__(self, position, velocity, strategy, direction_vector, openangle, starposition, starmass, semimajoraxis, inc, mean_anomaly)
         
         self.type="Transmitter"
         
@@ -72,7 +73,9 @@ class Transmitter(Parent):
         
         self.calc_eirp()
 
-    def update(self,time,dt): Parent.update(self,time,dt)
+    def update(self,time,dt):
+        '''Update Transmitter's position,velocity and other properties'''
+        Parent.update(self,time,dt)
 
     def calc_eirp(self):
         """Calculate effective isotropic radiated power"""
@@ -81,7 +84,6 @@ class Transmitter(Parent):
 
     def broadcast(self,time,dt):
         """Is transmitter broadcasting or not?"""
-
 
         # If pulse interval not defined or zero, pulse always on
 

@@ -6,12 +6,13 @@
 ###############
 
 # Inherited from agent.py
-# self.pos - position (Vector3D)
-# self.vel - velocity (Vector3D)
-# self.starpos - host star position (Vector3D)
-# self.mstar - host star mass
+# self.position - position (Vector3D)
+# self.velocity - velocity (Vector3D)
+# self.starposition - host star position (Vector3D)
+# self.starmass - host star mass
 # self.a - semimajor axis of orbit around host star
-# self.meananom - mean anomaly
+# self.inc - inclination of orbit around host star
+# self.mean_anomaly - mean anomaly
 
 # self.sensitivity - sensitivity of observation
 # self.numin - minimum frequency
@@ -35,9 +36,9 @@ from numpy import sin,cos, arccos
 
 class Observer(Parent):
     
-    def __init__(self,position=None,velocity=None,strategy=None, direction_vector=None,openingangle=None, starposition=None,starmass=None,semimaj=None,inc=None,mean_anomaly=None, sensitivity=None, nu_min=None, nu_max=None, nchannels=None):
+    def __init__(self,position=None, velocity=None, strategy=None, direction_vector=None, openingangle=None, starposition=None, starmass=None, semimaj=None, inc=None, mean_anomaly=None, sensitivity=None, nu_min=None, nu_max=None, nchannels=None):
         """Initialises an Observer object"""
-        Parent.__init__(self,position,velocity,strategy,direction_vector,openingangle,starposition,starmass,semimaj,inc,mean_anomaly)
+        Parent.__init__(self, position, velocity, strategy, direction_vector, openingangle, starposition, starmass, semimaj, inc, mean_anomaly)
         
         self.type = "Observer"
     
@@ -46,7 +47,9 @@ class Observer(Parent):
         self.nu_max = nu_max
         self.nchannels = nchannels
     
-    def update(self,time,dt): Parent.update(self,time,dt)
+    def update(self,time,dt):
+        """Update Observer position, velocity and other properties"""
+        Parent.update(self,time,dt)
     
 
     def slew_to_target(self,time,dt, newtarget):
@@ -54,7 +57,7 @@ class Observer(Parent):
         self.n = newtarget
 
     def calculate_doppler_drift(self,time,dt,transmitter):
-        """Calculates doppler shift of signal"""
+        """Calculate doppler shift of signal received from transmitter object"""
     
         # Calculate relative velocity
         relative_velocity = transmitter.velocity.subtract(self.velocity)

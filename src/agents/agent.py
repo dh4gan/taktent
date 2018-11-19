@@ -33,7 +33,7 @@ AUyr_to_kms = 1.496e8/(3.15e7)
 
 class Agent:
     
-    def __init__(self, position=None,velocity=None,strategy=None,direction_vector=None, openingangle=None,starposition=None,starmass=None,semimaj=None,inc=None,mean_anomaly=None):
+    def __init__(self, position=None,velocity=None,strategy=None,direction_vector=None, openingangle=None,starposition=None,starmass=None,semimajoraxis=None,inc=None,mean_anomaly=None):
         """Defines a generic Agent in the simulation"""
     
         self.type = "Agent"
@@ -47,15 +47,15 @@ class Agent:
         self.n = direction_vector
         self.openingangle = openingangle
         self.starposition = starposition
-        self.mstar = starmass
-        self.a = semimaj
-        self.inc = inc
+        self.starmass = starmass
+        self.semimajoraxis = semimajoraxis
+        self.inclination = inc
         self.mean_anomaly = mean_anomaly
         
         self.active = True
     
         try:
-            self.period = sqrt(self.a*self.a*self.a/self.mstar)
+            self.period = sqrt(self.semimajoraxis*self.semimajoraxis*self.semimajoraxis/self.starmass)
         except ZeroDivisionError:
             self.period = 0.0
 
@@ -76,17 +76,17 @@ class Agent:
     def orbit(self,time,dt):
         """Moves agent in orbit around host star"""
 
-        if(self.mean_anomaly is None):
+        # If orbit not defined, then skip
+        if(self.mean_anomaly==None or self.inclination==None or self.semimajoraxis==None):
             return
-        inc = piby2 - self.inc
-
+        
+        inc = piby2 - self.inclination
 
         self.mean_anomaly = self.mean_anomaly + self.period*dt
 
-
-        self.position.x = self.a*sin(inc)*cos(self.mean_anomaly)
-        self.position.y = self.a*sin(inc)*sin(self.mean_anomaly)
-        self.position.z = self.a*cos(inc)
+        self.position.x = self.semimajoraxis*sin(inc)*cos(self.mean_anomaly)
+        self.position.y = self.semimajoraxis*sin(inc)*sin(self.mean_anomaly)
+        self.position.z = self.semimajoraxis*cos(inc)
         
         
         self.position = self.position.scalarmult(AU_to_pc)
@@ -94,7 +94,7 @@ class Agent:
         
         unitr = self.position.unit()
 
-        velmag = sqrt(self.mstar/self.a)*AUyr_to_kms
+        velmag = sqrt(self.starmass/self.semimajoraxis)*AUyr_to_kms
 
         self.velocity.x = cos(inc)*cos(self.mean_anomaly)
         self.velocity.y = cos(inc)*sin(self.mean_anomaly)
