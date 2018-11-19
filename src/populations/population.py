@@ -13,8 +13,8 @@
 # generate_transmitters - create a population of Transmitter objects TODO
 # generate_observer_at_origin - creates a single Observer at origin
 # generate_observers - generate a population of Observer objects TODO
-# define_observation_strategies - defines observation survey for all Observer objects TODO
-# define_transmitter_strategies - defines transmissions for all Transmitter objects TODO
+# define_observation_strategies - defines observation survey for all Observer objects
+# define_transmitter_strategies - defines transmissions for all Transmitter objects
 # conduct_observations - goes through each Observer object and attempts to observe Transmitters
 # plot - plots entire population of Agents (Observers & Transmitters)
 
@@ -43,6 +43,18 @@ class Population:
         print (strategy)
         self.agents.append(observer.Observer(origin,origin,strategy,observe_direction,openangle,origin,0.0,0.0,0.0))
 
+
+    def define_agent_strategies(self,strategy,agentType):
+        for agent in self.agents:
+            if(agent.type==agentType or if agentType=None):
+                agent.define_strategy(strategy)
+
+    def define_transmitter_strategies(self,strategy):
+        self.define_agent_strategies(self,strategy,"Transmitter")
+    
+    def define_observation_strategies(self,strategy):
+        self.define_agent_strategies(self,strategy,"Observer")
+    
     def update_agents(self,time,dt):
         '''Update the properties of all Agent Objects in the Population'''
         for agent in self.agents:

@@ -27,8 +27,8 @@
 # orbit(time) - move observer in orbit around host star
 # plot(radius,wedge_length) - plot observer and its field of view
 
-# slew_to_target(time,dt) - move target direction vector
 # observe_transmitter(time,dt,transmitter) - attempt to detect transmitter
+# skymap - generate a field of view image along observer's current target vector
 
 from agents.agent import Agent as Parent
 from numpy import sin,cos, arccos

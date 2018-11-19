@@ -60,20 +60,18 @@ class Agent:
             self.period = 0.0
 
 
+    def define_strategy(self,strategy):
+        self.strategy = strategy
+
     def update(self,time,dt):
         '''Update position, velocity and direction vector of Agent'''
         self.orbit(time,dt)
         
         self.strategy.update(time,dt)
-         
+        
+        # If checks that a current target is available
         if(self.strategy.current_target != None):
             self.n = self.strategy.current_target
-        
-    
-    def apply_strategy(self):
-        '''Apply current phase of strategy'''
-    
-        self.n
 
     def orbit(self,time,dt):
         """Moves agent in orbit around host star"""
