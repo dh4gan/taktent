@@ -5,7 +5,6 @@ from numpy import pi, cos, sin
 
 # test code imports key classes, makes a transmitter and an observer object, and plots them
 
-
 time = 0
 dt = 0.1
 
@@ -51,11 +50,10 @@ strat_obs = strategy.Strategy()
 
 # Define Population and create observer at origin
 
-popn = Population(time)
+popn = Population(time,dt)
 
 popn.generate_observer_at_origin(observer_dir,openangle,strat_obs)
 popn.add_agent(tran)
-
 
 
 # Define plot limits
@@ -68,21 +66,18 @@ ymax = 20
 time = 0.0
 dt = 0.1
 
-popn.update_agents(time,dt)
+# Ensures all strategies are up to date (TODO - do this better somehow?)
+popn.update_agents()
 
 # Test run multiple steps
 for i  in range(nsteps):
 
-    print ("Time: ",time)
+    print ("Time: ",popn.time)
     success = popn.conduct_observations(time,dt)
 
     outputfile = 'population_'+str(i).zfill(3)+'.png'
     popn.plot(markersize,wedge_length, xmax,ymax, outputfile)
-    popn.update_agents(time,dt)
-
-    time = time+dt
-
-
+    popn.update()
 
 
 

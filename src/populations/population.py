@@ -12,9 +12,9 @@
 
 # generate_transmitters - create a population of Transmitter objects TODO
 # generate_observer_at_origin - creates a single Observer at origin
-# generate_observers - generate a population of Observer objects TODO
-# define_observation_strategies - defines observation survey for all Observer objects
-# define_transmitter_strategies - defines transmissions for all Transmitter objects
+# generate_observers - create a population of Observer objects TODO
+# define_observation_strategies - defines observation strategy for all Observer objects
+# define_transmitter_strategies - defines transmission strategy for all Transmitter objects
 # conduct_observations - goes through each Observer object and attempts to observe Transmitters
 # plot - plots entire population of Agents (Observers & Transmitters)
 
@@ -25,11 +25,12 @@ import matplotlib.pyplot as plt
 
 class Population:
 
-    def __init__(self,time):
+    def __init__(self,time,dt):
         """Constructor for a group of agents"""
 
         self.agents = []
         self.time = time
+        self.dt = dt
 
     def add_agent(self, agent):
         """add Agent object to Population"""
@@ -58,12 +59,16 @@ class Population:
         """Define strategies of observers"""
         self.define_agent_strategies(self,strategy,"Observer")
     
-    def update_agents(self,time,dt):
+    
+    def update(self):
+        self.update_agents()
+        self.time = self.time+self.dt
+    
+    def update_agents(self):
         '''Update the properties of all Agent Objects in the Population'''
         
-        self.time = time
         for agent in self.agents:
-            agent.update(time,dt)
+            agent.update(self.time,self.dt)
 
     def conduct_observations(self,time,dt):
         """Loop through all Observers and attempt to observe all Transmitters"""
