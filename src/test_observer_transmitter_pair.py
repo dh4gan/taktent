@@ -66,8 +66,8 @@ ymax = 20
 time = 0.0
 dt = 0.1
 
-# Ensures all strategies are up to date (TODO - do this better somehow?)
-popn.update_agents()
+# Initialise population ready for run
+popn.initialise()
 
 # Test run multiple steps
 for i  in range(nsteps):

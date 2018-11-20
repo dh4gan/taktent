@@ -70,6 +70,11 @@ class Population:
         for agent in self.agents:
             agent.update(self.time,self.dt)
 
+    def initialise(self):
+        '''Set time to zero, and ensure all Agents in population are correctly up to date'''
+        self.time = 0.0
+        self.update_agents()
+
     def conduct_observations(self,time,dt):
         """Loop through all Observers and attempt to observe all Transmitters"""
 
