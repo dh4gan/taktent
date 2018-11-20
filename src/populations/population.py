@@ -19,9 +19,12 @@
 # plot - plots entire population of Agents (Observers & Transmitters)
 
 import agents.observer as observer
+import agents.transmitter as transmitter
 import agents.vector as vector
 from numpy import zeros
 import matplotlib.pyplot as plt
+
+from numpy.random import random
 
 class Population:
 
@@ -37,12 +40,65 @@ class Population:
         self.agents.append(agent)
     
         self.nagents = len(self.agents)
+    
+    # TODO - these probably belong in Agent?
+    def sample_random(self,seed=-45, xmin=-100.0,xmax=100.0,ymin=-100.0,ymax=100.0,zmin=-100.0,zmax=100.0):
+        """Return randomly sampled position and velocity vectors (vmag = 0.1 posmag)"""
+    
+        position = vector.Vector3D(xmin+ (xmax-xmin)*random(), ymin+(ymax-ymin)*random(), zmin+ (zmax-zmin)*random())
+
+        velocity = vector.Vector3D(random(), random(), random())
+
+        velocity = velocity.scalarmult(0.1*position.mag())
+
+        return position,velocity
+    
+    
+    def sample_GHZ(self):
+        '''Returns position and velocity vector of a star in the GHZ'''
+    # TODO copy in GHZ sampler from C++ methods
+    
+    
+    def sample_globular(self):
+        '''Returns position and velocity vector of a star in a globular cluster'''
+    
+    def generate_identical_transmitters(self, N_transmitters, strategy,semimajoraxis,inc,mean_anomaly,freq,band,solidangle,power,polarisation,tbegin,tend,pulseduration,pulseinterval,spatial_distribution=None):
+        '''Generate a population of identical transmitters according to some spatial distribution'''
+
+#zeroVector = vector.Vector3D(0.0,0.0,0.0)
+        
+        # Define a transmitter object with fixed broadcast parameters but no
+        agent = transmitter.Transmitter(freq=freq,band=band,solidangle=solidangle,power=power,polarisation=polarisation,tbegin=tbegin,tend=tend,pulseduration=pulseduration,pulseinterval=pulseinterval)
+        
+
+        # Set its position and velocity according to a random sampling
+        if(distribution=="GHZ"):
+            position,velocity = self.sample_GHZ()
+
+        elif(distribution=="globular"):
+            position,velocity = self.sample_globular()
+
+        elif(distribution=="random" or distribution==None):
+            position, velocity = self.sample_random()
+
+        agent.starposition = position
+        agent.star_velocity = velocity
+
+        agent.orbit()
+
+# Add to population
+
+        self.add_agent(agent)
+
+
+
+
 
     def generate_observer_at_origin(self,observe_direction,openangle,strategy):
         """Place a single observer object at co-ordinates (0.0,0.0,0.0)"""
         origin = vector.Vector3D(0.0,0.0,0.0)
         
-        self.agents.append(observer.Observer(origin, origin, strategy, observe_direction, openangle, origin, 0.0, 0.0, 0.0))
+        self.add_agent(observer.Observer(origin, origin, strategy, observe_direction, openangle, origin, 0.0, 0.0, 0.0))
 
 
     def define_agent_strategies(self,strategy,agentType):

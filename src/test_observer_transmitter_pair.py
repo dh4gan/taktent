@@ -39,7 +39,7 @@ strat = scanningStrategy.scanningStrategy(transmit_strategy)
 
 
 
-tran = transmitter.Transmitter(transmitter_pos,transmitter_vel,strat,transmitter_dir,openangle,transmitter_pos.copy(), 1.0,1.0,0.0,1.0,freq,band,solidangle,power)
+tran = transmitter.Transmitter(transmitter_pos,transmitter_vel,strat,transmitter_dir,openangle,transmitter_pos.copy(), transmitter_vel.copy(),1.0,1.0,0.0,1.0,freq,band,solidangle,power)
 
 
 # Define Observer properties

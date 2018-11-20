@@ -50,9 +50,9 @@ c = 2.99e8 # speed of light in ms-1
 
 class Transmitter(Parent):
 
-    def __init__(self,position=None, velocity=None, strategy=None, direction_vector=None, openangle=None, starposition=None, starmass=None, semimajoraxis=None, inc=None, mean_anomaly=None, freq=None,band=None, solidangle=None, power=None, polarisation=None, tbegin=None, tend=None, pulseduration=None,pulseinterval=None):
+    def __init__(self,position=None, velocity=None, strategy=None, direction_vector=None, openangle=None, starposition=None, starvelocity=None,starmass=None, semimajoraxis=None, inc=None, mean_anomaly=None, freq=None,band=None, solidangle=None, power=None, polarisation=None, tbegin=None, tend=None, pulseduration=None,pulseinterval=None):
         
-        Parent.__init__(self, position, velocity, strategy, direction_vector, openangle, starposition, starmass, semimajoraxis, inc, mean_anomaly)
+        Parent.__init__(self, position, velocity, strategy, direction_vector, openangle, starposition, starvelocity,starmass, semimajoraxis, inc, mean_anomaly)
         
         self.type="Transmitter"
         

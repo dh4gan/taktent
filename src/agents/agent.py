@@ -33,7 +33,7 @@ AUyr_to_kms = 1.496e8/(3.15e7)
 
 class Agent:
     
-    def __init__(self, position=None,velocity=None,strategy=None,direction_vector=None, openingangle=None,starposition=None,starmass=None,semimajoraxis=None,inc=None,mean_anomaly=None):
+    def __init__(self, position=None,velocity=None,strategy=None,direction_vector=None, openingangle=None,starposition=None,starvelocity=None,starmass=None,semimajoraxis=None,inc=None,mean_anomaly=None):
         """Defines a generic Agent in the simulation"""
     
         self.type = "Agent"
@@ -47,6 +47,7 @@ class Agent:
         self.n = direction_vector
         self.openingangle = openingangle
         self.starposition = starposition
+        self.starvelocity = starvelocity
         self.starmass = starmass
         self.semimajoraxis = semimajoraxis
         self.inclination = inc
@@ -101,6 +102,7 @@ class Agent:
         self.velocity.z = -sin(inc)
 
         self.velocity = self.velocity.scalarmult(velmag)
+        self.velocity = self.velocity.add(self.starvelocity)
 
     def plot(self,radius,wedge_length):
         """return matplotlib.patches for agent's position, and target vector (with opening angle)"""
