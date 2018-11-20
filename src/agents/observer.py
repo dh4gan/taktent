@@ -32,7 +32,7 @@
 # skymap - generate a field of view image along observer's current target vector
 
 from agents.agent import Agent as Parent
-from numpy import sin,cos, arccos
+from numpy import sin,cos, arccos, pi
 
 class Observer(Parent):
     
@@ -41,11 +41,18 @@ class Observer(Parent):
         Parent.__init__(self, position, velocity, strategy, direction_vector, openingangle, starposition, starvelocity,starmass, semimaj, inc, mean_anomaly)
         
         self.type = "Observer"
+        #self.success_colour = "#377eb8"
+        #self.fail_colour = "#ff7f00"
+        self.success_colour = "blue"
+        self.fail_colour = "red"
+        self.colour = self.fail_colour
     
         self.sensitivity = sensitivity
         self.nu_min = nu_min
         self.nu_max = nu_max
         self.nchannels = nchannels
+        
+        self.detect = {}
     
     def update(self,time,dt):
         """Update Observer position, velocity and other properties"""
@@ -76,15 +83,21 @@ class Observer(Parent):
     def observe_transmitter(self,time,dt,transmitter):
         """Attempt to observe a transmitter (returns true or false)"""
 
+        self.colour = self.fail_colour
+        
         # Is transmitter beam illuminating observer?
-        separation = transmitter.position.subtract(self.position)
+        #separation = transmitter.position.subtract(self.position)
+        separation = self.position.subtract(transmitter.position)
         unitsep = separation.unit()
 
         nt_dot_r = transmitter.n.dot(unitsep)
         observer_illuminated = arccos(nt_dot_r) < transmitter.openingangle
 
+#print (observer_illuminated, arccos(nt_dot_r), transmitter.openingangle)
+#       print (transmitter.n, unitsep)
+
         # Is transmitter in observer field of view?
-        no_dot_r = self.n.dot(unitsep)
+        no_dot_r = self.n.dot(unitsep.scalarmult(-1.0))
     
         in_observer_field = arccos(no_dot_r) < self.openingangle
         
@@ -111,7 +124,16 @@ class Observer(Parent):
         else:
             in_frequency_range = freqmin> self.nu_min or freqmax < self.nu_max
 
-        return observer_illuminated and in_observer_field and signal_powerful_enough
+        detected = observer_illuminated and in_observer_field and signal_powerful_enough
+        print (detected, observer_illuminated, in_observer_field, signal_powerful_enough)
+        if(detected):
+            print ("DETECTION")
+            self.colour = self.success_colour
+        
+        #print (detected, observer_illuminated, in_observer_field, signal_powerful_enough)
+        self.detect[transmitter.ID] = detected
+
+        return detected
 
   
 

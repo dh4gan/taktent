@@ -55,6 +55,7 @@ class Transmitter(Parent):
         Parent.__init__(self, position, velocity, strategy, direction_vector, openangle, starposition, starvelocity,starmass, semimajoraxis, inc, mean_anomaly)
         
         self.type="Transmitter"
+        self.colour = "#4daf4a"
         
         self.nu = freq
         self.bandwidth = band
