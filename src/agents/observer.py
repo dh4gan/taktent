@@ -86,15 +86,11 @@ class Observer(Parent):
         self.colour = self.fail_colour
         
         # Is transmitter beam illuminating observer?
-        #separation = transmitter.position.subtract(self.position)
         separation = self.position.subtract(transmitter.position)
         unitsep = separation.unit()
 
         nt_dot_r = transmitter.n.dot(unitsep)
         observer_illuminated = arccos(nt_dot_r) < transmitter.openingangle
-
-#print (observer_illuminated, arccos(nt_dot_r), transmitter.openingangle)
-#       print (transmitter.n, unitsep)
 
         # Is transmitter in observer field of view?
         no_dot_r = self.n.dot(unitsep.scalarmult(-1.0))
@@ -125,12 +121,10 @@ class Observer(Parent):
             in_frequency_range = freqmin> self.nu_min or freqmax < self.nu_max
 
         detected = observer_illuminated and in_observer_field and signal_powerful_enough
-        print (detected, observer_illuminated, in_observer_field, signal_powerful_enough)
+        
         if(detected):
-            print ("DETECTION")
             self.colour = self.success_colour
         
-        #print (detected, observer_illuminated, in_observer_field, signal_powerful_enough)
         self.detect[transmitter.ID] = detected
 
         return detected
