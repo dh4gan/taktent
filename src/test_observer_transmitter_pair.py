@@ -8,7 +8,7 @@ from numpy import pi, cos, sin
 time = 0
 dt = 0.1
 
-nsteps = 10
+nsteps = 100
 
 # Define transmitter properties
 
@@ -70,10 +70,10 @@ dt = 0.1
 popn.initialise()
 
 # Test run multiple steps
-for i  in range(nsteps):
+for i in range(nsteps):
 
     print ("Time: ",popn.time)
-    success = popn.conduct_observations(time,dt)
+    popn.conduct_observations(time,dt)
 
     outputfile = 'population_'+str(i).zfill(3)+'.png'
     popn.plot(markersize,wedge_length, xmax,ymax, outputfile)
