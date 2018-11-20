@@ -15,13 +15,13 @@
 # self.a - semimajor axis of orbit around host star
 # self.meananom - mean anomaly
 
-# self.nu - central frequency of broadcast
-# self.bandwidth - bandwidth of broadcast
+# self.nu - central frequency of broadcast  (default = HI (1.42 GHz)
+# self.bandwidth - bandwidth of broadcast   (default = 1% of 1.42 GHz)
 # self.openingangle - opening angle of broadcast
-# self.solidangle - solid angle of broadcast
+# self.solidangle - solid angle of broadcast  (default = 4pi, i.e. isotropic
 # self.n - direction vector of broadcast (Vector3D)
 
-# self.power - broadcast power
+# self.power - broadcast power                  (default = ?)
 # self.eirp - effective isotropic radiated power
 # self.polarisation - broadcast polarisation
 # self.tbegin - broadcast beginning time
@@ -50,7 +50,7 @@ c = 2.99e8 # speed of light in ms-1
 
 class Transmitter(Parent):
 
-    def __init__(self,position=None, velocity=None, strategy=None, direction_vector=None, openangle=None, starposition=None, starvelocity=None,starmass=None, semimajoraxis=None, inc=None, mean_anomaly=None, freq=None,band=None, solidangle=None, power=None, polarisation=None, tbegin=None, tend=None, pulseduration=None,pulseinterval=None):
+    def __init__(self,position=None, velocity=None, strategy=None, direction_vector=None, openangle=None, starposition=None, starvelocity=None,starmass=None, semimajoraxis=None, inc=None, mean_anomaly=None, freq=1.420e9,band=1.420e7, solidangle=fourpi, power=None, polarisation=None, tbegin=None, tend=None, pulseduration=None,pulseinterval=0.0):
         
         Parent.__init__(self, position, velocity, strategy, direction_vector, openangle, starposition, starvelocity,starmass, semimajoraxis, inc, mean_anomaly)
         
