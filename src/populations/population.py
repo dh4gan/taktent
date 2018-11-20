@@ -24,6 +24,7 @@ import agents.vector as vector
 from numpy import zeros
 import matplotlib.pyplot as plt
 
+from numpy import round
 from numpy.random import random
 
 class Population:
@@ -133,6 +134,15 @@ class Population:
         '''Set time to zero, and ensure all Agents in population are correctly up to date'''
         self.time = 0.0
         self.update_agents()
+    
+    
+    def generate_skymaps(self):
+        """Generate a map of the sky as seen by every observer"""
+    
+        for agent in self.agents:
+            if(agent.type=="Observer"):
+                agent.generate_skymap(self.time, self.agents)
+    
 
     def conduct_observations(self,time,dt):
         """Loop through all Observers and attempt to observe all Transmitters"""
@@ -165,8 +175,8 @@ class Population:
             # If actively transmitting/receiving, plot transmission/reception beam
             if(agent.active): ax1.add_patch(wedge)
 
-        # Add time to plots TODO
-        #ax1.annotate(self.time)
+        # Add time to plots
+        ax1.text(0.9, 0.9,'t = '+str(round(self.time,2))+' yr', bbox=dict(edgecolor='black', facecolor='none'), horizontalalignment='center', verticalalignment='center', transform = ax1.transAxes)
         
         
         if(filename==None):

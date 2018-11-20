@@ -69,6 +69,8 @@ dt = 0.1
 # Initialise population ready for run
 popn.initialise()
 
+popn.generate_skymaps()
+
 # Test run multiple steps
 for i in range(nsteps):
 

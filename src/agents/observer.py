@@ -32,7 +32,8 @@
 # skymap - generate a field of view image along observer's current target vector
 
 from agents.agent import Agent as Parent
-from numpy import sin,cos, arccos, pi
+from numpy import sin,cos, arccos, pi, arctan2, round
+import matplotlib.pyplot as plt
 
 class Observer(Parent):
     
@@ -128,6 +129,37 @@ class Observer(Parent):
         self.detect[transmitter.ID] = detected
 
         return detected
+
+    def generate_skymap(self, time, agentlist):
+        """Given a list of agents, produces a skymap"""
+
+        # Skymap - plane with normal=self.n
+
+        fig1 = plt.figure()
+        ax1 = fig1.add_subplot(111)
+
+        for agent in agentlist:
+            # If self is in the list, don't plot!
+            if agent.ID==self.ID: continue
+
+            # Distance between self and agent
+            distance = self.position.subtract(agent.position).mag()
+            
+            # Get x,y co-ordinates on plane via projection
+            projected_position = agent.position.subtract(self.n.scalarmult(agent.position.dot(self.n)))
+
+            # Angular co-ordinates found via trig
+            theta_x = arctan2(projected_position.x, distance)
+            theta_y = arctan2(projected_position.x, distance)
+
+            ax1.scatter(theta_x,theta_y, color = agent.colour, s=50)
+        ax1.text(0.9, 0.9,'t = '+str(round(time,2))+' yr', bbox=dict(edgecolor='black', facecolor='none'), horizontalalignment='center', verticalalignment='center', transform = ax1.transAxes)
+        outputfile = "skymap_"+self.ID[0:4]+"_time_"+str(round(time,2))+".png"
+        fig1.savefig(outputfile)
+        plt.close()
+
+
+
 
   
 
