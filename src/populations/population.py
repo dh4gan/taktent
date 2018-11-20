@@ -34,6 +34,9 @@ class Population:
         self.agents = []
         self.time = time
         self.dt = dt
+    
+        self.ndetect = []
+    
 
     def add_agent(self, agent):
         """add Agent object to Population"""
@@ -134,7 +137,7 @@ class Population:
     def conduct_observations(self,time,dt):
         """Loop through all Observers and attempt to observe all Transmitters"""
 
-        success = zeros((self.nagents,self.nagents))
+        self.success = zeros((self.nagents,self.nagents))
         
         for i in range(self.nagents):
             
@@ -146,9 +149,7 @@ class Population:
                     if self.agents[j].type=="Transmitter":
                         observed = self.agents[i].observe_transmitter(time,dt,self.agents[j])
                     if(observed):
-                            success[i,j]=1
-
-        return success
+                            self.success[i,j]=1
 
     def plot(self, markersize, wedge_length,xmax,ymax, filename=None):
         """Plot all agents in the system"""
@@ -172,5 +173,7 @@ class Population:
             plt.show()
         else:
             fig1.savefig(filename)
+
+        plt.close()
 
 
