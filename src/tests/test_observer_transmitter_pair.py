@@ -1,3 +1,6 @@
+import sys
+sys.path.append('..')
+
 from agents import *
 from populations.population import *
 from strategies import *
