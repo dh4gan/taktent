@@ -43,10 +43,10 @@ pc_yr_to_ms = 3.08e16/3.15e7
 
 class Observer(Parent):
     
-    def __init__(self,position=zero_vector, velocity=zero_vector, strategy=None, direction_vector=zero_vector, openingangle=piby2, starposition=zero_vector, starvelocity=zero_vector, starmass=1.0, semimaj=1.0, inc=0.0, mean_anomaly=0.0, longascend=0.0, sensitivity=None, nu_min=1.0e9, nu_max=2.0e9, nchannels=1.0e6):
+    def __init__(self,position=zero_vector, velocity=zero_vector, strategy=None, direction_vector=zero_vector, openingangle=piby2, starposition=zero_vector, starvelocity=zero_vector, starmass=1.0, semimajoraxis=1.0, inclination=0.0, longascend=0.0,mean_anomaly=0.0, sensitivity=None, nu_min=1.0e9, nu_max=2.0e9, nchannels=1.0e6):
         
         """Initialises an Observer object"""
-        Parent.__init__(self, position, velocity, strategy, direction_vector, openingangle, starposition, starvelocity,starmass, semimaj, inc, longascend, mean_anomaly)
+        Parent.__init__(self, position, velocity, strategy, direction_vector, openingangle, starposition, starvelocity,starmass, semimajoraxis, inclination, longascend, mean_anomaly)
         
         self.type = "Observer"
         #self.success_colour = "#377eb8"
@@ -93,9 +93,11 @@ class Observer(Parent):
 
         self.colour = self.fail_colour
         
+        
         # Is transmitter beam illuminating observer?
         separation = self.position.subtract(transmitter.position)
         unitsep = separation.unit()
+
 
         nt_dot_r = transmitter.n.dot(unitsep)
         observer_illuminated = arccos(nt_dot_r) < transmitter.openingangle
@@ -123,14 +125,13 @@ class Observer(Parent):
         freqmin = transmitter.nu -0.5*transmitter.bandwidth + delta_freq
         freqmax = transmitter.nu +0.5*transmitter.bandwidth + delta_freq
 
-
         in_frequency_range = False
+        
         if(self.nu_min==None or self.nu_max==None):
             in_frequency_range = True
         else:
             in_frequency_range = freqmin <=self.nu_max and self.nu_min <=freqmax
 
-        print (in_frequency_range, freqmin/1.0e9, freqmax/1.0e9, self.nu_min/1.0e9, self.nu_max/1.0e9)
         detected = observer_illuminated and in_observer_field and signal_powerful_enough and in_frequency_range
         
         if(detected):
@@ -145,7 +146,6 @@ class Observer(Parent):
 
     def set_colour(self):
     
-        print (True in self.detect.values())
         if True in self.detect.values():
             self.colour = self.success_colour
         else:

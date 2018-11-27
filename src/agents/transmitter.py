@@ -55,16 +55,16 @@ zero_vector = Vector3D(0.0,0.0,0.0)
 
 class Transmitter(Parent):
 
-    def __init__(self,position=zero_vector, velocity=zero_vector, strategy=None, direction_vector=zero_vector, openangle=twopi, starposition=zero_vector, starvelocity=zero_vector,starmass=1.0, semimajoraxis=1.0, inc=0.0, mean_anomaly=0.0, longascend = 0.0, freq=1.420e9,band=1.420e7, solidangle=fourpi, power=None, polarisation=None, tbegin=None, tend=None, pulseduration=None,pulseinterval=0.0):
+    def __init__(self,position=zero_vector, velocity=zero_vector, strategy=None, direction_vector=zero_vector, openangle=twopi, starposition=zero_vector, starvelocity=zero_vector,starmass=1.0, semimajoraxis=1.0, inclination=0.0, longascend = 0.0, mean_anomaly=0.0,  nu=1.420e9,bandwidth=1.420e7, solidangle=fourpi, power=None, polarisation=None, tbegin=None, tend=None, pulseduration=None,pulseinterval=0.0):
         
-        Parent.__init__(self, position, velocity, strategy, direction_vector, openangle, starposition, starvelocity,starmass, semimajoraxis, inc, mean_anomaly)
+        Parent.__init__(self, position, velocity, strategy, direction_vector, openangle, starposition, starvelocity,starmass, semimajoraxis, inclination,longascend, mean_anomaly)
         
         self.type="Transmitter"
         self.success_colour = "green"
         self.fail_colour = "gray"
         
-        self.nu = freq
-        self.bandwidth = band
+        self.nu = nu
+        self.bandwidth = bandwidth
         self.solidangle = solidangle
         self.power = power
         self.polarisation = polarisation
@@ -114,7 +114,6 @@ class Transmitter(Parent):
 
     def set_colour(self):
     
-        print (True in self.detected.values())
         if True in self.detected.values():
             self.colour = self.success_colour
         else:

@@ -38,7 +38,7 @@ zero_vector = Vector3D(0.0,0.0,0.0)
 
 class Agent:
     
-    def __init__(self, position=zero_vector, velocity=zero_vector,strategy=None,direction_vector=zero_vector, openingangle=piby2,starposition=zero_vector,starvelocity=zero_vector,starmass=1.0,semimajoraxis=1.0,inc=0.0, longascend = 0.0, mean_anomaly=0.0):
+    def __init__(self, position=zero_vector, velocity=zero_vector,strategy=None,direction_vector=zero_vector, openingangle=piby2,starposition=zero_vector,starvelocity=zero_vector,starmass=1.0,semimajoraxis=1.0,inclination=0.0, longascend = 0.0, mean_anomaly=0.0):
         """Defines a generic Agent in the simulation"""
     
         self.type = "Agent"
@@ -56,7 +56,7 @@ class Agent:
         self.starvelocity = starvelocity
         self.starmass = starmass
         self.semimajoraxis = semimajoraxis
-        self.inclination = inc
+        self.inclination = inclination
         self.longascend = longascend
         self.mean_anomaly = mean_anomaly
         
@@ -126,14 +126,21 @@ class Agent:
         self.star_velocity = Vector3D(vdisp*(-1.0+2.0*random()), vdisp*(-1.0+2.0*random()), vdisp*(-1.0+2.0*random()))
     
 
-    def sample_random_sphere(self, seed=-45, rmin = 10.0, rmax = 20.0, vdisp=0.1):
+    def sample_random_sphere(self, seed=-45, rmin = 10.0, rmax = 20.0, vdisp=0.0, flatsphere=True):
     
         r = rmin+ (rmax-rmin)*random()
         theta = pi*random()
         phi = 2.0*pi*random()
         
-        self.starposition = Vector3D(r*sin(theta)*cos(phi), r*sin(theta)*sin(phi), r*cos(theta))
-        self.star_velocity = Vector3D(vdisp*(-1.0+2.0*random()), vdisp*(-1.0+2.0*random()), vdisp*(-1.0+2.0*random()))
+        if(flatsphere):
+            self.starposition = Vector3D(r*cos(phi), r*sin(phi),0.0)
+            self.starvelocity = Vector3D(vdisp*(-1.0+2.0*random()), vdisp*(-1.0+2.0*random()), 0.0)        
+        else:
+            self.starposition = Vector3D(r*sin(theta)*cos(phi), r*sin(theta)*sin(phi), r*cos(theta))
+            self.starvelocity = Vector3D(vdisp*(-1.0+2.0*random()), vdisp*(-1.0+2.0*random()), vdisp*(-1.0+2.0*random()))
+        
+        self.position = self.starposition
+        self.velocity = self.starvelocity
                 
 
     def sample_GHZ(self):

@@ -44,13 +44,13 @@ class Population:
         self.nagents = len(self.agents)
     
     
-    def generate_identical_transmitters(self, N_transmitters, strategy,semimajoraxis,inc,mean_anomaly, longascend,freq,band,solidangle,power,polarisation=None,tbegin=None,tend=None,pulseduration=None,pulseinterval=None,spatial_distribution=None):
+    def generate_identical_transmitters(self, N_transmitters, strategy,semimajoraxis,inclination,longascend, mean_anomaly, nu, bandwidth, solidangle, power, polarisation=None, tbegin=None, tend=None, pulseduration=None, pulseinterval=None, spatial_distribution=None):
         '''Generate a population of identical transmitters according to some spatial distribution'''
         
         
         for i in range(N_transmitters):
             # Define a transmitter object with fixed broadcast parameters but no initial position
-            agent = transmitter.Transmitter(freq=freq,strategy=strategy,band=band,solidangle=solidangle,power=power,polarisation=polarisation,tbegin=tbegin,tend=tend,pulseduration=pulseduration,pulseinterval=pulseinterval)
+            agent = transmitter.Transmitter(semimajoraxis = semimajoraxis, inclination=inclination, longascend=longascend, mean_anomaly=mean_anomaly, nu=nu, strategy=strategy, bandwidth=bandwidth, solidangle=solidangle, power=power, polarisation=polarisation, tbegin=tbegin, tend=tend, pulseduration=pulseduration, pulseinterval=pulseinterval)
         
 
             # Set its position and velocity according to a random sampling
@@ -73,8 +73,7 @@ class Population:
     def generate_observer_at_origin(self,observe_direction,openangle,strategy):
         """Place a single observer object at co-ordinates (0.0,0.0,0.0)"""
         
-        
-        self.add_agent(observer.Observer(strategy=strategy, direction_vector=observe_direction, openingangle=openangle,semimaj=None))
+        self.add_agent(observer.Observer(strategy=strategy, direction_vector=observe_direction, openingangle=openangle,semimajoraxis=None))
     
         return self.agents[-1].ID
 
@@ -132,7 +131,7 @@ class Population:
                 
                     if self.agents[j].type=="Transmitter":
                         observed = self.agents[i].observe_transmitter(self.time,self.dt,self.agents[j])
-                    if(observed):
+                        if(observed):
                             self.success[i,j]=1
 
 
