@@ -60,7 +60,8 @@ class Transmitter(Parent):
         Parent.__init__(self, position, velocity, strategy, direction_vector, openangle, starposition, starvelocity,starmass, semimajoraxis, inc, mean_anomaly)
         
         self.type="Transmitter"
-        self.colour = "#4daf4a"
+        self.success_colour = "green"
+        self.fail_colour = "gray"
         
         self.nu = freq
         self.bandwidth = band
@@ -76,6 +77,8 @@ class Transmitter(Parent):
         
         # opening angle = fraction of solid angle (opening angle = pi if solid angle = 4 pi)
         self.openingangle = 0.25*self.solidangle
+        
+        self.detected ={} # dictionary tracking detections
         
         self.calc_eirp()
 
@@ -107,6 +110,15 @@ class Transmitter(Parent):
 
             # Pulse is on if remainder of nperiods is less than onfrac
             self.active = mod(nperiods) < onfrac
+
+
+    def set_colour(self):
+    
+        print (True in self.detected.values())
+        if True in self.detected.values():
+            self.colour = self.success_colour
+        else:
+            self.colour = self.fail_colour
 
 
 

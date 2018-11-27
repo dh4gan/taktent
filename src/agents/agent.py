@@ -23,6 +23,8 @@
 # plot - return patches suitable for a matplotlib plot
 
 from numpy import sin,cos,pi,sqrt, arctan2
+from numpy.random import random
+
 from matplotlib.patches import Circle, Wedge
 from uuid import uuid4
 from agents.vector import Vector3D
@@ -114,6 +116,29 @@ class Agent:
 
         self.velocity = self.velocity.scalarmult(velmag)
         self.velocity = self.velocity.add(self.starvelocity)
+
+
+    def sample_random(self,seed=-45, xmin=-10.0, xmax=10.0, ymin=-10.0, ymax=10.0, zmin=0.0, zmax=0.0, vdisp=0.1):
+        """Return randomly sampled position and velocity vectors (vmag = 0.1 posmag)"""
+        
+        self.starposition = Vector3D(xmin+ (xmax-xmin)*random(), ymin+(ymax-ymin)*random(), zmin+ (zmax-zmin)*random())
+        
+        self.star_velocity = Vector3D(vdisp*(-1.0+2.0*random()), vdisp*(-1.0+2.0*random()), vdisp*(-1.0+2.0*random()))
+    
+
+    def sample_random_sphere(self, seed=-45, rmin = 10.0, rmax = 20.0, vdisp=0.1):
+    
+        r = rmin+ (rmax-rmin)*random()
+        theta = pi*random()
+        phi = 2.0*pi*random()
+        
+        self.starposition = Vector3D(r*sin(theta)*cos(phi), r*sin(theta)*sin(phi), r*cos(theta))
+        self.star_velocity = Vector3D(vdisp*(-1.0+2.0*random()), vdisp*(-1.0+2.0*random()), vdisp*(-1.0+2.0*random()))
+                
+
+    def sample_GHZ(self):
+        '''Returns position and velocity vector of a star in the GHZ'''
+        # TODO copy in GHZ sampler from C++ methods
 
     def plot(self,radius,wedge_length):
         """return matplotlib.patches for agent's position, and target vector (with opening angle)"""

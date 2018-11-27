@@ -135,11 +135,23 @@ class Observer(Parent):
         
         if(detected):
             self.colour = self.success_colour
+            transmitter.colour = transmitter.success_colour
         
         self.detect[transmitter.ID] = detected
+        transmitter.detected[self.ID] = detected
 
         return detected
 
+
+    def set_colour(self):
+    
+        print (True in self.detect.values())
+        if True in self.detect.values():
+            self.colour = self.success_colour
+        else:
+            self.colour = self.fail_colour
+    
+    
     def generate_skymap(self, time, agentlist):
         """Given a list of agents, produces a skymap"""
 
