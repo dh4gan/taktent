@@ -32,14 +32,21 @@
 # skymap - generate a field of view image along observer's current target vector
 
 from agents.agent import Agent as Parent
-from numpy import sin,cos, arccos, pi, arctan2, round
+from numpy import sin,cos, arccos, pi, arctan2, round, amin,amax
+from agents.vector import Vector3D
 import matplotlib.pyplot as plt
+
+piby2 = 0.5*pi
+zero_vector = Vector3D(0.0,0.0,0.0)
+
+pc_yr_to_ms = 3.08e16/3.15e7
 
 class Observer(Parent):
     
-    def __init__(self,position=None, velocity=None, strategy=None, direction_vector=None, openingangle=None, starposition=None, starvelocity=None, starmass=None, semimaj=None, inc=None, mean_anomaly=None, sensitivity=None, nu_min=None, nu_max=None, nchannels=None):
+    def __init__(self,position=zero_vector, velocity=zero_vector, strategy=None, direction_vector=zero_vector, openingangle=piby2, starposition=zero_vector, starvelocity=zero_vector, starmass=1.0, semimaj=1.0, inc=0.0, mean_anomaly=0.0, longascend=0.0, sensitivity=None, nu_min=1.0e9, nu_max=2.0e9, nchannels=1.0e6):
+        
         """Initialises an Observer object"""
-        Parent.__init__(self, position, velocity, strategy, direction_vector, openingangle, starposition, starvelocity,starmass, semimaj, inc, mean_anomaly)
+        Parent.__init__(self, position, velocity, strategy, direction_vector, openingangle, starposition, starvelocity,starmass, semimaj, inc, longascend, mean_anomaly)
         
         self.type = "Observer"
         #self.success_colour = "#377eb8"
@@ -69,15 +76,15 @@ class Observer(Parent):
     
         # Calculate relative velocity
         relative_velocity = transmitter.velocity.subtract(self.velocity)
-    
         relative_position = transmitter.position.subtract(self.position)
     
-        # radial velocity
+        # radial velocity (in pc yr-1)
         radial_velocity = relative_velocity.dot(relative_position)
+        radial_velocity = radial_velocity*pc_yr_to_ms
     
         # frequency shift
         delta_freq = -transmitter.nu*radial_velocity/transmitter.broadcastspeed
-
+ 
         return delta_freq
     
 
@@ -116,12 +123,15 @@ class Observer(Parent):
         freqmin = transmitter.nu -0.5*transmitter.bandwidth + delta_freq
         freqmax = transmitter.nu +0.5*transmitter.bandwidth + delta_freq
 
+
+        in_frequency_range = False
         if(self.nu_min==None or self.nu_max==None):
             in_frequency_range = True
         else:
-            in_frequency_range = freqmin> self.nu_min or freqmax < self.nu_max
+            in_frequency_range = freqmin <=self.nu_max and self.nu_min <=freqmax
 
-        detected = observer_illuminated and in_observer_field and signal_powerful_enough
+        print (in_frequency_range, freqmin/1.0e9, freqmax/1.0e9, self.nu_min/1.0e9, self.nu_max/1.0e9)
+        detected = observer_illuminated and in_observer_field and signal_powerful_enough and in_frequency_range
         
         if(detected):
             self.colour = self.success_colour

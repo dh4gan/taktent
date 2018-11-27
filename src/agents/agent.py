@@ -25,15 +25,18 @@
 from numpy import sin,cos,pi,sqrt, arctan2
 from matplotlib.patches import Circle, Wedge
 from uuid import uuid4
+from agents.vector import Vector3D
 
 piby2 = 0.5*pi
 
+GmsolAU = 4.0*pi*pi
 AU_to_pc = 1.0/206265.0
 AUyr_to_kms = 1.496e8/(3.15e7)
+zero_vector = Vector3D(0.0,0.0,0.0)
 
 class Agent:
     
-    def __init__(self, position=None,velocity=None,strategy=None,direction_vector=None, openingangle=None,starposition=None,starvelocity=None,starmass=None,semimajoraxis=None,inc=None,mean_anomaly=None):
+    def __init__(self, position=zero_vector, velocity=zero_vector,strategy=None,direction_vector=zero_vector, openingangle=piby2,starposition=zero_vector,starvelocity=zero_vector,starmass=1.0,semimajoraxis=1.0,inc=0.0, longascend = 0.0, mean_anomaly=0.0):
         """Defines a generic Agent in the simulation"""
     
         self.type = "Agent"
@@ -52,14 +55,16 @@ class Agent:
         self.starmass = starmass
         self.semimajoraxis = semimajoraxis
         self.inclination = inc
+        self.longascend = longascend
         self.mean_anomaly = mean_anomaly
         
         self.active = True
     
-        try:
-            self.period = sqrt(self.semimajoraxis*self.semimajoraxis*self.semimajoraxis/self.starmass)
-        except ZeroDivisionError:
-            self.period = 0.0
+        if self.semimajoraxis !=None:
+            try:
+                self.period = sqrt(self.semimajoraxis*self.semimajoraxis*self.semimajoraxis/(self.starmass))
+            except ZeroDivisionError:
+                self.period = 0.0
 
 
     def define_strategy(self,strategy):
@@ -77,30 +82,35 @@ class Agent:
 
     def orbit(self,time,dt):
         """Moves agent in orbit around host star"""
-
+        
         # If orbit not defined, then skip
         if(self.mean_anomaly==None or self.inclination==None or self.semimajoraxis==None):
             return
         
         inc = piby2 - self.inclination
 
-        self.mean_anomaly = self.mean_anomaly + self.period*dt
+        self.mean_anomaly = self.mean_anomaly + 2.0*pi*self.period*dt
 
-        self.position.x = self.semimajoraxis*sin(inc)*cos(self.mean_anomaly)
-        self.position.y = self.semimajoraxis*sin(inc)*sin(self.mean_anomaly)
-        self.position.z = self.semimajoraxis*cos(inc)
+        self.position.x = cos(self.mean_anomaly)
+        self.position.y = sin(self.mean_anomaly)
+        self.position.z = 0.0
         
+        self.position = self.position.rotate_x(self.inclination)
+        self.position = self.position.rotate_z(self.longascend)
         
-        self.position = self.position.scalarmult(AU_to_pc)
+        self.position = self.position.scalarmult(AU_to_pc)  # positions in pc
         self.position = self.position.add(self.starposition)
         
         unitr = self.position.unit()
 
-        velmag = sqrt(self.starmass/self.semimajoraxis)*AUyr_to_kms
+        velmag = sqrt(GmsolAU*self.starmass/self.semimajoraxis)*AU_to_pc # velocity in pc yr-1
 
-        self.velocity.x = cos(inc)*cos(self.mean_anomaly)
-        self.velocity.y = cos(inc)*sin(self.mean_anomaly)
-        self.velocity.z = -sin(inc)
+        self.velocity.x = -sin(self.mean_anomaly)
+        self.velocity.y = cos(self.mean_anomaly)
+        self.velocity.z = 0.0
+        
+        self.velocity = self.velocity.rotate_x(self.inclination)
+        self.velocity = self.velocity.rotate_z(self.longascend)
 
         self.velocity = self.velocity.scalarmult(velmag)
         self.velocity = self.velocity.add(self.starvelocity)

@@ -44,13 +44,18 @@
 
 from numpy import pi,mod,arctan2
 from agents.agent import Agent as Parent
+from agents.vector import Vector3D
 
 fourpi = 4.0*pi
+twopi = 2.0*pi
+piby2 = 0.5*pi
 c = 2.99e8 # speed of light in ms-1
+
+zero_vector = Vector3D(0.0,0.0,0.0)
 
 class Transmitter(Parent):
 
-    def __init__(self,position=None, velocity=None, strategy=None, direction_vector=None, openangle=None, starposition=None, starvelocity=None,starmass=None, semimajoraxis=None, inc=None, mean_anomaly=None, freq=1.420e9,band=1.420e7, solidangle=fourpi, power=None, polarisation=None, tbegin=None, tend=None, pulseduration=None,pulseinterval=0.0):
+    def __init__(self,position=zero_vector, velocity=zero_vector, strategy=None, direction_vector=zero_vector, openangle=twopi, starposition=zero_vector, starvelocity=zero_vector,starmass=1.0, semimajoraxis=1.0, inc=0.0, mean_anomaly=0.0, longascend = 0.0, freq=1.420e9,band=1.420e7, solidangle=fourpi, power=None, polarisation=None, tbegin=None, tend=None, pulseduration=None,pulseinterval=0.0):
         
         Parent.__init__(self, position, velocity, strategy, direction_vector, openangle, starposition, starvelocity,starmass, semimajoraxis, inc, mean_anomaly)
         

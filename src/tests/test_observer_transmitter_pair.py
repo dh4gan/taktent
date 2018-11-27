@@ -55,7 +55,7 @@ strat_obs = strategy.Strategy()
 
 popn = Population(time,dt)
 
-popn.generate_observer_at_origin(observer_dir,openangle,strat_obs)
+observerID = popn.generate_observer_at_origin(observer_dir,openangle,strat_obs)
 popn.add_agent(tran)
 
 
@@ -78,7 +78,7 @@ popn.generate_skymaps()
 for i in range(nsteps):
 
     print ("Time: ",popn.time)
-    popn.conduct_observations(time,dt)
+    popn.conduct_observations()
 
     outputfile = 'population_'+str(i).zfill(3)+'.png'
     popn.plot(markersize,wedge_length, xmax,ymax, outputfile)

@@ -95,14 +95,13 @@ class Population:
         self.add_agent(agent)
 
 
-
-
-
     def generate_observer_at_origin(self,observe_direction,openangle,strategy):
         """Place a single observer object at co-ordinates (0.0,0.0,0.0)"""
-        origin = vector.Vector3D(0.0,0.0,0.0)
         
-        self.add_agent(observer.Observer(origin, origin, strategy, observe_direction, openangle, origin, 0.0, 0.0, 0.0))
+        
+        self.add_agent(observer.Observer(strategy=strategy, direction_vector=observe_direction, openingangle=openangle,semimaj=None))
+    
+        return self.agents[-1].ID
 
 
     def define_agent_strategies(self,strategy,agentType):
@@ -144,7 +143,7 @@ class Population:
                 agent.generate_skymap(self.time, self.agents)
     
 
-    def conduct_observations(self,time,dt):
+    def conduct_observations(self):
         """Loop through all Observers and attempt to observe all Transmitters"""
 
         self.success = zeros((self.nagents,self.nagents))
@@ -157,7 +156,7 @@ class Population:
                     if (i==j): continue
                 
                     if self.agents[j].type=="Transmitter":
-                        observed = self.agents[i].observe_transmitter(time,dt,self.agents[j])
+                        observed = self.agents[i].observe_transmitter(self.time,self.dt,self.agents[j])
                     if(observed):
                             self.success[i,j]=1
 

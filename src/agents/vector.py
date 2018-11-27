@@ -16,6 +16,7 @@
 # cross - calculate vector product
 
 import math
+from numpy import cos,sin
 
 class Vector3D(object):
     """3D cartesian vector object"""
@@ -81,6 +82,41 @@ class Vector3D(object):
         zcross = self.x*other.y - self.y*other.x
 
         return Vector3D(xcross,ycross,zcross)
+
+
+# Rotate about x-axis
+
+    def rotate_x(self, angle):
+        """Returns vector rotation by angle radians around x axis"""
+
+        xnew = self.x
+        ynew = self.y*cos(angle) - self.z*sin(angle)
+        znew = self.y*sin(angle) + self.z*cos(angle)
+
+        return Vector3D(xnew, ynew, znew)
+
+# Rotate about y-axis
+
+    def rotate_y(self, angle):
+        """Returns vector rotation by angle radians around y axis"""
+        
+        xnew = self.x*cos(angle) + self.y*sin(angle)
+        ynew = self.y
+        znew = -self.x*sin(angle) + self.z*cos(angle)
+        
+        return Vector3D(xnew, ynew, znew)
+
+# Rotate about z-axis
+
+    def rotate_z(self, angle):
+        """Returns vector rotation by angle radians around z axis"""
+        
+        xnew = self.x*cos(angle) - self.y*sin(angle)
+        ynew = self.x*sin(angle) + self.y*cos(angle)
+        znew = self.z
+        
+        return Vector3D(xnew, ynew, znew)
+
 
     
     
