@@ -13,6 +13,7 @@ class Strategy:
     
         self.ID = str(next(newID)).zfill(3)
         self.current_target = None
+    
 
     def update(self, time,dt):
         '''Update the strategy to its current time'''

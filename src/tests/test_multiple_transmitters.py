@@ -15,7 +15,15 @@ time = 0
 dt = 0.1
 nsteps = 100
 
-
+# function to define a scanning strategy (observer or transmitter)
+def scan_strategy(time, tinit=0.0, period_xy=12.0, period_yz=None, phase_xy=0.0, phase_yz=None):
+    
+    omega = 2.0*pi/period_xy
+    x_coord = cos(omega*(time-tinit)+phase_xy)
+    y_coord = sin(omega*(time-tinit)+phase_xy)
+    z_coord = 0.0
+    
+    return vector.Vector3D(x_coord, y_coord, z_coord).unit()
 
 #
 # 1. Define Observer properties
@@ -23,18 +31,12 @@ nsteps = 100
 
 observer_dir = vector.Vector3D(1.0,1.0,0.0).unit()
 
-# function to define observer's target vector
-def observing_strategy(time, tinit=0.0, period=12.0):
-    
-    omega = 2.0*pi/period
-    x_coord = cos(omega*(time-tinit))
-    y_coord = sin(omega*(time-tinit))
-    z_coord = 0.0
-    
-    return vector.Vector3D(x_coord, y_coord, z_coord).unit()
+
 
 # scanningStrategy object
-strat_obs = scanningStrategy.scanningStrategy(observing_strategy)
+
+observe_scanperiod = 10.0
+strat_obs = scanningStrategy.scanningStrategy(scan_strategy, tinit=0.0, period_xy = observe_scanperiod, phase_xy=0.0)
 
 openangle = 0.1*pi
 
@@ -56,20 +58,10 @@ popn.agents[-1].nu_max = 1.0e11
 # 3. Define properties of transmitter population
 #
 
-# Define a scanning transmitter strategy:
-
-# function to define transmitter target vector
-def transmit_strategy(time, tinit=0.0, period=12.0):
-
-    omega = 2.0*pi/period
-    x_coord = cos(omega*(time-tinit))
-    y_coord = sin(omega*(time-tinit))
-    z_coord = 0.0
-
-    return vector.Vector3D(x_coord, y_coord, z_coord).unit()
-
-# scanningStrategy object
-strat = scanningStrategy.scanningStrategy(transmit_strategy)
+# Use same scanning strategy, but with its own period
+scanperiod = 10.0
+scanphase = 1.7*pi
+strat = scanningStrategy.scanningStrategy(scan_strategy, tinit = 0.0, period_xy=scanperiod, phase_xy = scanphase)
 
 # Have ten transmitters with common broadcast properties
 # But different spatial locations
@@ -83,7 +75,7 @@ longascend = 0.0
 freq = 1.0e10
 band = 1.0e10
 
-solidangle = 4.0*pi
+solidangle = pi
 power = 100.0
 
 popn.generate_identical_transmitters(N_transmitters=N_transmitters, strategy=strat,semimajoraxis =None, inclination=None, mean_anomaly=None, longascend=None, nu=freq, bandwidth=band, solidangle=solidangle, power=power, spatial_distribution="random_sphere")
@@ -110,7 +102,7 @@ for i in range(nsteps):
     print ("Time: ",popn.time)
     popn.conduct_observations()
     
-    outputfile = 'population_'+str(i).zfill(3)+'.png'
+    outputfile = 'xy_'+str(i).zfill(3)+'.png'
     popn.plot(markersize,wedge_length, xmax,ymax, outputfile)
     popn.update()
 

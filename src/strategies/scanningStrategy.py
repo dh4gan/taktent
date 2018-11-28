@@ -19,12 +19,17 @@ from strategies.strategy import Strategy as Parent
 
 class scanningStrategy(Parent):
 
-    def __init__(self, targetfunction=None):
+    def __init__(self, targetfunction=None, period_xy=None, period_yz=None, phase_xy = None, phase_yz = None, tinit=None):
         Parent.__init__(self)
         
         self.targetfunction = targetfunction
+        self.period_xy = period_xy
+        self.period_yz = period_yz
+        
+        self.phase_xy = phase_xy
+        self.phase_yz = phase_yz
     
-    
+        self.tinit = tinit
     
     
     def update(self,time,dt):
@@ -32,6 +37,6 @@ class scanningStrategy(Parent):
 
         Parent.update(self,time,dt)
         
-        self.current_target= self.targetfunction(time)
+        self.current_target= self.targetfunction(time, tinit = self.tinit, period_xy = self.period_xy, period_yz = self.period_yz, phase_xy=self.phase_xy, phase_yz=self.phase_yz)
 
 

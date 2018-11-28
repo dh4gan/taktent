@@ -13,6 +13,13 @@ from populations.population import *
 from strategies import *
 from numpy import pi, cos, sin
 
+# Simulation timestep etc
+time = 0.0
+tmin = 0.0
+tmax = 20
+dt = 0.1
+
+nsteps = int((tmax-tmin)/dt)
 
 
 
@@ -33,9 +40,9 @@ power = 100.0
 # Define a scanning transmitter strategy:
 # First, function to define transmitter target vector (sweeps x-y plane with a given period)
 
-def transmit_strategy(time, tinit=0.0, period=12.0):
+def transmit_strategy(time, tinit=0.0, period_xy=12.0, period_yz=None):
 
-    omega = 2.0*pi/period
+    omega = 2.0*pi/period_xy
     x_coord = cos(omega*(time-tinit))
     y_coord = sin(omega*(time-tinit))
     z_coord = 0.0
@@ -44,7 +51,8 @@ def transmit_strategy(time, tinit=0.0, period=12.0):
 
 
 # Create scanningStrategy object
-strat = scanningStrategy.scanningStrategy(transmit_strategy)
+scanperiod = 5.0
+strat = scanningStrategy.scanningStrategy(transmit_strategy, tinit = 0.0, period_xy=scanperiod)
 
 
 # Create transmitter object
@@ -86,12 +94,7 @@ popn.generate_skymaps() # generate a skymap
 # 4. Run simulation
 #
 
-# Simulation timestep etc
-time = 0
-tmax = 20
-dt = 0.1
 
-nsteps = int(tmax-tmin)/dt)
 
 # Define plot limits
 markersize = 0.5
