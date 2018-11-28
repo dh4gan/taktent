@@ -17,6 +17,8 @@ time = 0
 dt = 0.1
 nsteps = 100
 
+ndetect_MCR = []
+
 # function to define a scanning strategy (observer or transmitter)
 def scan_strategy(time, tinit=0.0, period_xy=12.0, period_yz=None, phase_xy=0.0, phase_yz=None):
     
@@ -105,6 +107,8 @@ for irun in range(nruns):
 
 
     # Collect MCR data - what to collect?
+
+    ndetect_MCR.append(popn.ndetect)
 
 
 

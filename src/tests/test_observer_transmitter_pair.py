@@ -14,14 +14,9 @@ from strategies import *
 from numpy import pi, cos, sin
 
 # Simulation timestep etc
-time = 0.0
-tmin = 0.0
-tmax = 20
+tbegin = 0.0
+tend = 20
 dt = 0.1
-
-nsteps = int((tmax-tmin)/dt)
-
-
 
 #
 # 1. Define transmitter properties
@@ -40,7 +35,7 @@ power = 100.0
 # Define a scanning transmitter strategy:
 # First, function to define transmitter target vector (sweeps x-y plane with a given period)
 
-def transmit_strategy(time, tinit=0.0, period_xy=12.0, period_yz=None):
+def transmit_strategy(time, tinit=0.0, period_xy=12.0, period_yz=None, phase_xy = 0.0, phase_yz=None):
 
     omega = 2.0*pi/period_xy
     x_coord = cos(omega*(time-tinit))
@@ -52,7 +47,7 @@ def transmit_strategy(time, tinit=0.0, period_xy=12.0, period_yz=None):
 
 # Create scanningStrategy object
 scanperiod = 5.0
-strat = scanningStrategy.scanningStrategy(transmit_strategy, tinit = 0.0, period_xy=scanperiod)
+strat = scanningStrategy.scanningStrategy(transmit_strategy, tinit = 0.0, period_xy=scanperiod, phase_xy=0.0)
 
 
 # Create transmitter object
@@ -76,7 +71,7 @@ strat_obs = strategy.Strategy()
 # 3. Define Population object and create observer at origin
 #
 
-popn = Population(time,dt)
+popn = Population(tbegin,tend,dt)
 
 observerID = popn.generate_observer_at_origin(observer_dir,openangle,strat_obs)
 
@@ -102,7 +97,7 @@ wedge_length = 5.0
 xmax = 20
 ymax = 20
 
-for i in range(nsteps):
+for i in range(popn.nsteps):
 
     print ("Time: ",popn.time)
     popn.conduct_observations() # All observers attempt to observe transmitters
@@ -110,9 +105,14 @@ for i in range(nsteps):
     outputfile = 'xy_'+str(i).zfill(3)+'.png'
     # Plot observers and transmitters (x,y)
     popn.plot(markersize,wedge_length, xmax,ymax, outputfile)
-
+    
     # Update attributes of all agents in population
     popn.update()
+
+
+print (popn.ndetect)
+
+
 
 
 

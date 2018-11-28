@@ -11,9 +11,9 @@ from numpy import pi, cos, sin
 
 # test code imports key classes, makes a transmitter and an observer object, and plots them
 
-time = 0
+tbegin = 0
+tend = 20
 dt = 0.1
-nsteps = 100
 
 # function to define a scanning strategy (observer or transmitter)
 def scan_strategy(time, tinit=0.0, period_xy=12.0, period_yz=None, phase_xy=0.0, phase_yz=None):
@@ -45,7 +45,7 @@ openangle = 0.1*pi
 # 2. Define Population and create observer at origin
 #
 
-popn = Population(time,dt)
+popn = Population(tbegin,tend,dt)
 
 observerID = popn.generate_observer_at_origin(observer_dir,openangle,strat_obs)
 

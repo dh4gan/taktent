@@ -21,21 +21,25 @@
 import agents.observer as observer
 import agents.transmitter as transmitter
 import agents.vector as vector
-from numpy import zeros
+from numpy import zeros, sum, round
 import matplotlib.pyplot as plt
-
-from numpy import round
 
 class Population:
 
-    def __init__(self,time,dt):
+    def __init__(self,tbegin, tend, dt):
         """Constructor for a group of agents"""
 
         self.agents = []
-        self.time = time
+        
+        self.tbegin = tbegin
+        self.tend = tend
         self.dt = dt
-    
-        self.ndetect = []
+        self.time = tbegin
+        
+        self.nsteps = int((self.tend-self.tbegin)/self.dt)
+        self.istep = 0
+        
+        self.ndetect = zeros(self.nsteps)
     
 
     def add_agent(self, agent):
@@ -96,6 +100,7 @@ class Population:
     def update(self):
         self.update_agents()
         self.time = self.time+self.dt
+        self.istep = self.istep+1
     
     def update_agents(self):
         '''Update the properties of all Agent Objects in the Population'''
@@ -133,8 +138,9 @@ class Population:
                         observed = self.agents[i].observe_transmitter(self.time,self.dt,self.agents[j])
                         if(observed):
                             self.success[i,j]=1
-
-
+                            
+        self.ndetect[self.istep] = sum(self.success)
+        
         for i in range(self.nagents):
             self.agents[i].set_colour()
 
