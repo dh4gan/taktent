@@ -1,3 +1,6 @@
+# Test code produces a population of transmitters (with an observer at the origin)
+# and tests observer detection algorithms
+
 import sys
 sys.path.append('..')
 
@@ -12,15 +15,15 @@ time = 0
 dt = 0.1
 nsteps = 100
 
-# Define Population and create observer at origin
 
-popn = Population(time,dt)
 
-# Define Observer properties
+#
+# 1. Define Observer properties
+#
 
 observer_dir = vector.Vector3D(1.0,1.0,0.0).unit()
 
-# function to define transmitter target vector
+# function to define observer's target vector
 def observing_strategy(time, tinit=0.0, period=12.0):
     
     omega = 2.0*pi/period
@@ -35,20 +38,23 @@ strat_obs = scanningStrategy.scanningStrategy(observing_strategy)
 
 openangle = 0.1*pi
 
+
+#
+# 2. Define Population and create observer at origin
+#
+
+popn = Population(time,dt)
+
 observerID = popn.generate_observer_at_origin(observer_dir,openangle,strat_obs)
+
 
 popn.agents[-1].nu_min = 1.0e0
 popn.agents[-1].nu_max = 1.0e11
 
 
-
-# Define transmitter properties
-
-transmitter_pos = vector.Vector3D(10.0,0.0,0.0)
-transmitter_vel = vector.Vector3D(0.0,0.0,0.0)
-transmitter_dir = vector.Vector3D(0.0,1.0,0.0)
-
-
+#
+# 3. Define properties of transmitter population
+#
 
 # Define a scanning transmitter strategy:
 
@@ -64,6 +70,9 @@ def transmit_strategy(time, tinit=0.0, period=12.0):
 
 # scanningStrategy object
 strat = scanningStrategy.scanningStrategy(transmit_strategy)
+
+# Have ten transmitters with common broadcast properties
+# But different spatial locations
 
 N_transmitters=10
 
@@ -87,24 +96,25 @@ wedge_length = 2.0
 xmax = 20
 ymax = 20
 
-time = 0.0
-dt = 0.1
+# Simulation timestep etc
+popn.time = 0
+tmax = 20
+popn.dt = 0.1
 
 # Initialise population ready for run
 popn.initialise()
-
-popn.generate_skymaps()
 
 # Test run multiple steps
 for i in range(nsteps):
 
     print ("Time: ",popn.time)
     popn.conduct_observations()
-
+    
     outputfile = 'population_'+str(i).zfill(3)+'.png'
     popn.plot(markersize,wedge_length, xmax,ymax, outputfile)
     popn.update()
 
+    popn.generate_skymaps()
 
 
 

@@ -1,3 +1,10 @@
+#
+# Test code creates an observer and transmitter pair
+# Observer has a fixed pointing
+# Transmitter sweeps its beam with a given period
+# Simulation is plotted to file
+#
+
 import sys
 sys.path.append('..')
 
@@ -6,14 +13,12 @@ from populations.population import *
 from strategies import *
 from numpy import pi, cos, sin
 
-# test code imports key classes, makes a transmitter and an observer object, and plots them
 
-time = 0
-dt = 0.1
 
-nsteps = 100
 
-# Define transmitter properties
+#
+# 1. Define transmitter properties
+#
 
 transmitter_pos = vector.Vector3D(10.0,0.0,0.0)
 transmitter_vel = vector.Vector3D(0.0,0.0,0.0)
@@ -26,8 +31,8 @@ solidangle = pi
 power = 100.0
 
 # Define a scanning transmitter strategy:
+# First, function to define transmitter target vector (sweeps x-y plane with a given period)
 
-# function to define transmitter target vector
 def transmit_strategy(time, tinit=0.0, period=12.0):
 
     omega = 2.0*pi/period
@@ -37,51 +42,73 @@ def transmit_strategy(time, tinit=0.0, period=12.0):
 
     return vector.Vector3D(x_coord, y_coord, z_coord).unit()
 
-# scanningStrategy object
+
+# Create scanningStrategy object
 strat = scanningStrategy.scanningStrategy(transmit_strategy)
 
 
-
+# Create transmitter object
 tran = transmitter.Transmitter(position=transmitter_pos,velocity=transmitter_vel,strategy=strat,direction_vector=transmitter_dir,starposition=transmitter_pos.copy(), starvelocity = transmitter_vel.copy(),nu=freq,bandwidth=band,solidangle=solidangle,power=power)
 
 
-# Define Observer properties
+
+#
+# 2. Define Observer properties
+#
+
+
+# Observer points along x-direction
 
 observer_dir = vector.Vector3D(1.0,0.0,0.0).unit()
+
+# Blank strategy = pointing fixed
 strat_obs = strategy.Strategy()
 
-
-# Define Population and create observer at origin
+#
+# 3. Define Population object and create observer at origin
+#
 
 popn = Population(time,dt)
 
 observerID = popn.generate_observer_at_origin(observer_dir,openangle,strat_obs)
+
+# Add a single agent
 popn.add_agent(tran)
 
+# Initialise population ready for run
+popn.initialise()
+
+popn.generate_skymaps() # generate a skymap
+
+
+
+#
+# 4. Run simulation
+#
+
+# Simulation timestep etc
+time = 0
+tmax = 20
+dt = 0.1
+
+nsteps = int(tmax-tmin)/dt)
 
 # Define plot limits
-
 markersize = 0.5
 wedge_length = 5.0
 xmax = 20
 ymax = 20
 
-time = 0.0
-dt = 0.1
-
-# Initialise population ready for run
-popn.initialise()
-
-popn.generate_skymaps()
-
-# Test run multiple steps
 for i in range(nsteps):
 
     print ("Time: ",popn.time)
-    popn.conduct_observations()
+    popn.conduct_observations() # All observers attempt to observe transmitters
 
-    outputfile = 'population_'+str(i).zfill(3)+'.png'
+    outputfile = 'xy_'+str(i).zfill(3)+'.png'
+    # Plot observers and transmitters (x,y)
     popn.plot(markersize,wedge_length, xmax,ymax, outputfile)
+
+    # Update attributes of all agents in population
     popn.update()
 
 
