@@ -185,7 +185,7 @@ class Observer(Parent):
             ax1.scatter(theta_x,theta_y, color = agent.colour, s=50)
         
         ax1.text(0.9, 0.9,'t = '+str(round(time,2))+' yr', bbox=dict(edgecolor='black', facecolor='none'), horizontalalignment='center', verticalalignment='center', transform = ax1.transAxes)
-        outputfile = "skymap_"+self.ID[0:4]+"_time_00"+str(round(time,2))+".png"
+        outputfile = "skymap_"+self.ID+"_time_00"+str(round(time,2))+".png"
         fig1.savefig(outputfile)
         plt.close()
 

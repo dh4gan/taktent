@@ -26,7 +26,7 @@ from numpy import sin,cos,pi,sqrt, arctan2
 from numpy.random import random
 
 from matplotlib.patches import Circle, Wedge
-from uuid import uuid4
+import itertools
 from agents.vector import Vector3D
 
 piby2 = 0.5*pi
@@ -36,13 +36,16 @@ AU_to_pc = 1.0/206265.0
 AUyr_to_kms = 1.496e8/(3.15e7)
 zero_vector = Vector3D(0.0,0.0,0.0)
 
+newID = itertools.count(1)
+
 class Agent:
-    
+
     def __init__(self, position=zero_vector, velocity=zero_vector,strategy=None,direction_vector=zero_vector, openingangle=piby2,starposition=zero_vector,starvelocity=zero_vector,starmass=1.0,semimajoraxis=1.0,inclination=0.0, longascend = 0.0, mean_anomaly=0.0):
         """Defines a generic Agent in the simulation"""
     
         self.type = "Agent"
-        self.ID = str(uuid4())
+        self.ID = str(next(newID)).zfill(3)
+        
         self.colour = "black"
         
         self.position = position

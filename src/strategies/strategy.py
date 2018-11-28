@@ -3,13 +3,15 @@
 
 #
 
-from uuid import uuid4
+import itertools
+
+newID = itertools.count(1)
 
 class Strategy:
 
     def __init__(self):
     
-        self.ID = str(uuid4())
+        self.ID = str(next(newID)).zfill(3)
         self.current_target = None
 
     def update(self, time,dt):
