@@ -126,7 +126,7 @@ class Agent:
         self.star_velocity = Vector3D(vdisp*(-1.0+2.0*random()), vdisp*(-1.0+2.0*random()), vdisp*(-1.0+2.0*random()))
     
 
-    def sample_random_sphere(self, seed=-45, rmin = 10.0, rmax = 20.0, vdisp=0.0, flatsphere=True):
+    def sample_random_sphere(self, seed=-45, rmin = 10.0, rmax = 20.0, vdisp=0.0, flatsphere=False):
     
         r = rmin+ (rmax-rmin)*random()
         theta = pi*random()

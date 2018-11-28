@@ -159,24 +159,33 @@ class Observer(Parent):
 
         fig1 = plt.figure()
         ax1 = fig1.add_subplot(111)
+        ax1.set_xlim(-self.openingangle, self.openingangle)
+        ax1.set_ylim(-self.openingangle, self.openingangle)
 
         for agent in agentlist:
             # If self is in the list, don't plot!
             if agent.ID==self.ID: continue
 
+            relative_position = agent.position.subtract(self.position)
+            
+            # If outside the observer's field of view, skip
+            if arccos(relative_position.unit().dot(self.n)) >self.openingangle:
+                continue
+                        
             # Distance between self and agent
-            distance = self.position.subtract(agent.position).mag()
+            distance = relative_position.mag()
             
             # Get x,y co-ordinates on plane via projection
             projected_position = agent.position.subtract(self.n.scalarmult(agent.position.dot(self.n)))
 
             # Angular co-ordinates found via trig
             theta_x = arctan2(projected_position.x, distance)
-            theta_y = arctan2(projected_position.x, distance)
-
+            theta_y = arctan2(projected_position.y, distance)
+            
             ax1.scatter(theta_x,theta_y, color = agent.colour, s=50)
+        
         ax1.text(0.9, 0.9,'t = '+str(round(time,2))+' yr', bbox=dict(edgecolor='black', facecolor='none'), horizontalalignment='center', verticalalignment='center', transform = ax1.transAxes)
-        outputfile = "skymap_"+self.ID[0:4]+"_time_"+str(round(time,2))+".png"
+        outputfile = "skymap_"+self.ID[0:4]+"_time_00"+str(round(time,2))+".png"
         fig1.savefig(outputfile)
         plt.close()
 
