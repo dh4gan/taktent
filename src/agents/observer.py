@@ -89,17 +89,25 @@ class Observer(Parent):
     
 
     def observe_transmitter(self,time,dt,transmitter):
-        """Attempt to observe a transmitter (returns true or false)"""
+        """Attempt to observe a transmitter (returns true or false)
+            Must take care to account for time delay between transmission and reception"""
+
+
 
         self.colour = self.fail_colour
-        
-        
-        # Is transmitter beam illuminating observer?
+             
+        # Travel time between observer and transmitter location
         separation = self.position.subtract(transmitter.position)
+        delay_time = time - separation.mag()/transmitter.broadcastspeed
+
+        #
+        # 1. Is transmitter beam illuminating observer?
+        #
+        
         unitsep = separation.unit()
 
-
-        nt_dot_r = transmitter.n.dot(unitsep)
+        oldn = transmitter.strategy.get_old_target(delay_time, dt)
+        nt_dot_r = oldn.dot(unitsep)
         observer_illuminated = arccos(nt_dot_r) < transmitter.openingangle
 
         # Is transmitter in observer field of view?
@@ -116,8 +124,10 @@ class Observer(Parent):
         # Is transmitter actively broadcasting?
         # Must take into account time delays
         
-        delay_time = time - separation.mag()/transmitter.broadcastspeed
+  
         transmitter_broadcasting = transmitter.broadcast(delay_time,dt)
+        
+        print (transmitter_broadcasting, delay_time, transmitter.broadcast(time,dt))
         
         # Is signal in frequency range after Doppler drifting?
         delta_freq = self.calculate_doppler_drift(time,dt,transmitter)

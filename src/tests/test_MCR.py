@@ -6,18 +6,19 @@ sys.path.append('..')
 from agents import *
 from populations.population import *
 from strategies import *
-from numpy import pi, cos, sin
+from numpy import pi, cos, sin, sum
 
 
 # MCR parameters
 
 nruns = 3
-
+runseed = 4
 tbegin = 0
 tend = 20
 dt = 0.1
 
 ndetect_MCR = []
+ntotal_MCR = []
 
 # function to define a scanning strategy (observer or transmitter)
 def scan_strategy(time, tinit=0.0, period_xy=12.0, period_yz=None, phase_xy=0.0, phase_yz=None):
@@ -35,6 +36,7 @@ for irun in range(nruns):
     # 1. Define Observer properties
     #
 
+    runseed = runseed + irun
     observer_dir = vector.Vector3D(1.0,1.0,0.0).unit()
 
 
@@ -70,7 +72,7 @@ for irun in range(nruns):
     # Have ten transmitters with common broadcast properties
     # But different spatial locations
 
-    N_transmitters=10
+    N_transmitters=100
 
     semimajoraxis = 1.0
     inc = 0.0
@@ -82,7 +84,7 @@ for irun in range(nruns):
     solidangle = 4.0*pi
     power = 100.0
 
-    popn.generate_identical_transmitters(N_transmitters=N_transmitters, strategy=strat,semimajoraxis =None, inclination=None, mean_anomaly=None, longascend=None, nu=freq, bandwidth=band, solidangle=solidangle, power=power, spatial_distribution="random_sphere",seed=20)
+    popn.generate_identical_transmitters(N_transmitters=N_transmitters, strategy=strat,semimajoraxis =None, inclination=None, mean_anomaly=None, longascend=None, nu=freq, bandwidth=band, solidangle=solidangle, power=power, spatial_distribution="random_sphere",seed=runseed)
 
     # Initialise population ready for run
     popn.initialise()
@@ -94,15 +96,15 @@ for irun in range(nruns):
         popn.conduct_observations()
         popn.update()
 
-
-
     # Collect MCR data - what to collect?
 
     ndetect_MCR.append(popn.ndetect)
+    ntotal_MCR.append(sum(popn.ndetect))
 
 
 # End of MCR runs
 
+print (ntotal_MCR)
 print (ndetect_MCR)
 
 

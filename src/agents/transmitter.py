@@ -85,6 +85,8 @@ class Transmitter(Parent):
     def update(self,time,dt):
         '''Update Transmitter's position,velocity and other properties'''
         Parent.update(self,time,dt)
+        # check if currently broadcasting (from Transmitter's point of view)
+        self.active = self.broadcast(time,dt)
 
     def calc_eirp(self):
         """Calculate effective isotropic radiated power"""
@@ -92,24 +94,31 @@ class Transmitter(Parent):
         self.eirp = self.power*(fourpi)/self.solidangle
 
     def broadcast(self,time,dt):
-        """Is transmitter broadcasting or not?"""
+        """Is transmitter broadcasting or not at a specific time"""
 
-        # If pulse interval not defined or zero, pulse always on
-
-        if(self.pulseinterval==None or self.pulseinterval==0):
-            self.active=True
+        broadcasting = False
+        
+        # Check if broadcast not yet begun, or broadcast ended
+        if((time<self.tbegin and self.tbegin!=None) or (time > self.tend and self.tend!=None)):
+            return broadcasting
+        
+        # If not pulsing, and within time limits, definitely broadcasting
+        if(self.pulseinterval==None or self.pulseinterval==0.0):
+            broadcasting=True
         else:
             # period of pulse = pulse duration + pulse interval
             period = self.pulseduration + self.pulseinterval
 
             # How many pulse cycles have elapsed (real value)
-            nperiods = time/period
+            nperiods = (time-self.tbegin)/period
         
             # fraction of time pulse is on during a cycle
             onfrac = self.pulseduration/period
 
             # Pulse is on if remainder of nperiods is less than onfrac
-            self.active = mod(nperiods) < onfrac
+            broadcasting = mod(nperiods,1.0) < onfrac
+
+        return broadcasting
 
 
     def set_colour(self):

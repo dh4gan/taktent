@@ -37,6 +37,16 @@ class pointingStrategy(Parent):
 
         self.current_target= self.targetlist[ibegin]
 
+    def get_old_target(self,oldtime,dt):
+        '''Find pointing at time oldtime'''
+        
+        Parent.get_old_target(self,oldtime,dt)
+        
+        ibegin = next((t for t in tbegin if t>oldtime), None)
+        iend =  next((t for t in tend if t>oldtime),None)
+        
+        return self.targetlist[ibegin]
+
     
     def add_target(self, targetvector, tbegin, tend):
         """Add a target vector to strategy"""
