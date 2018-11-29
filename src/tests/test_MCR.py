@@ -13,9 +13,9 @@ from numpy import pi, cos, sin
 
 nruns = 3
 
-time = 0
+tbegin = 0
+tend = 20
 dt = 0.1
-nsteps = 100
 
 ndetect_MCR = []
 
@@ -30,14 +30,12 @@ def scan_strategy(time, tinit=0.0, period_xy=12.0, period_yz=None, phase_xy=0.0,
     return vector.Vector3D(x_coord, y_coord, z_coord).unit()
 
 
-
 for irun in range(nruns):
     #
     # 1. Define Observer properties
     #
 
     observer_dir = vector.Vector3D(1.0,1.0,0.0).unit()
-
 
 
     # scanningStrategy object
@@ -52,10 +50,9 @@ for irun in range(nruns):
     # 2. Define Population and create observer at origin
     #
 
-    popn = Population(time,dt)
+    popn = Population(tbegin,tend,dt)
 
     observerID = popn.generate_observer_at_origin(observer_dir,openangle,strat_obs)
-
 
     popn.agents[-1].nu_min = 1.0e0
     popn.agents[-1].nu_max = 1.0e11
@@ -82,26 +79,19 @@ for irun in range(nruns):
     freq = 1.0e10
     band = 1.0e10
 
-    solidangle = pi
+    solidangle = 4.0*pi
     power = 100.0
 
     popn.generate_identical_transmitters(N_transmitters=N_transmitters, strategy=strat,semimajoraxis =None, inclination=None, mean_anomaly=None, longascend=None, nu=freq, bandwidth=band, solidangle=solidangle, power=power, spatial_distribution="random_sphere")
-
-
-    # Simulation timestep etc
-    popn.time = 0
-    tmax = 20
-    popn.dt = 0.1
 
     # Initialise population ready for run
     popn.initialise()
 
     # Test run multiple steps
-    for i in range(nsteps):
+    for i in range(popn.nsteps):
 
         print ("Time: ",popn.time)
         popn.conduct_observations()
-    
         popn.update()
 
 
@@ -109,6 +99,11 @@ for irun in range(nruns):
     # Collect MCR data - what to collect?
 
     ndetect_MCR.append(popn.ndetect)
+
+
+# End of MCR runs
+
+print (ndetect_MCR)
 
 
 
