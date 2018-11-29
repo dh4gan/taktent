@@ -82,6 +82,8 @@ popn.generate_identical_transmitters(N_transmitters=N_transmitters, strategy=str
 
 popn.assign_Gaussian_broadcast_parameters(seed=10, nu_parameters=[1.42e9,1.0e9], solidangle_parameters=[pi,0.5*pi])
 
+popn.assign_Gaussian_strategy_parameters(seed=10)
+
 # Define plot limits
 
 markersize = 0.5

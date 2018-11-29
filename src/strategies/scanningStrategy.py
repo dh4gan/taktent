@@ -14,7 +14,7 @@
 
 from agents import vector
 from strategies.strategy import Strategy as Parent
-
+import copy
 
 
 class scanningStrategy(Parent):
@@ -30,6 +30,9 @@ class scanningStrategy(Parent):
         self.phase_yz = phase_yz
     
         self.tinit = tinit
+    
+    def __copy__(self):
+        return scanningStrategy(self.targetfunction, self.period_xy, self.period_yz, self.phase_xy, self.phase_yz, self.tinit)
     
     
     def get_target(self,time,dt):
@@ -48,5 +51,6 @@ class scanningStrategy(Parent):
         Parent.update(self,time,dt)
         
         self.current_target= self.get_target(time,dt)
+        print (self.period_xy, self.phase_xy, self.current_target)
 
 

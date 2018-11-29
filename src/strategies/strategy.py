@@ -4,6 +4,7 @@
 #
 
 import itertools
+import copy
 
 newID = itertools.count(1)
 
@@ -14,6 +15,9 @@ class Strategy:
         self.ID = str(next(newID)).zfill(3)
         self.current_target = None
     
+    
+    def __copy__(self):
+        return Strategy()
     
     def get_target(self,time,dt):
         '''Returns target vector at a given time t

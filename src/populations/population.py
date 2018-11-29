@@ -77,6 +77,22 @@ class Population:
             agent.tend = gaussian_sample(tend_parameters)
             agent.pulseduration = gaussian_sample(pulseduration_parameters)
             agent.pulseinterval = gaussian_sample(pulseinterval_parameters)
+                
+                
+    def assign_Gaussian_strategy_parameters(self, seed=10,period_xy_parameters=[1.0,0.1], period_yz_parameters=[1.0,0.1], phase_xy_parameters=[pi,0.5*pi], phase_yz_parameters=[pi,0.5*pi]):
+        '''Assign parameters to scanningStrategy objects belonging to Transmitters in Population'''
+    
+        for agent in self.agents:
+            if(agent.type=="Observer"):
+                continue
+            agent.strategy.period_xy = gaussian_sample(period_xy_parameters)
+            agent.strategy.period_yz = gaussian_sample(period_yz_parameters)
+            agent.strategy.phase_xy = gaussian_sample(phase_xy_parameters)
+            agent.strategy.phase_yz = gaussian_sample(phase_yz_parameters)
+            print (agent.ID, agent.strategy.period_xy, agent.strategy.phase_xy)
+
+#agent.strategy.update(self.time,self.dt)
+
 
 
     def assign_uniform_broadcast_parameters(self, seed=10, nu_parameters=[1.0e9,5.0e9], bandwidth_parameters=[1.0e8,1.0e9], solidangle_parameters=[0.0, 4*pi], power_parameters=[1.0e15,1.0e20], tbegin_parameters = [0.0, 0.0], tend_parameters=[100.0,100.0], pulseduration_parameters = [0.1,1.0], pulseinterval_parameters=[0.1,1.0] ):
@@ -103,7 +119,7 @@ class Population:
         
         for i in range(N_transmitters):
             # Define a transmitter object with fixed broadcast parameters but no initial position
-            agent = transmitter.Transmitter(semimajoraxis = semimajoraxis, inclination=inclination, longascend=longascend, mean_anomaly=mean_anomaly, nu=nu, strategy=strategy, bandwidth=bandwidth, solidangle=solidangle, power=power, polarisation=polarisation, tbegin=tbegin, tend=tend, pulseduration=pulseduration, pulseinterval=pulseinterval)
+            agent = transmitter.Transmitter(semimajoraxis = semimajoraxis, inclination=inclination, longascend=longascend, mean_anomaly=mean_anomaly, nu=nu, strategy=strategy.__copy__(), bandwidth=bandwidth, solidangle=solidangle, power=power, polarisation=polarisation, tbegin=tbegin, tend=tend, pulseduration=pulseduration, pulseinterval=pulseinterval)
         
 
             # Set its position and velocity according to a random sampling
