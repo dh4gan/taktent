@@ -78,8 +78,9 @@ band = 1.0e10
 solidangle = pi
 power = 100.0
 
-popn.generate_identical_transmitters(N_transmitters=N_transmitters, strategy=strat,semimajoraxis =None, inclination=None, mean_anomaly=None, longascend=None, nu=freq, bandwidth=band, solidangle=solidangle, power=power, spatial_distribution="random_sphere", seed=10)
+popn.generate_identical_transmitters(N_transmitters=N_transmitters, strategy=strat,semimajoraxis =None, inclination=None, mean_anomaly=None, longascend=None, nu=freq, bandwidth=band, solidangle=solidangle, power=power, spatial_distribution="random_sphere", seed=10,tbegin=popn.tbegin, tend=popn.tend)
 
+popn.assign_Gaussian_broadcast_parameters(seed=10, nu_parameters=[1.42e9,1.0e9], solidangle_parameters=[pi,0.5*pi])
 
 # Define plot limits
 

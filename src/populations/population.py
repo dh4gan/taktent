@@ -21,8 +21,18 @@
 import agents.observer as observer
 import agents.transmitter as transmitter
 import agents.vector as vector
-from numpy import zeros, sum, round, random
+from numpy import zeros, sum, round, random, pi
 import matplotlib.pyplot as plt
+
+
+def gaussian_sample(params):
+    '''Return sample from a Gaussian distribution with params=[mu,sigma]'''
+    return params[1]*random.randn() + params[0]
+
+def uniform_sample(params):
+    '''Return sample from a uniform distribution in range given by params=[min,max]'''
+    return params[0]+ random.random()*(params[1]-params[0])
+
 
 class Population:
 
@@ -47,16 +57,53 @@ class Population:
         self.agents.append(agent)
         self.nagents = len(self.agents)
     
+
     
-    def generate_identical_transmitters(self, N_transmitters, strategy,semimajoraxis,inclination,longascend, mean_anomaly, nu, bandwidth, solidangle, power, polarisation=None, tbegin=None, tend=None, pulseduration=None, pulseinterval=None, spatial_distribution=None, seed=10):
-        '''Generate a population of identical transmitters according to some spatial distribution'''
+    def assign_Gaussian_broadcast_parameters(self, seed=10, nu_parameters=[1.42e9,1.0e9], bandwidth_parameters=[1.0e9,1.0e8], solidangle_parameters=[0.1*pi, 0.01*pi], power_parameters=[1.0e20,1.0e15], tbegin_parameters = [0.0, 0.0], tend_parameters=[100.0,0.0], pulseduration_parameters = [1.0,0.1], pulseinterval_parameters=[1.0,0.1] ):
+        '''Assign broadcast parameters to all transmitters assuming Gaussian distributions
+            Each argument contains [mean,stdev] for each broadcast parameter'''
+    
+        for agent in self.agents:
+            if(agent.type=="Observer"):
+                continue
+            agent.nu = gaussian_sample(nu_parameters)
+            agent.bandwidth = gaussian_sample(bandwidth_parameters)
+            agent.solidangle = gaussian_sample(solidangle_parameters)
+            if(agent.solidangle>4.0*pi):
+                agent.solidangle = 4.0*pi
+            agent.openingangle = 0.25*agent.solidangle
+            agent.power = gaussian_sample(power_parameters)
+            agent.tbegin = gaussian_sample(tbegin_parameters)
+            agent.tend = gaussian_sample(tend_parameters)
+            agent.pulseduration = gaussian_sample(pulseduration_parameters)
+            agent.pulseinterval = gaussian_sample(pulseinterval_parameters)
+
+
+    def assign_uniform_broadcast_parameters(self, seed=10, nu_parameters=[1.0e9,5.0e9], bandwidth_parameters=[1.0e8,1.0e9], solidangle_parameters=[0.0, 4*pi], power_parameters=[1.0e15,1.0e20], tbegin_parameters = [0.0, 0.0], tend_parameters=[100.0,100.0], pulseduration_parameters = [0.1,1.0], pulseinterval_parameters=[0.1,1.0] ):
+        '''Assign broadcast parameters to all transmitters assuming uniform distributions
+        Each argument contains [min,max] for each broadcast parameter'''
+            
+        for agent in self.agents:
+            if(agent.type=="Observer"):
+                continue
+            agent.nu = uniform_sample(nu_parameters)
+            agent.bandwidth = uniform_sample(bandwidth_parameters)
+            agent.solidangle = uniform_sample(solidangle_parameters)
+            agent.power = uniform_sample(power_parameters)
+            agent.tbegin = uniform_sample(tbegin_parameters)
+            agent.tend = uniform_sample(tend_parameters)
+            agent.pulseduration = uniform_sample(pulseduration_parameters)
+            agent.pulseinterval = uniform_sample(pulseinterval_parameters)
+    
+    
+    def generate_identical_transmitters(self, N_transmitters, strategy,semimajoraxis,inclination,longascend, mean_anomaly, nu, bandwidth, solidangle, power, polarisation=None, tbegin=0.0, tend=100.0, pulseduration=None, pulseinterval=None, spatial_distribution=None, seed=10):
+        '''Generate a population of transmitters with identical broadcast properties, distributed in space according to a defined distribution'''
         
         random.seed(seed)
         
         for i in range(N_transmitters):
             # Define a transmitter object with fixed broadcast parameters but no initial position
             agent = transmitter.Transmitter(semimajoraxis = semimajoraxis, inclination=inclination, longascend=longascend, mean_anomaly=mean_anomaly, nu=nu, strategy=strategy, bandwidth=bandwidth, solidangle=solidangle, power=power, polarisation=polarisation, tbegin=tbegin, tend=tend, pulseduration=pulseduration, pulseinterval=pulseinterval)
-        
         
 
             # Set its position and velocity according to a random sampling
@@ -69,7 +116,6 @@ class Population:
             elif(spatial_distribution=="random" or spatial_distribution==None):
                 agent.sample_random()
 
-            print (agent.position)
             agent.orbit(self.time,self.dt)
 
             # Add to population

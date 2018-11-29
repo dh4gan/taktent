@@ -84,7 +84,7 @@ for irun in range(nruns):
     solidangle = 4.0*pi
     power = 100.0
 
-    popn.generate_identical_transmitters(N_transmitters=N_transmitters, strategy=strat,semimajoraxis =None, inclination=None, mean_anomaly=None, longascend=None, nu=freq, bandwidth=band, solidangle=solidangle, power=power, spatial_distribution="random_sphere",seed=runseed)
+    popn.generate_identical_transmitters(N_transmitters=N_transmitters, strategy=strat,semimajoraxis =None, inclination=None, mean_anomaly=None, longascend=None, nu=freq, bandwidth=band, solidangle=solidangle, power=power, spatial_distribution="random_sphere",seed=runseed,tbegin=popn.tbegin, tend=popn.tend)
 
     # Initialise population ready for run
     popn.initialise()

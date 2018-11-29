@@ -123,13 +123,8 @@ class Observer(Parent):
         else:
             signal_powerful_enough = transmitter.eirp > self.sensitivity
         
-        # Is transmitter actively broadcasting?
-        # Must take into account time delays
-        
-  
+        # Is transmitter actively broadcasting (given time delay)?
         transmitter_broadcasting = transmitter.broadcast(delay_time,dt)
-        
-        print (transmitter_broadcasting, delay_time, transmitter.broadcast(time,dt))
         
         # Is signal in frequency range after Doppler drifting?
         delta_freq = self.calculate_doppler_drift(time,dt,transmitter)
