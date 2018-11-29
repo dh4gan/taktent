@@ -15,13 +15,14 @@ class Strategy:
         self.current_target = None
     
     
-    def get_old_target(self,oldtime):
-        '''Returns target vector at a previous time
-            needed for transmissions with long travel time'''
+    def get_target(self,time,dt):
+        '''Returns target vector at a given time t
+            Allows for vector to be retrieved at earlier times
+            if signal travel time is long'''
     
     
     def update(self, time,dt):
-        '''Update the strategy to its current time'''
+        '''Update the current strategy to a given time'''
 
 
 

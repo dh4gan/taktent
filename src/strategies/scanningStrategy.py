@@ -32,14 +32,14 @@ class scanningStrategy(Parent):
         self.tinit = tinit
     
     
-    def get_old_target(self,oldtime,dt):
-        '''Get targetvector at old time'''
+    def get_target(self,time,dt):
+        '''Get target vector at time time'''
         
-        Parent.update(self,oldtime,dt)
+        Parent.get_target(self,time,dt)
         
-        oldtarget = self.targetfunction(oldtime, tinit = self.tinit, period_xy = self.period_xy, period_yz = self.period_yz, phase_xy=self.phase_xy, phase_yz=self.phase_yz)
+        target_vector = self.targetfunction(time, tinit = self.tinit, period_xy = self.period_xy, period_yz = self.period_yz, phase_xy=self.phase_xy, phase_yz=self.phase_yz)
     
-        return oldtarget
+        return target_vector
 
     
     def update(self,time,dt):
@@ -47,6 +47,6 @@ class scanningStrategy(Parent):
 
         Parent.update(self,time,dt)
         
-        self.current_target= self.targetfunction(time, tinit = self.tinit, period_xy = self.period_xy, period_yz = self.period_yz, phase_xy=self.phase_xy, phase_yz=self.phase_yz)
+        self.current_target= self.get_target(time,dt)
 
 

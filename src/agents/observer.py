@@ -106,7 +106,9 @@ class Observer(Parent):
         
         unitsep = separation.unit()
 
-        oldn = transmitter.strategy.get_old_target(delay_time, dt)
+        # Find transmitter target vector given time delay
+        
+        oldn = transmitter.strategy.get_target(delay_time, dt)
         nt_dot_r = oldn.dot(unitsep)
         observer_illuminated = arccos(nt_dot_r) < transmitter.openingangle
 

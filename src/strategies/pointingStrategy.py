@@ -26,26 +26,22 @@ class pointingStrategy(Parent):
 
         self.ntargets = len(self.targetlist)
     
+    def get_target(self,time,dt):
+        '''Find pointing at given time'''
+        
+        Parent.get_target(self,time,dt)
+        
+        ibegin = next((t for t in tbegin if t>time), None)
+        iend =  next((t for t in tend if t>time),None)
+        
+        return self.targetlist[ibegin]
+    
     
     def update(self,time,dt):
         '''Update pointing'''
         
         Parent.update(self,time,dt)
-    
-        ibegin = next((t for t in tbegin if t>time), None)
-        iend =  next((t for t in tend if t>time),None)
-
-        self.current_target= self.targetlist[ibegin]
-
-    def get_old_target(self,oldtime,dt):
-        '''Find pointing at time oldtime'''
-        
-        Parent.get_old_target(self,oldtime,dt)
-        
-        ibegin = next((t for t in tbegin if t>oldtime), None)
-        iend =  next((t for t in tend if t>oldtime),None)
-        
-        return self.targetlist[ibegin]
+        self.current_target = self.get_target(time,dt)
 
     
     def add_target(self, targetvector, tbegin, tend):
