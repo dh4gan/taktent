@@ -21,7 +21,7 @@
 import agents.observer as observer
 import agents.transmitter as transmitter
 import agents.vector as vector
-from numpy import zeros, sum, round
+from numpy import zeros, sum, round, random
 import matplotlib.pyplot as plt
 
 class Population:
@@ -48,13 +48,15 @@ class Population:
         self.nagents = len(self.agents)
     
     
-    def generate_identical_transmitters(self, N_transmitters, strategy,semimajoraxis,inclination,longascend, mean_anomaly, nu, bandwidth, solidangle, power, polarisation=None, tbegin=None, tend=None, pulseduration=None, pulseinterval=None, spatial_distribution=None):
+    def generate_identical_transmitters(self, N_transmitters, strategy,semimajoraxis,inclination,longascend, mean_anomaly, nu, bandwidth, solidangle, power, polarisation=None, tbegin=None, tend=None, pulseduration=None, pulseinterval=None, spatial_distribution=None, seed=10):
         '''Generate a population of identical transmitters according to some spatial distribution'''
         
+        random.seed(seed)
         
         for i in range(N_transmitters):
             # Define a transmitter object with fixed broadcast parameters but no initial position
             agent = transmitter.Transmitter(semimajoraxis = semimajoraxis, inclination=inclination, longascend=longascend, mean_anomaly=mean_anomaly, nu=nu, strategy=strategy, bandwidth=bandwidth, solidangle=solidangle, power=power, polarisation=polarisation, tbegin=tbegin, tend=tend, pulseduration=pulseduration, pulseinterval=pulseinterval)
+        
         
 
             # Set its position and velocity according to a random sampling
@@ -67,6 +69,7 @@ class Population:
             elif(spatial_distribution=="random" or spatial_distribution==None):
                 agent.sample_random()
 
+            print (agent.position)
             agent.orbit(self.time,self.dt)
 
             # Add to population

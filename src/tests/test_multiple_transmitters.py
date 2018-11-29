@@ -78,7 +78,7 @@ band = 1.0e10
 solidangle = pi
 power = 100.0
 
-popn.generate_identical_transmitters(N_transmitters=N_transmitters, strategy=strat,semimajoraxis =None, inclination=None, mean_anomaly=None, longascend=None, nu=freq, bandwidth=band, solidangle=solidangle, power=power, spatial_distribution="random_sphere")
+popn.generate_identical_transmitters(N_transmitters=N_transmitters, strategy=strat,semimajoraxis =None, inclination=None, mean_anomaly=None, longascend=None, nu=freq, bandwidth=band, solidangle=solidangle, power=power, spatial_distribution="random_sphere", seed=10)
 
 
 # Define plot limits
@@ -97,7 +97,7 @@ popn.dt = 0.1
 popn.initialise()
 
 # Test run multiple steps
-for i in range(nsteps):
+for i in range(popn.nsteps):
 
     print ("Time: ",popn.time)
     popn.conduct_observations()
