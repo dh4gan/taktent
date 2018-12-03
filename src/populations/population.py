@@ -89,11 +89,6 @@ class Population:
             agent.strategy.period_yz = gaussian_sample(period_yz_parameters)
             agent.strategy.phase_xy = gaussian_sample(phase_xy_parameters)
             agent.strategy.phase_yz = gaussian_sample(phase_yz_parameters)
-            print (agent.ID, agent.strategy.period_xy, agent.strategy.phase_xy)
-
-#agent.strategy.update(self.time,self.dt)
-
-
 
     def assign_uniform_broadcast_parameters(self, seed=10, nu_parameters=[1.0e9,5.0e9], bandwidth_parameters=[1.0e8,1.0e9], solidangle_parameters=[0.0, 4*pi], power_parameters=[1.0e15,1.0e20], tbegin_parameters = [0.0, 0.0], tend_parameters=[100.0,100.0], pulseduration_parameters = [0.1,1.0], pulseinterval_parameters=[0.1,1.0] ):
         '''Assign broadcast parameters to all transmitters assuming uniform distributions

@@ -12,7 +12,7 @@ from numpy import pi, cos, sin
 # test code imports key classes, makes a transmitter and an observer object, and plots them
 
 tbegin = 0
-tend = 20
+tend = 1.0
 dt = 0.1
 
 # function to define a scanning strategy (observer or transmitter)
@@ -66,7 +66,7 @@ strat = scanningStrategy.scanningStrategy(scan_strategy, tinit = 0.0, period_xy=
 # Have ten transmitters with common broadcast properties
 # But different spatial locations
 
-N_transmitters=10
+N_transmitters=1000
 
 semimajoraxis = 1.0
 inc = 0.0

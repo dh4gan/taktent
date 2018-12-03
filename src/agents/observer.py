@@ -160,38 +160,46 @@ class Observer(Parent):
     
     
     def generate_skymap(self, time, agentlist):
-        """Given a list of agents, produces a skymap"""
-
-        # Skymap - plane with normal=self.n
+        """Given a list of agents, produces a skymap (in standard spherical polar co-ordinates)"""
 
         fig1 = plt.figure()
         ax1 = fig1.add_subplot(111)
-        ax1.set_xlim(-self.openingangle, self.openingangle)
-        ax1.set_ylim(-self.openingangle, self.openingangle)
+        
+        # Find centre of plot
+        
+        # convert direction vector to spherical polars
+        r0,theta0,phi0 = self.n.spherical_polars()
+        
+        
+        
+        ax1.set_xlim(phi0-self.openingangle, phi0+self.openingangle)
+        ax1.set_ylim(theta0-self.openingangle, theta0+self.openingangle)
 
         for agent in agentlist:
             # If self is in the list, don't plot!
             if agent.ID==self.ID: continue
 
+            # Find relative position vector (in Cartesian co-ordinates)
+
             relative_position = agent.position.subtract(self.position)
-            
-            # If outside the observer's field of view, skip
+
+            # If agent outside the observer's field of view, skip
             if arccos(relative_position.unit().dot(self.n)) >self.openingangle:
                 continue
-                        
-            # Distance between self and agent
-            distance = relative_position.mag()
-            
-            # Get x,y co-ordinates on plane via projection
-            projected_position = agent.position.subtract(self.n.scalarmult(agent.position.dot(self.n)))
 
-            # Angular co-ordinates found via trig
-            theta_x = arctan2(projected_position.x, distance)
-            theta_y = arctan2(projected_position.y, distance)
+            # Convert to spherical polars
+            r,theta,phi = relative_position.spherical_polars()
             
-            ax1.scatter(theta_x,theta_y, color = agent.colour, s=50)
+            
+            print (r0,theta0,phi0, r,theta,phi)
+            # Plot on map
+            ax1.scatter(phi,theta, color = agent.colour, s=50)
         
+        # Annotate map with time
         ax1.text(0.9, 0.9,'t = '+str(round(time,2))+' yr', bbox=dict(edgecolor='black', facecolor='none'), horizontalalignment='center', verticalalignment='center', transform = ax1.transAxes)
+        
+        # save to file
+        
         outputfile = "skymap_"+self.ID+"_time_00"+str(round(time,2))+".png"
         fig1.savefig(outputfile)
         plt.close()
