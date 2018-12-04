@@ -12,7 +12,7 @@ from numpy import pi, cos, sin
 # test code imports key classes, makes a transmitter and an observer object, and plots them
 
 tbegin = 0
-tend = 1.0
+tend = 10.0
 dt = 0.1
 
 # function to define a scanning strategy (observer or transmitter)
@@ -66,7 +66,7 @@ strat = scanningStrategy.scanningStrategy(scan_strategy, tinit = 0.0, period_xy=
 # Have ten transmitters with common broadcast properties
 # But different spatial locations
 
-N_transmitters=1000
+N_transmitters=10
 
 semimajoraxis = 1.0
 inc = 0.0
@@ -109,7 +109,7 @@ for i in range(popn.nsteps):
     popn.plot(markersize,wedge_length, xmax,ymax, outputfile)
     popn.update()
 
-    popn.generate_skymaps()
+    popn.generate_skymaps(fullmap=True)
 
 
 

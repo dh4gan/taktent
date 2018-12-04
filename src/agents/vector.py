@@ -16,7 +16,7 @@
 # cross - calculate vector product
 
 import math
-from numpy import cos,sin,arccos,arctan2
+from numpy import cos,sin,arccos,arctan2, pi, sign
 
 class Vector3D(object):
     """3D cartesian vector object"""
@@ -119,11 +119,19 @@ class Vector3D(object):
 
 # Get spherical polar coordinates
 
-    def spherical_polars(self):
+    def spherical_polars(self,degrees=False):
 
         r = self.mag()
-        theta = arccos(self.z/r)
-        phi = arctan2(self.x,self.y)
+        
+        # Theta in range [-pi/2,pi/2]
+        theta = arccos(self.z/r) - 0.5*pi
+    
+        # Phi in range [-pi,pi]
+        phi = arctan2(self.y,self.x)
+        
+        if(degrees):
+            theta = theta*180.0/pi
+            phi = phi*180.0/pi
 
         return r,theta,phi
 

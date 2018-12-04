@@ -174,12 +174,12 @@ class Population:
         self.update_agents()
     
     
-    def generate_skymaps(self):
+    def generate_skymaps(self,fullmap=False):
         """Generate a map of the sky as seen by every observer"""
     
         for agent in self.agents:
             if(agent.type=="Observer"):
-                agent.generate_skymap(self.time, self.agents)
+                agent.generate_skymap(self.time, self.agents,fullmap=fullmap)
     
 
     def conduct_observations(self):

@@ -32,9 +32,10 @@
 # skymap - generate a field of view image along observer's current target vector
 
 from agents.agent import Agent as Parent
-from numpy import sin,cos, arccos, pi, arctan2, round, amin,amax
+from numpy import sin,cos, arccos, pi, arctan2, round, amin,amax, zeros,linspace
 from agents.vector import Vector3D
 import matplotlib.pyplot as plt
+from mpl_toolkits.basemap import Basemap
 
 piby2 = 0.5*pi
 zero_vector = Vector3D(0.0,0.0,0.0)
@@ -159,21 +160,46 @@ class Observer(Parent):
             self.colour = self.fail_colour
     
     
-    def generate_skymap(self, time, agentlist):
+    def generate_skymap(self, time, agentlist,fullmap=False):
         """Given a list of agents, produces a skymap (in standard spherical polar co-ordinates)"""
+
+
+        def get_circle_outline(x0,y0,r, npoints=100):
+            t = linspace(0,2.0*pi, num=npoints)
+        
+            x = zeros(npoints)
+            y = zeros(npoints)
+            
+            for i in range(npoints):
+                x[i] = r*cos(t[i]) + x0
+                y[i] = r*sin(t[i]) + y0
+    
+            return x,y
 
         fig1 = plt.figure()
         ax1 = fig1.add_subplot(111)
-        
-        # Find centre of plot
-        
-        # convert direction vector to spherical polars
-        r0,theta0,phi0 = self.n.spherical_polars()
-        
-        
-        
-        ax1.set_xlim(phi0-self.openingangle, phi0+self.openingangle)
-        ax1.set_ylim(theta0-self.openingangle, theta0+self.openingangle)
+
+        # Set up centre of plot
+        # If plotting a fullsky map, get angles in degrees
+        r0,theta0,phi0 = self.n.spherical_polars(degrees=fullmap)
+
+        if(fullmap):
+
+            map = Basemap(projection="hammer",lat_0=0, lon_0=0)
+            
+            # Plot observer field of view on full map (circle centred on direction vector)
+            
+            map.drawparallels([-90,-60,-30,0,30,60,90])
+            map.drawmeridians([-90,-60,-30,0,30,60,90])
+            
+            thetapoints = []
+            phipoints = []
+            colourpoints = []
+        else:
+
+
+            ax1.set_xlim(phi0-self.openingangle, phi0+self.openingangle)
+            ax1.set_ylim(theta0-self.openingangle, theta0+self.openingangle)
 
         for agent in agentlist:
             # If self is in the list, don't plot!
@@ -184,24 +210,40 @@ class Observer(Parent):
             relative_position = agent.position.subtract(self.position)
 
             # If agent outside the observer's field of view, skip
-            if arccos(relative_position.unit().dot(self.n)) >self.openingangle:
+            if (fullmap==False and arccos(relative_position.unit().dot(self.n)) >self.openingangle):
                 continue
 
-            # Convert to spherical polars
-            r,theta,phi = relative_position.spherical_polars()
+            # Convert to spherical polars (if a fullmap, angles will be in degrees)
+            r,theta,phi = relative_position.spherical_polars(degrees=fullmap)
             
             
-            print (r0,theta0,phi0, r,theta,phi)
-            # Plot on map
-            ax1.scatter(phi,theta, color = agent.colour, s=50)
+            # Either store points (or directly plot them, depending on choice of map)
+            if(fullmap):
+                thetapoints.append(theta)
+                phipoints.append(phi)
+                colourpoints.append(agent.colour)
+            else:
+                ax1.scatter(phi,theta, color = agent.colour, s=50)
         
-        # Annotate map with time
-        ax1.text(0.9, 0.9,'t = '+str(round(time,2))+' yr', bbox=dict(edgecolor='black', facecolor='none'), horizontalalignment='center', verticalalignment='center', transform = ax1.transAxes)
+        
+        # If creating an all-sky map, plot agents and draw a circle representing observer's FoV
+        if(fullmap):
+            map.scatter(phipoints,thetapoints, color=colourpoints,latlon=True)
+            
+            xcircle,ycircle = get_circle_outline(phi0, theta0, self.openingangle*180.0/pi)
+            xpt,ypt = map(xcircle,ycircle)
+            map.scatter(xpt,ypt, color='red', latlon=False, marker='.')
+            
+            # Note that text location slightly different for all sky maps vs FoV maps
+            ax1.text(0.95, 0.95,'t = '+str(round(time,2))+' yr', bbox=dict(edgecolor='black', facecolor='none'), horizontalalignment='center', verticalalignment='center', transform = ax1.transAxes)
+            
+        else:
+            ax1.text(0.9, 0.9,'t = '+str(round(time,2))+' yr', bbox=dict(edgecolor='black', facecolor='none'), horizontalalignment='center', verticalalignment='center', transform = ax1.transAxes)
         
         # save to file
         
         outputfile = "skymap_"+self.ID+"_time_00"+str(round(time,2))+".png"
-        fig1.savefig(outputfile)
+        plt.savefig(outputfile)
         plt.close()
 
 
