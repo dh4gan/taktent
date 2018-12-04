@@ -66,7 +66,7 @@ strat = scanningStrategy.scanningStrategy(scan_strategy, tinit = 0.0, period_xy=
 # Have ten transmitters with common broadcast properties
 # But different spatial locations
 
-N_transmitters=10
+N_transmitters=1000
 
 semimajoraxis = 1.0
 inc = 0.0

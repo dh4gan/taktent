@@ -32,10 +32,32 @@
 # skymap - generate a field of view image along observer's current target vector
 
 from agents.agent import Agent as Parent
-from numpy import sin,cos, arccos, pi, arctan2, round, amin,amax, zeros,linspace
+from numpy import sin,cos, arccos, pi, arctan2, round, amin,amax, zeros,linspace, arange
 from agents.vector import Vector3D
 import matplotlib.pyplot as plt
-from mpl_toolkits.basemap import Basemap
+
+basemap_installed = True
+
+try:
+    from mpl_toolkits.basemap import Basemap
+except ModuleNotFoundError:
+    print ("WARNING: basemap not installed")
+    print ("==> Cannot produce all sky maps for Observers")
+    print ("==> Will default to field-of-view sky maps")
+    basemap_installed = False
+
+
+def get_circle_outline(x0,y0,r, npoints=100):
+    t = linspace(0,2.0*pi, num=npoints)
+    
+    x = zeros(npoints)
+    y = zeros(npoints)
+        
+    for i in range(npoints):
+        x[i] = r*cos(t[i]) + x0
+        y[i] = r*sin(t[i]) + y0
+            
+    return x,y
 
 piby2 = 0.5*pi
 zero_vector = Vector3D(0.0,0.0,0.0)
@@ -164,39 +186,35 @@ class Observer(Parent):
         """Given a list of agents, produces a skymap (in standard spherical polar co-ordinates)"""
 
 
-        def get_circle_outline(x0,y0,r, npoints=100):
-            t = linspace(0,2.0*pi, num=npoints)
-        
-            x = zeros(npoints)
-            y = zeros(npoints)
-            
-            for i in range(npoints):
-                x[i] = r*cos(t[i]) + x0
-                y[i] = r*sin(t[i]) + y0
-    
-            return x,y
+        # Boolean checks if user wants an all-sky map and has Basemap installed
+        plot_fullmap = fullmap and basemap_installed
 
         fig1 = plt.figure()
         ax1 = fig1.add_subplot(111)
 
         # Set up centre of plot
-        # If plotting a fullsky map, get angles in degrees
-        r0,theta0,phi0 = self.n.spherical_polars(degrees=fullmap)
+        # If plotting an all-sky map , get angles in degrees
+        # otherwise use radians
+        
+        r0,theta0,phi0 = self.n.spherical_polars(degrees=plot_fullmap)
+        
+        # Lists to store agent positions and colours
+        thetapoints = []
+        phipoints = []
+        colourpoints = []
 
-        if(fullmap):
+        # If plotting an all-sky map, set up Basemap object and draw parallels/meridians
+        if(plot_fullmap):
 
-            map = Basemap(projection="hammer",lat_0=0, lon_0=0)
+            parallels = arange(-90,90, 30)
+            meridians = arange(-180,180,30)
+            parlabels = [True for i in range(len(parallels))]
+        
+            map = Basemap(projection="moll",lat_0=0, lon_0=0)
+            map.drawparallels(parallels, labels=parlabels)
+            map.drawmeridians(meridians)
             
-            # Plot observer field of view on full map (circle centred on direction vector)
-            
-            map.drawparallels([-90,-60,-30,0,30,60,90])
-            map.drawmeridians([-90,-60,-30,0,30,60,90])
-            
-            thetapoints = []
-            phipoints = []
-            colourpoints = []
         else:
-
 
             ax1.set_xlim(phi0-self.openingangle, phi0+self.openingangle)
             ax1.set_ylim(theta0-self.openingangle, theta0+self.openingangle)
@@ -210,24 +228,20 @@ class Observer(Parent):
             relative_position = agent.position.subtract(self.position)
 
             # If agent outside the observer's field of view, skip
-            if (fullmap==False and arccos(relative_position.unit().dot(self.n)) >self.openingangle):
+            if (plot_fullmap==False and arccos(relative_position.unit().dot(self.n)) >self.openingangle):
                 continue
 
             # Convert to spherical polars (if a fullmap, angles will be in degrees)
-            r,theta,phi = relative_position.spherical_polars(degrees=fullmap)
+            r,theta,phi = relative_position.spherical_polars(degrees=plot_fullmap)
             
-            
-            # Either store points (or directly plot them, depending on choice of map)
-            if(fullmap):
-                thetapoints.append(theta)
-                phipoints.append(phi)
-                colourpoints.append(agent.colour)
-            else:
-                ax1.scatter(phi,theta, color = agent.colour, s=50)
+            # Store data in lists
+            thetapoints.append(theta)
+            phipoints.append(phi)
+            colourpoints.append(agent.colour)
         
         
         # If creating an all-sky map, plot agents and draw a circle representing observer's FoV
-        if(fullmap):
+        if(plot_fullmap):
             map.scatter(phipoints,thetapoints, color=colourpoints,latlon=True)
             
             xcircle,ycircle = get_circle_outline(phi0, theta0, self.openingangle*180.0/pi)
@@ -235,16 +249,16 @@ class Observer(Parent):
             map.scatter(xpt,ypt, color='red', latlon=False, marker='.')
             
             # Note that text location slightly different for all sky maps vs FoV maps
-            ax1.text(0.95, 0.95,'t = '+str(round(time,2))+' yr', bbox=dict(edgecolor='black', facecolor='none'), horizontalalignment='center', verticalalignment='center', transform = ax1.transAxes)
+            ax1.text(0.9, 1.3,'Observer '+str(self.ID)+'\nt = '+str(round(time,2))+' yr', bbox=dict(edgecolor='black', facecolor='none'), horizontalalignment='center', verticalalignment='center', transform = ax1.transAxes)
             
         else:
-            ax1.text(0.9, 0.9,'t = '+str(round(time,2))+' yr', bbox=dict(edgecolor='black', facecolor='none'), horizontalalignment='center', verticalalignment='center', transform = ax1.transAxes)
+            
+            ax1.scatter(phipoints,thetapoints, color=colourpoints)
+            ax1.text(0.87, 0.9,'Observer '+str(self.ID)+'\nt = '+str(round(time,2))+' yr', bbox=dict(edgecolor='black', facecolor='none'), horizontalalignment='center', verticalalignment='center', transform = ax1.transAxes)
         
         # save to file
-        
         outputfile = "skymap_"+self.ID+"_time_00"+str(round(time,2))+".png"
         plt.savefig(outputfile)
-        plt.close()
 
 
 
