@@ -32,17 +32,18 @@ Future Features/Wishlist
 
 
 
-
 Installation Instructions
 --------------------------
 
-This package is yet to be hosted on PyPI...
+This package is hosted on PyPI.  To install with pip:
+
+> pip install taktent
 
 
 Examples of Use
 ---------------
 
-Examples of how to use tak-tent to setup and conduct SETI simulations can be found in the `src/examples/` folder.
+Examples of how to use tak-tent to setup and conduct SETI simulations can be found in the `examples/` folder.
 
 
 Package Structure
