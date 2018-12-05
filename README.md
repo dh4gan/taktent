@@ -31,7 +31,6 @@ Future Features/Wishlist
 * Interstellar scintillation/absorption/dispersion
 
 
-
 Installation Instructions
 --------------------------
 
@@ -75,7 +74,9 @@ The package contains several modules defining six fundamental classes:
 Code dependencies
 -----------------
 
-The code has been developed in Python 3.6, using numpy 1.14.3 and matplotlib 2.2.2
+The code has been developed in Python 3.6, using numpy 1.14.3 and matplotlib 2.2.2, and hence requires these for basic operation.
+
+If the user wishes to generate all-sky maps for their Observer objects, this will also require mpl_toolkits.basemap to be installed.
 
 The Name
 ---------
