@@ -1,2 +1,5 @@
 src/*/.pyc
 src/*/__pycache__
+
+dist/
+/*.egg-info
