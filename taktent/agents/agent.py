@@ -33,7 +33,7 @@ from numpy.random import random
 
 from matplotlib.patches import Circle, Wedge
 import itertools
-from agents.vector import Vector3D
+from taktent.agents.vector import Vector3D
 
 piby2 = 0.5*pi
 

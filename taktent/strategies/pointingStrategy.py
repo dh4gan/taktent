@@ -12,8 +12,8 @@
 # add_target_to_list - add a given target vector to strategy
 # convert_locations_to_targets - take a set of 3D position vectors, turn them into direction vectors
 
-import agents.vector
-from strategies.strategy import Strategy as Parent
+import taktent.agents.vector
+from taktent.strategies.strategy import Strategy as Parent
 
 class pointingStrategy(Parent):
 

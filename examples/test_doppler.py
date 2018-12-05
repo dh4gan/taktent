@@ -1,19 +1,15 @@
-import sys
-sys.path.append('..')
 
-from agents import *
-from populations.population import *
-from strategies import *
+from taktent.agents import *
+from taktent.populations.population import *
+from taktent.strategies import *
 from numpy import pi, cos, sin
 
 # test the observed doppler drift of a narrowband transmission
 
 time = 0.0
-tmin = 0.0
-tmax = 1.0
+tbegin = 0.0
+tend = 1.0
 dt = 0.01
-
-nsteps = int((tmax - tmin)/dt)
 
 # Define transmitter properties
 
@@ -33,7 +29,7 @@ power = 100.0
 # Define a scanning transmitter strategy:
 
 # function to define transmitter target vector (constant direction)
-def transmit_strategy(time):
+def transmit_strategy(time, tinit=0.0, period_xy=0.0, period_yz=0.0, phase_xy=0.0, phase_yz=0.0):
     return vector.Vector3D(-1.0,0.0,0.0).unit()
 
 # scanningStrategy object
@@ -41,7 +37,7 @@ strat = scanningStrategy.scanningStrategy(transmit_strategy)
 
 # create transmitter object
 
-tran = transmitter.Transmitter(transmitter_pos,transmitter_vel,strat,transmitter_dir,openangle,transmitter_pos.copy(), transmitter_vel.copy(),freq=freq,band=band,solidangle=solidangle,power=power)
+tran = transmitter.Transmitter(transmitter_pos,transmitter_vel,strat,transmitter_dir,openangle,transmitter_pos.copy(), transmitter_vel.copy(),nu=freq,bandwidth=band,solidangle=solidangle,power=power, tbegin=tbegin, tend=tend)
 
 
 # Define its orbital properties
@@ -58,7 +54,7 @@ strat_obs = strategy.Strategy()
 
 # Define Population and create observer at origin
 
-popn = Population(time,dt)
+popn = Population(tbegin, tend,dt)
 
 observerID = popn.generate_observer_at_origin(observer_dir,openangle,strat_obs)
 
@@ -78,7 +74,7 @@ ymax = 20
 popn.initialise()
 
 # Test run for multiple steps, outputting to file
-for i in range(nsteps):
+for i in range(popn.nsteps):
 
     print ("Time: ",popn.time)
     popn.conduct_observations()

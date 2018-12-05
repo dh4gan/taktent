@@ -1,11 +1,8 @@
 # Test code runs multiple simulations (Monte Carlo Realisation)
 
-import sys
-sys.path.append('..')
-
-from agents import *
-from populations.population import *
-from strategies import *
+from taktent.agents import *
+from taktent.populations.population import *
+from taktent.strategies import *
 from numpy import pi, cos, sin, sum
 
 

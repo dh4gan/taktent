@@ -43,8 +43,8 @@
 # broadcast(time,dt) - determine if transmitter is transmitting
 
 from numpy import pi,mod,arctan2
-from agents.agent import Agent as Parent
-from agents.vector import Vector3D
+from taktent.agents.agent import Agent as Parent
+from taktent.agents.vector import Vector3D
 
 fourpi = 4.0*pi
 twopi = 2.0*pi

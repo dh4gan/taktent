@@ -41,9 +41,9 @@
 # observe_transmitter(time,dt,transmitter) - attempt to detect transmitter
 # skymap - generate a field of view image along observer's current target vector
 
-from agents.agent import Agent as Parent
+from taktent.agents.agent import Agent as Parent
 from numpy import sin,cos, arccos, pi, arctan2, round, amin,amax, zeros,linspace, arange
-from agents.vector import Vector3D
+from taktent.agents.vector import Vector3D
 import matplotlib.pyplot as plt
 
 basemap_installed = True

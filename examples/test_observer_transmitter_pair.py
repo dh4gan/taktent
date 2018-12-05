@@ -5,12 +5,12 @@
 # Simulation is plotted to file
 #
 
-import sys
-sys.path.append('..')
+#import sys
+#sys.path.append('..')
 
-from agents import *
-from populations.population import *
-from strategies import *
+from taktent.agents import *
+from taktent.populations.population import *
+from taktent.strategies import *
 from numpy import pi, cos, sin
 
 # Simulation timestep etc
@@ -51,7 +51,7 @@ strat = scanningStrategy.scanningStrategy(transmit_strategy, tinit = 0.0, period
 
 
 # Create transmitter object
-tran = transmitter.Transmitter(position=transmitter_pos,velocity=transmitter_vel,strategy=strat,direction_vector=transmitter_dir,starposition=transmitter_pos.copy(), starvelocity = transmitter_vel.copy(),nu=freq,bandwidth=band,solidangle=solidangle,power=power, tbegin=0.0, tend = 10.0, pulseduration = 0.1, pulseinterval=0.7)
+tran = transmitter.Transmitter(position=transmitter_pos,velocity=transmitter_vel,strategy=strat,direction_vector=transmitter_dir,starposition=transmitter_pos.copy(), starvelocity = transmitter_vel.copy(),nu=freq,bandwidth=band,solidangle=solidangle,power=power, tbegin=tbegin,tend=tend)
 
 
 
@@ -99,7 +99,7 @@ ymax = 20
 
 for i in range(popn.nsteps):
 
-    print ("Time: ",popn.time)
+    print ("Time: ",str(round(popn.time,2)))
     popn.conduct_observations() # All observers attempt to observe transmitters
 
     outputfile = 'xy_'+str(i).zfill(3)+'.png'

@@ -31,9 +31,9 @@
 # conduct_observations - goes through each Observer object and attempts to observe Transmitters
 # plot - plot entire population of Agents (Observers & Transmitters)
 
-import agents.observer as observer
-import agents.transmitter as transmitter
-import agents.vector as vector
+import taktent.agents.observer as observer
+import taktent.agents.transmitter as transmitter
+import taktent.agents.vector as vector
 from numpy import zeros, sum, round, random, pi
 import matplotlib.pyplot as plt
 
@@ -340,6 +340,6 @@ class Population:
         else:
             fig1.savefig(filename)
 
-        fig1.close()
+        plt.close()
 
 

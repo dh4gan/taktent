@@ -4,9 +4,9 @@
 import sys
 sys.path.append('..')
 
-from agents import *
-from populations.population import *
-from strategies import *
+from taktent.agents import *
+from taktent.populations.population import *
+from taktent.strategies import *
 from numpy import pi, cos, sin
 
 # test code imports key classes, makes a transmitter and an observer object, and plots them

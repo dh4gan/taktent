@@ -15,8 +15,8 @@
 # get_target(time,dt) -- get target at given time
 # update(time,dt) -- update to the current target
 
-from agents import vector
-from strategies.strategy import Strategy as Parent
+from taktent.agents import vector
+from taktent.strategies.strategy import Strategy as Parent
 import copy
 
 class scanningStrategy(Parent):

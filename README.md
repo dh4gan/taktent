@@ -36,9 +36,7 @@ Future Features/Wishlist
 Installation Instructions
 --------------------------
 
-This package is hosted on PyPI, and so can be installed via
-
-`> pip install taktent`
+This package is yet to be hosted on PyPI...
 
 
 Examples of Use
