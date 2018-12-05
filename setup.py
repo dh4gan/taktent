@@ -1,12 +1,13 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
-setup(name='tak-tent',
-      version='0.9',
+setup(name='taktent',
+      version='0.91',
       description='A framework for conducting agent-based simulations of SETI',
+      long_description=open('README.md').read(),
       url='http://github.com/dh4gan/tak-tent',
       author='Duncan Forgan',
       author_email='dh4gan@gmail.com',
       license='GPL-3.0',
-      install_requires=['numpy','matplotlib']
+      install_requires=['numpy','matplotlib'],
       packages=find_packages(exclude=['tests*']),
       zip_safe=False)
