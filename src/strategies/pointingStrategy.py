@@ -18,6 +18,17 @@ from strategies.strategy import Strategy as Parent
 class pointingStrategy(Parent):
 
     def __init__(self):
+        """
+        Generate a pointingStrategy Object
+        
+        Attributes:
+        -----------
+        
+        targetlist -- list of target vectors (vector3D objects)
+        ntargets -- total number of targets in list
+        tbegin -- beginning time of strategy (years)
+        tend -- ending time of strategy (years)
+        """
 
         Parent.__init__(self)
         self.targetlist = []

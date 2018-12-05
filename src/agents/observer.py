@@ -24,10 +24,20 @@
 # Methods:
 ###########
 
-# Inherited from agent.py
-# orbit(time) - move observer in orbit around host star
-# plot(radius,wedge_length) - plot observer and its field of view
+# Inherited/Extended from agent.py
+# define_strategy(strategy) - define strategy of Agent
+# update(time,dt) - update Agent position, velocity and direction vector
+# orbit(time) - move agent in orbit around host star
+# sample_random(seed,xmin,xmax,ymin,ymax,zmin,zmax,vdisp) - sample position and velocity in uniform cube
+# sample_random_sphere(seed, rmin,rmax,vdisp,flatsphere) - sample position and velocity in uniform sphere
+# sample_GHZ(): sample position and velocity in Galactic Habitable Zones
 
+# plot(radius,wedge_length) - return patches suitable for a matplotlib plot
+
+# Additional Methods:
+
+# calculate_doppler_drift(time,dt,transmitter) - calculate the Doppler drift from a signal emitted by a transmitter
+# set_colour() - set the colour of the observer for plotting
 # observe_transmitter(time,dt,transmitter) - attempt to detect transmitter
 # skymap - generate a field of view image along observer's current target vector
 
@@ -68,7 +78,31 @@ class Observer(Parent):
     
     def __init__(self,position=zero_vector, velocity=zero_vector, strategy=None, direction_vector=zero_vector, openingangle=piby2, starposition=zero_vector, starvelocity=zero_vector, starmass=1.0, semimajoraxis=1.0, inclination=0.0, longascend=0.0,mean_anomaly=0.0, sensitivity=None, nu_min=1.0e9, nu_max=2.0e9, nchannels=1.0e6):
         
-        """Initialises an Observer object"""
+        """
+        Initialises an Observer object
+        
+        Keyword Arguments:
+        -----------------
+        
+        position -- cartesian position vector (pc)
+        velocity -- cartesian velocity vector (pc yr^-1)
+        strategy -- Strategy object defining Agent's pointing behaviour
+        direction_vector -- unit vector defining pointing direction of Agent
+        openingangle -- opening angle of beam defined by Agent's pointing (radians)
+        starposition -- cartesian position vector of host star (pc)
+        starvelocity -- cartesian velocity vector of host star (pc yr^-1)
+        starmass -- host star mass (solar masses)
+        semimajoraxis -- semimajor axis of orbit about host star (AU)
+        inclination -- inclination of orbit about host star (radians)
+        longascend -- longitude of the ascending node of orbit about host star (radians)
+        mean_anomaly -- mean anomaly of orbit about host star (radians)
+        
+        sensitivity -- the minimum detectable signal power
+        nu_min -- the minimum frequency detectable (Hz)
+        nu_max -- the maximum frequency detectable (Hz)
+        nchannels -- the number of frequency channels in the detector
+        
+        """
         Parent.__init__(self, position, velocity, strategy, direction_vector, openingangle, starposition, starvelocity,starmass, semimajoraxis, inclination, longascend, mean_anomaly)
         
         self.type = "Observer"
@@ -86,16 +120,32 @@ class Observer(Parent):
         self.detect = {}
     
     def update(self,time,dt):
-        """Update Observer position, velocity and other properties"""
+        """
+        Update position, velocity and direction vector of Observer
+            
+            Keyword Arguments:
+            ------------------
+            time -- current time (years)
+            dt -- timestep (years)
+            
+        """
         Parent.update(self,time,dt)
-    
-
-    def slew_to_target(self,time,dt, newtarget):
-        """Move observer to target direction"""
-        self.n = newtarget
 
     def calculate_doppler_drift(self,time,dt,transmitter):
-        """Calculate doppler shift of signal received from transmitter object"""
+        """
+        Calculate doppler drift of signal received from transmitter object
+        
+        Keyword Arguments:
+        ------------------
+        time -- current time (in years)
+        dt -- timestep (in years)
+        transmitter -- Transmitter object being observed
+        
+        Returns:
+        --------
+        delta_freq = change in frequency (Hz)
+        
+        """
     
         # Calculate relative velocity
         relative_velocity = transmitter.velocity.subtract(self.velocity)
@@ -112,10 +162,21 @@ class Observer(Parent):
     
 
     def observe_transmitter(self,time,dt,transmitter):
-        """Attempt to observe a transmitter (returns true or false)
-            Must take care to account for time delay between transmission and reception"""
-
-
+        """
+        Attempt to observe a transmitter, taking into account time delay between transmission and reception, and doppler drift
+        
+        Keyword Arguments:
+        ------------------
+        time -- current time (years)
+        dt -- timestep (years)
+        transmitter -- Transmitter Object
+        
+        
+        Returns:
+        --------
+        detected -- Is transmitter detected or not? (Boolean)
+        
+        """
 
         self.colour = self.fail_colour
              
@@ -183,7 +244,19 @@ class Observer(Parent):
     
     
     def generate_skymap(self, time, agentlist,fullmap=False):
-        """Given a list of agents, produces a skymap (in standard spherical polar co-ordinates)"""
+        """
+        Given a list of agents, produces a skymap (in standard spherical polar co-ordinates)
+        
+        Keyword Arguments:
+        ------------------
+        time -- current time (years)
+        dt -- timestep (years)
+        fullmap -- Boolean determines type of map:
+        
+                True - Produce either an all-sky map with observer field of view drawn on. (Requires mpl_toolkits.basemap)
+        
+                False - Produce a map of observer's field of view only
+        """
 
 
         # Boolean checks if user wants an all-sky map and has Basemap installed

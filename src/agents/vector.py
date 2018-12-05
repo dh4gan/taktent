@@ -20,34 +20,80 @@ from numpy import cos,sin,arccos,arctan2, pi, sign
 
 class Vector3D(object):
     """3D cartesian vector object"""
-# Initialising Function
+    
     def __init__(self,x,y,z):
+        """
+        Constructs 3D cartesian vector
+        Keyword Arguments:
+        ------------------
+        x -- x co-ordinate
+        y -- y co-ordinate
+        z -- z co-ordinate
+        """
         self.x = x
         self.y = y
         self.z = z
 
     def __str__(self):
+        """
+        Print vector as a string
+        """
+        
         s= '3D Vector ( %f, %f, %f)' % (self.x, self.y, self.z)
         return s
 
 # Vector addition
 
     def copy(self):
-        '''Return a copy of vector3D object'''
+        """
+        Return a copy of Vector3D object
+        """
         return Vector3D (self.x, self.y, self.z)
             
     def add(self,other):
-        """ Adds another vector"""
+        """
+        Returns self + other
+        
+        Keyword Arguments:
+        ------------------
+        other -- Vector3D
+        
+        Returns:
+        --------
+        self+other
+        """
         return Vector3D (self.x + other.x, self.y + other.y, self.z + other.z)
             
 # Vector subtraction
             
     def subtract(self,other):
-        """ Subtracts another vector"""
+        """
+        Returns self - other
+        
+        Keyword Arguments:
+        ------------------
+        other -- Vector3D
+        
+        Returns:
+        --------
+        self-other
+        """
+        
         return Vector3D (self.x - other.x, self.y - other.y, self.z - other.z)
             
     def scalarmult(self, num):
-        """ Multiplies vector by scalar"""
+        """
+        Returns self*num
+            
+        Keyword Arguments:
+        ------------------
+        num -- Scalar
+            
+        Returns:
+        --------
+        self*num
+        """
+ 
         return Vector3D (num*self.x, num*self.y,num*self.z)
 
 # Magnitude of the Vector
@@ -87,7 +133,7 @@ class Vector3D(object):
 # Rotate about x-axis
 
     def rotate_x(self, angle):
-        """Returns vector rotation by angle radians around x axis"""
+        """Returns vector rotated by angle radians around x axis"""
 
         xnew = self.x
         ynew = self.y*cos(angle) - self.z*sin(angle)
@@ -98,7 +144,7 @@ class Vector3D(object):
 # Rotate about y-axis
 
     def rotate_y(self, angle):
-        """Returns vector rotation by angle radians around y axis"""
+        """Returns vector rotated by angle radians around y axis"""
         
         xnew = self.x*cos(angle) + self.y*sin(angle)
         ynew = self.y
@@ -109,7 +155,7 @@ class Vector3D(object):
 # Rotate about z-axis
 
     def rotate_z(self, angle):
-        """Returns vector rotation by angle radians around z axis"""
+        """Returns vector rotated by angle radians around z axis"""
         
         xnew = self.x*cos(angle) - self.y*sin(angle)
         ynew = self.x*sin(angle) + self.y*cos(angle)
@@ -120,6 +166,19 @@ class Vector3D(object):
 # Get spherical polar coordinates
 
     def spherical_polars(self,degrees=False):
+        """ Return vector components in spherical polars
+            
+            Keyword Arguments:
+            ------------------
+            degrees -- return angles in degrees? (boolean)
+            
+
+            Returns:
+            --------
+            r - r component
+            theta - theta component
+            phi - phi component
+        """
 
         r = self.mag()
         

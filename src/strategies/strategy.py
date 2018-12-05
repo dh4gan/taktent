@@ -11,12 +11,14 @@ newID = itertools.count(1)
 class Strategy:
 
     def __init__(self):
+        """ Creates a new Strategy object"""
     
         self.ID = str(next(newID)).zfill(3)
         self.current_target = None
     
     
     def __copy__(self):
+        """ Return a copy of the Strategy object"""
         return Strategy()
     
     def get_target(self,time,dt):
