@@ -37,7 +37,7 @@ Installation Instructions
 
 This package is hosted on PyPI.  To install with pip:
 
-> pip install taktent
+`> pip install taktent`
 
 
 Examples of Use
