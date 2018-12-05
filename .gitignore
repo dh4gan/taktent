@@ -1,5 +1,5 @@
-src/*/.pyc
-src/*/__pycache__
+taktent/*/.pyc
+taktent/*/__pycache__
 
 dist/
 /*.egg-info
