@@ -332,6 +332,7 @@ class Observer(Parent):
         # save to file
         outputfile = "skymap_"+self.ID+"_time_00"+str(round(time,2))+".png"
         plt.savefig(outputfile)
+        plt.close()
 
 
 

@@ -340,6 +340,6 @@ class Population:
         else:
             fig1.savefig(filename)
 
-        plt.close()
+        fig1.close()
 
 

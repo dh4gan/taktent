@@ -102,7 +102,7 @@ popn.initialise()
 # Test run multiple steps
 for i in range(popn.nsteps):
 
-    print ("Time: ",popn.time)
+    print ("Time: ",str(round(popn.time,2)))
     popn.conduct_observations()
     
     outputfile = 'xy_'+str(i).zfill(3)+'.png'

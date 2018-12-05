@@ -87,8 +87,10 @@ class Agent:
         self.velocity = velocity
         
         self.strategy=strategy
+        self.n = direction_vector
         
-        self.n = direction_vector.unit()
+        if(self.n.mag()>1.0e-30):
+            self.n = self.n.unit()
         self.openingangle = openingangle
         self.starposition = starposition
         self.starvelocity = starvelocity
@@ -214,7 +216,7 @@ class Agent:
         self.velocity = self.starvelocity
     
 
-    def sample_random_sphere(self, seed=-45, rmin = 10.0, rmax = 20.0, vdisp=0.0, flatsphere=False):
+    def sample_random_sphere(self, seed=-45, rmin = 10.0, rmax = 20.0, vdisp=0.0, flatsphere=True):
         """
         Return position and velocity vectors randomly sampled on a sphere
         
