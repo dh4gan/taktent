@@ -1,4 +1,4 @@
-tak-tent: a simulator package for (radio) SETI
+taktent: a simulator package for (radio) SETI
 ==============================================
 
 This Python package allows the user to setup and run an agent-based simulation of a SETI survey.  The package allows the creation of a population of observing and transmitting civilisations.  Each transmitter and observer conducts their activities according to an input strategy.  The success of observers and transmitters can then be recorded, and multiple simulations can be run for Monte Carlo Realisation.
@@ -23,7 +23,6 @@ Features
 * Generates maps of the sky as seen from Observers' point of view
 
 
-
 Future Features/Wishlist
 ------------------------
 
@@ -37,13 +36,15 @@ Future Features/Wishlist
 Installation Instructions
 --------------------------
 
+This package is hosted on PyPI, and so can be installed via
+
+`> pip install taktent`
 
 
 Examples of Use
 ---------------
 
 Examples of how to use tak-tent to setup and conduct SETI simulations can be found in the `src/examples/` folder.
-
 
 
 Package Structure
@@ -80,7 +81,7 @@ The code has been developed in Python 3.6, using numpy 1.14.3 and matplotlib 2.2
 The Name
 ---------
 
-The name "tak-tent" is derived from the Scots phrase "tak tent o' the sma things", which translates as "pay attention to the little things"
+The name "taktent" is derived from the Scots phrase "tak tent o' the sma things", which translates as "pay attention to the little things"
 
 
 
