@@ -1,12 +1,55 @@
-tak-tent: a simulator for (radio) SETI
-======================================
+tak-tent: a simulator package for (radio) SETI
+==============================================
 
-This Python code (in development) runs an agent-based simulation of a SETI survey.  A population of observing and transmitting civilisations is created, and the success of observers in detecting transmitters can be measured. The intention is to develop a flexible code capable of Monte Carlo Realisation.  This will allow observation strategies to be tested, and to determine what types of transmitter can be detected for a given survey mode.
+This Python package allows the user to setup and run an agent-based simulation of a SETI survey.  The package allows the creation of a population of observing and transmitting civilisations.  Each transmitter and observer conducts their activities according to an input strategy.  The success of observers and transmitters can then be recorded, and multiple simulations can be run for Monte Carlo Realisation.
 
-The Code
+This package is therefore a flexible framework in which to simulate and test different SETI strategies, both as an Observer and as a Transmitter.
+
+
+![](doc/xymovie.gif)
+
+
+Features
 --------
 
-The code contains several packages defining six fundamental classes: 
+* Object-oriented, agent-driven simulation of Observers and Transmitters
+
+* Simulates continuous and pulsing broadcasts at a defined beam-size
+
+* Permits transmission/observation as a scan across the sky, or as a series of discrete pointings
+
+* Accounts for Doppler drift due to transmitters/observers orbiting a host star
+
+* Generates maps of the sky as seen from Observers' point of view
+
+
+
+Future Features/Wishlist
+------------------------
+
+* Currently designed for electromagnetic communications - in principle extendable to e.g. neutrino or gravitational wave emission
+
+* Interstellar scintillation/absorption/dispersion
+
+
+
+
+Installation Instructions
+--------------------------
+
+
+
+Examples of Use
+---------------
+
+Examples of how to use tak-tent to setup and conduct SETI simulations can be found in the `src/examples/` folder.
+
+
+
+Package Structure
+------------------
+
+The package contains several modules defining six fundamental classes: 
 
 ### `agents/`
 
