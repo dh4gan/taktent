@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='taktent',
-      version='1.0',
+      version='1.11',
       description='A framework for conducting agent-based simulations of SETI',
       long_description=open('README.md').read(),
       url='http://github.com/dh4gan/taktent',

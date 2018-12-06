@@ -6,6 +6,7 @@ This Python package allows the user to setup and run an agent-based simulation o
 
 This package is therefore a flexible framework in which to simulate and test different SETI strategies, both as an Observer and as a Transmitter.  It is primarily designed with radio SETI in mind, but is sufficiently flexible to simulate all forms of electromagnetic SETI.
 
+If you want to use this in a publication, please get in touch with me!
 
 ![](doc/xymovie.gif)
 
@@ -44,10 +45,6 @@ Installation Instructions
 This package is hosted on PyPI.  To install with pip:
 
 `> pip install taktent`
-
-
-Code dependencies
------------------
 
 The code has been developed in Python 3.6, using numpy 1.14.3 and matplotlib 2.2.2, and hence requires these for basic operation.
 
