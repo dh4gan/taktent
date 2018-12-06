@@ -28,7 +28,7 @@
 
 # plot(radius,wedge_length) - return patches suitable for a matplotlib plot
 
-from numpy import sin,cos,pi,sqrt, arctan2
+from numpy import sin,cos,pi,sqrt, arctan2, exp,log
 from numpy.random import random
 
 from matplotlib.patches import Circle, Wedge
@@ -43,6 +43,37 @@ AUyr_to_kms = 1.496e8/(3.15e7)
 zero_vector = Vector3D(0.0,0.0,0.0)
 
 newID = itertools.count(1)
+
+def get_position_from_orbit(semimajoraxis,inclination,longascend, mean_anomaly):
+    """
+    Given circular orbit with parameters (a,i,Omega,M), return position vector
+    
+    Keyword Arguments:
+    ------------------
+    semimajoraxis - semimajor axis
+    inclination - orbital inclination (radians)
+    longascend - longitude of the ascending node (radians)
+    mean_anomaly - Mean Anomaly (radians)
+    
+    Returns:
+    --------
+    position - position vector (Vector3D)
+
+    """
+
+    position = Vector3D(0.0,0.0,0.0)
+
+    # Compute orbit in the x-y plane
+    position.x = semimajoraxis*cos(mean_anomaly)
+    position.y = semimajoraxis*sin(mean_anomaly)
+    position.z = 0.0
+        
+    # Rotate orbit according to inclination and longitude of ascending node
+    position = position.rotate_x(inclination)
+    position = position.rotate_z(longascend)
+
+    return position
+
 
 class Agent:
 
@@ -162,14 +193,7 @@ class Agent:
         # Update mean anomaly
         self.mean_anomaly = self.mean_anomaly + 2.0*pi*self.period*dt
 
-        # Compute orbit in the x-y plane
-        self.position.x = cos(self.mean_anomaly)
-        self.position.y = sin(self.mean_anomaly)
-        self.position.z = 0.0
-        
-        # Rotate orbit according to inclination and longitude of ascending node
-        self.position = self.position.rotate_x(self.inclination)
-        self.position = self.position.rotate_z(self.longascend)
+        self.position = get_position_from_orbit(self.semimajoraxis,self.inclination, self.longascend, self.mean_anomaly)
         
         self.position = self.position.scalarmult(AU_to_pc)  # positions in pc
         self.position = self.position.add(self.starposition)
@@ -244,9 +268,36 @@ class Agent:
         self.velocity = self.starvelocity
                 
 
-    def sample_GHZ(self):
-        '''Returns position and velocity vector of a star in the GHZ'''
-        # TODO copy in GHZ sampler from C++ methods
+    def sample_GHZ(self, seed = 10, innerRadius=6000.0, outerRadius=10000.0, scale = 3500, max_inclination = 0.0,  incmax=0.5):
+        '''
+        Places agent in a circular orbit inside an annular Galactic Habitable Zone
+            
+            
+        '''
+    
+        # All stars have the same mass
+        self.starmass = 1.0;
+
+        # Scale surface density distribution for the range of radii involved
+        sigma_0 = (exp(-innerRadius/scale) - exp(-outerRadius/scale));
+    
+        # Randomly assign star orbital parameters
+        # Assign semimajor axis such that the surface density profile is correct
+
+        semimajoraxis = exp(-innerRadius/scale) -random()*sigma_0
+        semimajoraxis = -log(semimajoraxis)*scale
+    
+        inclination = -incmax + random() * 2.0 * incmax
+        mean_anomaly = random() * 2.0 * pi
+        longascend = random() * 2.0 * pi
+    
+        # Convert orbit into a position vector
+        self.starposition = get_position_from_orbit(semimajoraxis, inclination, longascend, mean_anomaly)
+        self.starvelocity = Vector3D(0.0,0.0,0.0)
+        
+        self.position = self.starposition
+        self.velocity = self.starvelocity
+    
 
     def plot(self,radius,wedge_length):
         """

@@ -217,7 +217,6 @@ class Population:
             # Define a transmitter object with fixed broadcast parameters but no initial position
             agent = transmitter.Transmitter(semimajoraxis = semimajoraxis, inclination=inclination, longascend=longascend, mean_anomaly=mean_anomaly, nu=nu, strategy=strategy.__copy__(), bandwidth=bandwidth, solidangle=solidangle, power=power, polarisation=polarisation, tbegin=tbegin, tend=tend, pulseduration=pulseduration, pulseinterval=pulseinterval)
         
-
             # Set its position and velocity according to a random sampling
             if(spatial_distribution=="GHZ"):
                 agent.sample_GHZ()

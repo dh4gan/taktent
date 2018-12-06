@@ -1,5 +1,7 @@
 taktent/*/.pyc
 taktent/*/__pycache__
+examples/*.png
+
 
 dist/
 /*.egg-info

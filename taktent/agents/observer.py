@@ -183,6 +183,10 @@ class Observer(Parent):
         # Travel time between observer and transmitter location
         separation = self.position.subtract(transmitter.position)
         delay_time = time - separation.mag()/transmitter.broadcastspeed
+        
+        # Cannot detect transmitters before start of run
+        if(delay_time <0.0):
+            return False
 
         #
         # 1. Is transmitter beam illuminating observer?
