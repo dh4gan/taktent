@@ -234,6 +234,24 @@ class Population:
             self.add_agent(agent)
 
 
+
+    def generate_observer(self, observe_direction, openangle, strategy, spatial_distribution="random_sphere"):
+        """Place a single observer object according to a spatial distribution"""
+    
+        agent = observer.Observer(strategy=strategy, direction_vector=observe_direction, openingangle=openangle,semimajoraxis=None)
+    
+        # Set its position and velocity according to a random sampling
+        if(spatial_distribution=="GHZ"):
+            agent.sample_GHZ()
+            
+        elif(spatial_distribution=="random_sphere"):
+            agent.sample_random_sphere()
+            
+        elif(spatial_distribution=="random" or spatial_distribution==None):
+            agent.sample_random()
+
+        self.add_agent(agent)
+
     def generate_observer_at_origin(self,observe_direction,openangle,strategy):
         """Place a single observer object at co-ordinates (0.0,0.0,0.0)"""
         

@@ -42,16 +42,17 @@ openangle = 0.1*pi
 
 
 #
-# 2. Define Population and create observer at origin
+# 2. Define Population and create observer
 #
 
 popn = Population(tbegin,tend,dt)
 
-observerID = popn.generate_observer_at_origin(observer_dir,openangle,strat_obs)
-
-
+#observerID = popn.generate_observer_at_origin(observer_dir,openangle,strat_obs)
+observerID = popn.generate_observer(observer_dir,openangle,strat_obs, spatial_distribution="GHZ")
 popn.agents[-1].nu_min = 1.0e0
 popn.agents[-1].nu_max = 1.0e11
+
+
 
 
 #
@@ -83,6 +84,8 @@ popn.generate_identical_transmitters(N_transmitters=N_transmitters, strategy=str
 popn.assign_Gaussian_broadcast_parameters(seed=10, nu_parameters=[1.42e9,1.0e9], solidangle_parameters=[pi,0.5*pi])
 
 popn.assign_Gaussian_strategy_parameters(seed=10)
+
+
 
 # Define plot limits
 
