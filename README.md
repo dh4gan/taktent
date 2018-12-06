@@ -39,14 +39,28 @@ This package is hosted on PyPI.  To install with pip:
 `> pip install taktent`
 
 
-Examples of Use
----------------
+Code dependencies
+-----------------
 
-Examples of how to use tak-tent to setup and conduct SETI simulations can be found in the `examples/` folder.
+The code has been developed in Python 3.6, using numpy 1.14.3 and matplotlib 2.2.2, and hence requires these for basic operation.
+
+If the user wishes to generate all-sky maps for their Observer objects, this will also require `mpl_toolkits.basemap` to be installed.  This is an optional requirement, and the package will function without it.
+
+
+Examples of Use
+-------------------
+
+Examples of how to use `taktent` to set up and conduct SETI simulations can be found in the `examples/` folder.
+
+
+How to Contribute
+----------------------
+
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) for details
 
 
 Package Structure
-------------------
+---------------------
 
 The package contains several modules defining six fundamental classes: 
 
@@ -71,12 +85,20 @@ The package contains several modules defining six fundamental classes:
 
 `Population` - a class that defines the combined population of Transmitters and Observers, and drives the simulation
 
-Code dependencies
------------------
 
-The code has been developed in Python 3.6, using numpy 1.14.3 and matplotlib 2.2.2, and hence requires these for basic operation.
+Creating a Simulation
+-------------------------
 
-If the user wishes to generate all-sky maps for their Observer objects, this will also require mpl_toolkits.basemap to be installed.
+The basic procedure for creating simulations is as follows:
+
+1. Create a `Population` object
+2. Create `Strategy` objects for `Transmitter` and `Observer`
+3. Generate `Transmitter` objects (either manually or using methods in `Population`)
+4. Generate an `Observer` (or multiple `Observer` objects)
+5. Run the simulation (with data recorded in the `Population` Object)
+
+Monte Carlo Realisation simulations can then be run by repeating steps 1-5 as many times as necessary.
+
 
 The Name
 ---------
