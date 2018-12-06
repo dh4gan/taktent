@@ -50,6 +50,9 @@ fourpi = 4.0*pi
 twopi = 2.0*pi
 piby2 = 0.5*pi
 c = 2.99e8 # speed of light in ms-1
+pc = 3.08e16
+year = 3.15e7
+c_pc_yr = c*year/pc
 
 zero_vector = Vector3D(0.0,0.0,0.0)
 
