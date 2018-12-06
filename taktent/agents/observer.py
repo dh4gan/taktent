@@ -182,7 +182,8 @@ class Observer(Parent):
              
         # Travel time between observer and transmitter location
         separation = self.position.subtract(transmitter.position)
-        delay_time = time - separation.mag()/transmitter.broadcastspeed
+        distance = separation.mag()
+        delay_time = time - distance/transmitter.broadcastspeed
         
         # Cannot detect transmitters before start of run
         if(delay_time <0.0):
@@ -209,7 +210,7 @@ class Observer(Parent):
         if(self.sensitivity==None):
             signal_powerful_enough =True
         else:
-            signal_powerful_enough = transmitter.eirp > self.sensitivity
+            signal_powerful_enough = transmitter.transmitted_flux(distance,) > self.sensitivity
         
         # Is transmitter actively broadcasting (given time delay)?
         transmitter_broadcasting = transmitter.broadcast(delay_time,dt)

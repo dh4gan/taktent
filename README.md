@@ -4,7 +4,7 @@ taktent: a simulator package for (radio) SETI
 
 This Python package allows the user to setup and run an agent-based simulation of a SETI survey.  The package allows the creation of a population of observing and transmitting civilisations.  Each transmitter and observer conducts their activities according to an input strategy.  The success of observers and transmitters can then be recorded, and multiple simulations can be run for Monte Carlo Realisation.
 
-This package is therefore a flexible framework in which to simulate and test different SETI strategies, both as an Observer and as a Transmitter.
+This package is therefore a flexible framework in which to simulate and test different SETI strategies, both as an Observer and as a Transmitter.  It is primarily designed with radio SETI in mind, but is sufficiently flexible to simulate all forms of electromagnetic SETI.
 
 
 ![](doc/xymovie.gif)
@@ -15,9 +15,11 @@ Features
 
 * Object-oriented, agent-driven simulation of Observers and Transmitters
 
+* Generates agents spatially distributed in random cubes, random spheres and the Galactic Habitable Zone
+
 * Simulates continuous and pulsing broadcasts at a defined beam-size
 
-* Permits transmission/observation as a scan across the sky, or as a series of discrete pointings
+* Permits transmission/observation strategies as a smooth scan across the sky, or as a series of discrete pointings
 
 * Accounts for Doppler drift due to transmitters/observers orbiting a host star
 

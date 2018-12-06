@@ -42,7 +42,7 @@
 # calc_eirp - calculate effective isotropic radiated power
 # broadcast(time,dt) - determine if transmitter is transmitting
 
-from numpy import pi,mod,arctan2
+from numpy import pi,mod,arctan2, power
 from taktent.agents.agent import Agent as Parent
 from taktent.agents.vector import Vector3D
 
@@ -58,7 +58,7 @@ zero_vector = Vector3D(0.0,0.0,0.0)
 
 class Transmitter(Parent):
 
-    def __init__(self,position=zero_vector, velocity=zero_vector, strategy=None, direction_vector=zero_vector, openangle=twopi, starposition=zero_vector, starvelocity=zero_vector,starmass=1.0, semimajoraxis=1.0, inclination=0.0, longascend = 0.0, mean_anomaly=0.0,  nu=1.420e9,bandwidth=1.420e7, solidangle=fourpi, power=None, polarisation=None, tbegin=None, tend=None, pulseduration=None,pulseinterval=0.0):
+    def __init__(self,position=zero_vector, velocity=zero_vector, strategy=None, direction_vector=zero_vector, openangle=twopi, starposition=zero_vector, starvelocity=zero_vector,starmass=1.0, semimajoraxis=1.0, inclination=0.0, longascend = 0.0, mean_anomaly=0.0,  nu=1.420e9,bandwidth=1.420e7, solidangle=fourpi, power=None, polarisation=None, tbegin=None, tend=None, pulseduration=None,pulseinterval=0.0, decaylaw=2):
         """
         Initialises an Observer object
             
@@ -95,6 +95,7 @@ class Transmitter(Parent):
         ------------------------
         
         eirp - effective isotropic radiated power
+        decaylaw - index of radiation decay (1/r^2 for EM, 1/r for GW etc)
         broadcastspeed - transmission speed of broadcast (default is lightspped)
         
         detected -- dictionary tracking which observers have detected it
@@ -118,6 +119,7 @@ class Transmitter(Parent):
         self.pulseinterval = pulseinterval
         
         self.broadcastspeed = c # assume transmissions move at lightspeed by default
+        self.decaylaw = decaylaw # inverse square law of radiation decay by default
         
         # opening angle = fraction of solid angle (opening angle = pi if solid angle = 4 pi)
         self.openingangle = 0.25*self.solidangle
@@ -145,6 +147,23 @@ class Transmitter(Parent):
         """Calculate effective isotropic radiated power"""
 
         self.eirp = self.power*(fourpi)/self.solidangle
+    
+    
+    def transmitted_flux(self,distance):
+        """
+        Given a distance, computes the flux received at a given location
+        
+        Keyword Arguments:
+        ------------------
+        distance - distance between transmitter and location
+        
+        
+        Returns:
+        --------
+        Flux
+        """
+    
+        return self.eirp/(fourpi*power(distance,self.decaylaw))
 
     def broadcast(self,time,dt):
         """
