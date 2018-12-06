@@ -1,5 +1,6 @@
 taktent: a simulator package for (radio) SETI
 ==============================================
+[![DOI](https://zenodo.org/badge/157450057.svg)](https://zenodo.org/badge/latestdoi/157450057)
 
 This Python package allows the user to setup and run an agent-based simulation of a SETI survey.  The package allows the creation of a population of observing and transmitting civilisations.  Each transmitter and observer conducts their activities according to an input strategy.  The success of observers and transmitters can then be recorded, and multiple simulations can be run for Monte Carlo Realisation.
 
