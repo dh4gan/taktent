@@ -268,10 +268,17 @@ class Agent:
         self.velocity = self.starvelocity
                 
 
-    def sample_GHZ(self, seed = 10, innerRadius=6000.0, outerRadius=10000.0, scale = 3500, max_inclination = 0.0,  incmax=0.5):
+    def sample_GHZ(self, seed = 10, inner_radius=6000.0, outer_radius=10000.0, scale_length = 3500, max_inclination = 0.5):
         '''
         Places agent in a circular orbit inside an annular Galactic Habitable Zone
-            
+        
+        Keyword Arguments:
+        ------------------
+        
+        inner_radius - inner radius of GHZ
+        outer_radius - outer radius of GHZ
+        scale_length - scale_length of exponential surface density distribution of Agents
+        max_inclination - maximum inclination of Agent
             
         '''
     
@@ -279,15 +286,15 @@ class Agent:
         self.starmass = 1.0;
 
         # Scale surface density distribution for the range of radii involved
-        sigma_0 = (exp(-innerRadius/scale) - exp(-outerRadius/scale));
+        sigma_0 = (exp(-inner_radius/scale_length) - exp(-outer_radius/scale_length));
     
         # Randomly assign star orbital parameters
         # Assign semimajor axis such that the surface density profile is correct
 
-        semimajoraxis = exp(-innerRadius/scale) -random()*sigma_0
-        semimajoraxis = -log(semimajoraxis)*scale
+        semimajoraxis = exp(-inner_radius/scale_length) -random()*sigma_0
+        semimajoraxis = -log(semimajoraxis)*scale_length
     
-        inclination = -incmax + random() * 2.0 * incmax
+        inclination = -max_inclination + random() * 2.0 * max_inclination
         mean_anomaly = random() * 2.0 * pi
         longascend = random() * 2.0 * pi
     
@@ -301,7 +308,8 @@ class Agent:
 
     def plot(self,radius,wedge_length):
         """
-        Return matplotlib.patches objects for agent's position, and target vector (with opening angle)
+        Return matplotlib.patches objects for agent's position,
+        and target vector (with opening angle)
         
         Keyword Arguments:
         ------------------

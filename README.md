@@ -27,13 +27,13 @@ Features
 
 * Generates maps of the sky as seen from Observers' point of view
 
+* Current presets optimised for electromagnetic signals - can be configured for signals of arbitrary speed and decay behaviour (gravitational waves, neutrinos)
+
 
 Future Features/Wishlist
 ------------------------
 
-* Currently designed for electromagnetic communications - in principle extendable to e.g. neutrino or gravitational wave emission
-
-* Interstellar scintillation/absorption/dispersion
+* Interstellar scintillation/absorption/dispersion, other forms of noise
 
 * Sampling of planetary orbits from exoplanet data
 

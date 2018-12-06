@@ -157,7 +157,6 @@ class Transmitter(Parent):
         ------------------
         distance - distance between transmitter and location
         
-        
         Returns:
         --------
         Flux
