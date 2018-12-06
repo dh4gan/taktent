@@ -21,6 +21,8 @@ Features
 
 * Accounts for Doppler drift due to transmitters/observers orbiting a host star
 
+* Accounts for signal travel time
+
 * Generates maps of the sky as seen from Observers' point of view
 
 
