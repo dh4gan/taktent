@@ -31,6 +31,8 @@ Future Features/Wishlist
 
 * Interstellar scintillation/absorption/dispersion
 
+* Sampling of planetary orbits from exoplanet data
+
 
 Installation Instructions
 --------------------------
