@@ -193,7 +193,10 @@ class Observer(Parent):
         # 1. Is transmitter beam illuminating observer?
         #
         
-        unitsep = separation.unit()
+        if(distance>0.0):
+            unitsep = separation.unit()
+        else:
+            return False
 
         # Find transmitter target vector given time delay
         
@@ -233,9 +236,8 @@ class Observer(Parent):
         if(detected):
             self.colour = self.success_colour
             transmitter.colour = transmitter.success_colour
-        
-        self.detect[transmitter.ID] = detected
-        transmitter.detected[self.ID] = detected
+            self.detect[transmitter.ID] = detected
+            transmitter.detected[self.ID] = detected
 
         return detected
 

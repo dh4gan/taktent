@@ -1,5 +1,8 @@
 # Test code runs multiple simulations (Monte Carlo Realisation)
 
+import sys
+sys.path.append('..')
+
 from taktent.agents import *
 from taktent.populations.population import *
 from taktent.strategies import *
@@ -49,7 +52,7 @@ for irun in range(nruns):
     # 2. Define Population and create observer at origin
     #
 
-    popn = Population(tbegin,tend,dt)
+    popn = Population(tbegin,tend,dt,seed=runseed)
 
     observerID = popn.generate_observer_at_origin(observer_dir,openangle,strat_obs)
 
@@ -81,7 +84,7 @@ for irun in range(nruns):
     solidangle = 4.0*pi
     power = 100.0
 
-    popn.generate_identical_transmitters(N_transmitters=N_transmitters, strategy=strat,semimajoraxis =None, inclination=None, mean_anomaly=None, longascend=None, nu=freq, bandwidth=band, solidangle=solidangle, power=power, spatial_distribution="random_sphere",seed=runseed,tbegin=popn.tbegin, tend=popn.tend)
+    popn.generate_identical_transmitters(N_transmitters=N_transmitters, strategy=strat,semimajoraxis =None, inclination=None, mean_anomaly=None, longascend=None, nu=freq, bandwidth=band, solidangle=solidangle, power=power, spatial_distribution="random_sphere",tbegin=popn.tbegin, tend=popn.tend)
 
     # Initialise population ready for run
     popn.initialise()

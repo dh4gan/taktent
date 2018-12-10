@@ -7,12 +7,13 @@ sys.path.append('..')
 from taktent.agents import *
 from taktent.populations.population import *
 from taktent.strategies import *
-from numpy import pi, cos, sin
+from numpy import pi, cos, sin, random
 
 # test code imports key classes, makes a transmitter and an observer object, and plots them
 
+iseed = 10
 tbegin = 0
-tend = 10.0
+tend = 1.0
 dt = 0.1
 
 # function to define a scanning strategy (observer or transmitter)
@@ -45,7 +46,7 @@ openangle = 0.1*pi
 # 2. Define Population and create observer
 #
 
-popn = Population(tbegin,tend,dt)
+popn = Population(tbegin,tend,dt,seed=iseed)
 
 #observerID = popn.generate_observer_at_origin(observer_dir,openangle,strat_obs)
 observerID = popn.generate_observer(observer_dir,openangle,strat_obs, spatial_distribution="GHZ")
@@ -79,11 +80,11 @@ band = 1.0e10
 solidangle = pi
 power = 100.0
 
-popn.generate_identical_transmitters(N_transmitters=N_transmitters, strategy=strat,semimajoraxis =None, inclination=None, mean_anomaly=None, longascend=None, nu=freq, bandwidth=band, solidangle=solidangle, power=power, spatial_distribution="GHZ", seed=10,tbegin=popn.tbegin, tend=popn.tend)
+popn.generate_identical_transmitters(N_transmitters=N_transmitters, strategy=strat,semimajoraxis =None, inclination=None, mean_anomaly=None, longascend=None, nu=freq, bandwidth=band, solidangle=solidangle, power=power, spatial_distribution="GHZ",tbegin=popn.tbegin, tend=popn.tend)
 
-popn.assign_Gaussian_broadcast_parameters(seed=10, nu_parameters=[1.42e9,1.0e9], solidangle_parameters=[pi,0.5*pi])
+popn.assign_Gaussian_broadcast_parameters(nu_parameters=[1.42e9,1.0e9], solidangle_parameters=[pi,0.5*pi])
 
-popn.assign_Gaussian_strategy_parameters(seed=10)
+popn.assign_Gaussian_strategy_parameters()
 
 
 
@@ -113,9 +114,13 @@ for i in range(popn.nsteps):
     outputfile = 'xy_'+str(i).zfill(3)+'.png'
     popn.plot(markersize,wedge_length, xmax,ymax, outputfile)
     popn.update()
-
     popn.generate_skymaps(fullmap=True)
 
+
+print (popn.means["distance"])
+print (popn.means["frequency"])
+print (popn.means["pulseinterval"])
+print (popn.means["pulseduration"])
 
 
 

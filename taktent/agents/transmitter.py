@@ -58,7 +58,7 @@ zero_vector = Vector3D(0.0,0.0,0.0)
 
 class Transmitter(Parent):
 
-    def __init__(self,position=zero_vector, velocity=zero_vector, strategy=None, direction_vector=zero_vector, openangle=twopi, starposition=zero_vector, starvelocity=zero_vector,starmass=1.0, semimajoraxis=1.0, inclination=0.0, longascend = 0.0, mean_anomaly=0.0,  nu=1.420e9,bandwidth=1.420e7, solidangle=fourpi, power=None, polarisation=None, tbegin=None, tend=None, pulseduration=None,pulseinterval=0.0, decaylaw=2):
+    def __init__(self,position=zero_vector, velocity=zero_vector, strategy=None, direction_vector=zero_vector, openangle=twopi, starposition=zero_vector, starvelocity=zero_vector,starmass=1.0, semimajoraxis=1.0, inclination=0.0, longascend = 0.0, mean_anomaly=0.0,  nu=1.420e9,bandwidth=1.420e7, solidangle=fourpi, power=None, polarisation=None, tbegin=0.0, tend=0.0, pulseduration=0.0,pulseinterval=0.0, decaylaw=2):
         """
         Initialises an Observer object
             

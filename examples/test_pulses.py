@@ -17,6 +17,7 @@ from numpy import pi, cos, sin
 tbegin = 0.0
 tend = 20
 dt = 0.1
+iseed = 20
 
 #
 # 1. Define transmitter properties
@@ -71,7 +72,7 @@ strat_obs = strategy.Strategy()
 # 3. Define Population object and create observer at origin
 #
 
-popn = Population(tbegin,tend,dt)
+popn = Population(tbegin,tend,dt,seed =iseed)
 
 observerID = popn.generate_observer_at_origin(observer_dir,openangle,strat_obs)
 

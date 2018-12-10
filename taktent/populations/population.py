@@ -34,7 +34,7 @@
 import taktent.agents.observer as observer
 import taktent.agents.transmitter as transmitter
 import taktent.agents.vector as vector
-from numpy import zeros, sum, round, random, pi
+from numpy import zeros, sum, round, random, pi, where
 import matplotlib.pyplot as plt
 
 
@@ -49,7 +49,7 @@ def uniform_sample(params):
 
 class Population:
 
-    def __init__(self,tbegin, tend, dt):
+    def __init__(self,tbegin, tend, dt,seed=10):
         """
         Constructor for a Population object (group of agents in a simulation)
             
@@ -75,12 +75,22 @@ class Population:
         self.tend = tend
         self.dt = dt
         self.time = tbegin
+        self.seed = seed
+        random.seed(self.seed)
         
         self.nsteps = int((self.tend-self.tbegin)/self.dt)
         self.istep = 0
         
         self.ndetect = zeros(self.nsteps)
     
+        self.means = {}
+        self.means["time"] = zeros(self.nsteps)
+        self.means["distance"] = zeros(self.nsteps)
+        self.means["frequency"] = zeros(self.nsteps)
+        self.means["bandwidth"] = zeros(self.nsteps)
+        self.means["power"] = zeros(self.nsteps)
+        self.means["pulseinterval"] = zeros(self.nsteps)
+        self.means["pulseduration"] = zeros(self.nsteps)
 
     def add_agent(self, agent):
         """
@@ -95,15 +105,65 @@ class Population:
         self.nagents = len(self.agents)
     
 
+    def find_agent(self, ID):
+        """
+        Search for an agent by its ID, and return it
+        
+        Keyword Arguments:
+        ------------------
+        ID - ID number to be returned
+        
+        Returns:
+        --------
+        agent - agent corresponding to this ID
+        """
     
-    def assign_Gaussian_broadcast_parameters(self, seed=10, nu_parameters=[1.42e9,1.0e9], bandwidth_parameters=[1.0e9,1.0e8], solidangle_parameters=[0.1*pi, 0.01*pi], power_parameters=[1.0e20,1.0e15], tbegin_parameters = [0.0, 0.0], tend_parameters=[100.0,0.0], pulseduration_parameters = [1.0,0.1], pulseinterval_parameters=[1.0,0.1] ):
+        targetID = where([a.ID==ID for a in self.agents])[0][0]
+        return self.agents[targetID]
+    
+    
+    def calculate_means(self):
+        """
+        Calculate mean properties of detected Transmitters
+    
+        Mean properties calculated:
+        Distance
+        Frequency
+        Bandwidth
+        Pulse Duration
+        Pulse Interval
+        
+        """
+        
+        for a in self.agents:
+            if a.type=="Observer":
+                # Loop over detected transmitters in Observer list
+                for key in a.detect.keys():
+                    transmitter = self.find_agent(key)
+                    
+                    self.means["time"][self.istep] = self.time
+                    
+                    self.means["distance"][self.istep] += transmitter.position.subtract(a.position).mag()/float(self.ndetect[self.istep])
+
+                    self.means["frequency"][self.istep] +=transmitter.nu/float(self.ndetect[self.istep])
+                    self.means["bandwidth"][self.istep] +=transmitter.bandwidth/float(self.ndetect[self.istep])
+                    self.means["power"][self.istep] +=transmitter.power/float(self.ndetect[self.istep])
+                    self.means["pulseduration"][self.istep]+=transmitter.pulseduration/float(self.ndetect[self.istep])
+                    self.means["pulseinterval"][self.istep]+=transmitter.pulseinterval/float(self.ndetect[self.istep])
+
+
+
+
+                
+    
+    
+    def assign_Gaussian_broadcast_parameters(self, nu_parameters=[1.42e9,1.0e9], bandwidth_parameters=[1.0e9,1.0e8], solidangle_parameters=[0.1*pi, 0.01*pi], power_parameters=[1.0e20,1.0e15], tbegin_parameters = [0.0, 0.0], tend_parameters=[100.0,0.0], pulseduration_parameters = [1.0,0.1], pulseinterval_parameters=[1.0,0.1] ):
         '''
         Assign broadcast parameters to all transmitters assuming Gaussian distributions
         Each argument contains [mean,stdev] for each broadcast parameter
             
         Keyword Arguments:
         ------------------
-        seed -- Random number seed
         nu_parameters - frequency [mean,stdev]
         bandwidth_parameters - bandwidth [mean,stdev]
         solidangle_parameters - solidangle [mean,stdev]
@@ -130,13 +190,12 @@ class Population:
             agent.pulseinterval = gaussian_sample(pulseinterval_parameters)
                 
                 
-    def assign_Gaussian_strategy_parameters(self, seed=10,period_xy_parameters=[1.0,0.1], period_yz_parameters=[1.0,0.1], phase_xy_parameters=[pi,0.5*pi], phase_yz_parameters=[pi,0.5*pi]):
+    def assign_Gaussian_strategy_parameters(self,period_xy_parameters=[1.0,0.1], period_yz_parameters=[1.0,0.1], phase_xy_parameters=[pi,0.5*pi], phase_yz_parameters=[pi,0.5*pi]):
         '''
         Assign parameters to scanningStrategy objects belonging to Transmitters in Population
             
         Keyword Arguments:
         -----------------
-        seed -- Random number seed
         period_xy_parameters -- period_xy [mean,stdev]
         period_yz parameters -- period_yz [mean,stdev]
         phase_xy_parameters -- phase_xy [mean,stdev]
@@ -151,14 +210,13 @@ class Population:
             agent.strategy.phase_xy = gaussian_sample(phase_xy_parameters)
             agent.strategy.phase_yz = gaussian_sample(phase_yz_parameters)
 
-    def assign_uniform_broadcast_parameters(self, seed=10, nu_parameters=[1.0e9,5.0e9], bandwidth_parameters=[1.0e8,1.0e9], solidangle_parameters=[0.0, 4*pi], power_parameters=[1.0e15,1.0e20], tbegin_parameters = [0.0, 0.0], tend_parameters=[100.0,100.0], pulseduration_parameters = [0.1,1.0], pulseinterval_parameters=[0.1,1.0] ):
+    def assign_uniform_broadcast_parameters(self, nu_parameters=[1.0e9,5.0e9], bandwidth_parameters=[1.0e8,1.0e9], solidangle_parameters=[0.0, 4*pi], power_parameters=[1.0e15,1.0e20], tbegin_parameters = [0.0, 0.0], tend_parameters=[100.0,100.0], pulseduration_parameters = [0.1,1.0], pulseinterval_parameters=[0.1,1.0] ):
         '''
         Assign broadcast parameters to all transmitters assuming uniform distributions
         Each argument contains [min,max] for each broadcast parameter
         
         Keyword Arguments:
         ------------------
-        seed -- random number seed
         nu_parameters - frequency [min,max]
         bandwidth_parameters - bandwidth [min,max]
         solidangle_parameters - solidangle [min,max]
@@ -183,7 +241,7 @@ class Population:
             agent.pulseinterval = uniform_sample(pulseinterval_parameters)
     
     
-    def generate_identical_transmitters(self, N_transmitters, strategy,semimajoraxis,inclination,longascend, mean_anomaly, nu, bandwidth, solidangle, power, polarisation=None, tbegin=0.0, tend=100.0, pulseduration=None, pulseinterval=None, spatial_distribution=None, seed=10):
+    def generate_identical_transmitters(self, N_transmitters, strategy,semimajoraxis,inclination,longascend, mean_anomaly, nu, bandwidth, solidangle, power, polarisation=None, tbegin=0.0, tend=100.0, pulseduration=0.0, pulseinterval=0.0, spatial_distribution=None):
         '''
         Generate a population of transmitters with identical broadcast properties,
         distributed in space according to a defined distribution
@@ -207,11 +265,7 @@ class Population:
         pulseinterval -- pulse interval (years)
         spatial_distribution -- choice of distribution of transmitters: "GHZ", "random_sphere", "random"
         
-        seed -- random number seed
-        
         '''
-        
-        random.seed(seed)
         
         for i in range(N_transmitters):
             # Define a transmitter object with fixed broadcast parameters but no initial position
@@ -278,7 +332,9 @@ class Population:
     def update(self):
         """ Update Population attributes"""
         
+        self.calculate_means()
         self.update_agents()
+        
         self.time = self.time+self.dt
         self.istep = self.istep+1
     
@@ -320,6 +376,7 @@ class Population:
         for i in range(self.nagents):
             
             if self.agents[i].type=="Observer":
+                self.agents[i].detect ={}
 
                 for j in range(self.nagents):
                     if (i==j): continue
