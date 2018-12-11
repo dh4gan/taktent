@@ -92,26 +92,20 @@ ymax = 10000
 markersize = 0.03*xmax
 wedge_length = 0.15*xmax
 
-
-# Simulation timestep etc
-popn.time = 0
-tmax = 20
-popn.dt = 0.1
-
-# Initialise population ready for run
-popn.initialise()
+# Run simulation
+popn.run_simulation(write_detections=True, make_plots=False, fullskymap=True)
 
 # Test run multiple steps
-for i in range(popn.nsteps):
+#for i in range(popn.nsteps):
 
-    print ("Time: ",str(round(popn.time,2)))
-    popn.conduct_observations()
-    popn.record_detections()
-    outputfile = 'xy_'+str(i).zfill(3)+'.png'
-    popn.plot(markersize,wedge_length, xmax,ymax, outputfile)
-    popn.update()
+#    print ("Time: ",str(round(popn.time,2)))
+#    popn.conduct_observations()
+#    popn.record_detections()
+#    outputfile = 'xy_'+str(i).zfill(3)+'.png'
+#    popn.plot(markersize,wedge_length, xmax,ymax, outputfile)
+#    popn.update()
 
-    popn.generate_skymaps(fullmap=True)
+#    popn.generate_skymaps(fullmap=True)
 
 
 

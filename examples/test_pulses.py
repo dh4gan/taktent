@@ -79,39 +79,15 @@ observerID = popn.generate_observer_at_origin(observer_dir,openangle,strat_obs)
 # Add a single agent
 popn.add_agent(tran)
 
-# Initialise population ready for run
-popn.initialise()
-
-popn.generate_skymaps() # generate a skymap
-
-
 
 #
 # 4. Run simulation
 #
 
+# Run simulation
+popn.run_simulation(write_detections=True, make_plots=False, fullskymap=True)
 
 
-# Define plot limits
-markersize = 0.5
-wedge_length = 5.0
-xmax = 20
-ymax = 20
-
-for i in range(popn.nsteps):
-
-    print ("Time: ",popn.time)
-    popn.conduct_observations() # All observers attempt to observe transmitters
-
-    outputfile = 'xy_'+str(i).zfill(3)+'.png'
-    # Plot observers and transmitters (x,y)
-    popn.plot(markersize,wedge_length, xmax,ymax, outputfile)
-    
-    # Update attributes of all agents in population
-    popn.update()
-
-
-print (popn.ndetect)
 
 
 

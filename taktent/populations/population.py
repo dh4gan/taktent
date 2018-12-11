@@ -34,9 +34,12 @@
 import taktent.agents.observer as observer
 import taktent.agents.transmitter as transmitter
 import taktent.agents.vector as vector
-from numpy import zeros, sum, round, random, pi, where
+from numpy import zeros, sum, round, random, pi, where, amax, savetxt, vstack, transpose
 import matplotlib.pyplot as plt
 
+import itertools
+
+newID = itertools.count(1)
 
 def gaussian_sample(params):
     '''Return sample from a Gaussian distribution with params=[mu,sigma]'''
@@ -49,13 +52,14 @@ def uniform_sample(params):
 
 class Population:
 
-    def __init__(self,tbegin, tend, dt,seed=10):
+    def __init__(self, tbegin, tend, dt,index=1,seed=10):
         """
         Constructor for a Population object (group of agents in a simulation)
             
         Keyword Arguments:
         ------------------
-            
+        
+        index -- a numerical identifier for this simulation (to distinguish multiple simulations)
         tbegin -- beginning time of simulation (years)
         tend -- ending time of simulation (years)
         dt -- timestep (years)
@@ -69,6 +73,7 @@ class Population:
         
         """
 
+        self.ID = str(index).zfill(3)
         self.agents = []
         
         self.tbegin = tbegin
@@ -349,9 +354,33 @@ class Population:
         self.define_agent_strategies(self,strategy,"Observer")
     
     
-    def update(self):
+    def run_simulation(self, write_detections=False, make_plots=False, fullskymap=False):
+    
+        self.initialise()
+        for i in range(self.nsteps):
+            
+            print ("Simulation ID ",self.ID, "Time: ",str(round(self.time,2)))
+            self.update(write_detections,make_plots,fullskymap)
+
+
+        self.write_means_to_file()
+    
+    
+    
+    
+    def update(self, write_detections=False, make_plots=False, fullskymap=False):
         """ Update Population attributes"""
         
+        self.conduct_observations()
+        
+        if(write_detections):
+            self.record_detections()
+        
+        if(make_plots):
+            outputfile = 'xy_'+str(self.istep).zfill(3)+'.png'
+            self.plot(outputfile)
+            self.generate_skymaps(fullmap=fullskymap)
+    
         self.calculate_means()
         self.update_agents()
         
@@ -361,8 +390,26 @@ class Population:
     def update_agents(self):
         """Update the properties of all Agent Objects in the Population"""
         
+        self.xmin = 1.0e30
+        self.xmax = -1.0e30
+        self.ymin = 1.0e30
+        self.ymax = -1.0e30
+        
         for agent in self.agents:
             agent.update(self.time,self.dt)
+            
+            if agent.position.x > self.xmax:
+                self.xmax = agent.position.x
+            
+            if agent.position.x < self.xmin:
+                self.xmin = agent.position.x
+                    
+            if agent.position.y > self.ymax:
+                self.ymax = agent.position.y
+
+            if agent.position.y < self.ymin:
+                self.ymin = agent.position.y
+
 
     def initialise(self):
         """Set time to zero, and ensure all Agents in population are correctly up to date"""
@@ -411,12 +458,17 @@ class Population:
         for i in range(self.nagents):
             self.agents[i].set_colour()
 
-    def plot(self, markersize, wedge_length,xmax,ymax, filename=None):
+    def plot(self,filename=None):
         """Plot all agents in the system"""
         fig1 = plt.figure()
         ax1 = fig1.add_subplot(111)
-        ax1.set_xlim(-xmax,xmax)
-        ax1.set_ylim(-ymax,ymax)
+        ax1.set_xlim(self.xmin,self.xmax)
+        ax1.set_ylim(self.ymin,self.ymax)
+        
+        
+        rmax =amax([self.xmax,self.ymax])
+        markersize = 0.03*rmax
+        wedge_length = 0.15*rmax
         
         for agent in self.agents:
             circle, wedge = agent.plot(markersize,wedge_length)
@@ -435,5 +487,30 @@ class Population:
             fig1.savefig(filename)
 
         plt.close()
+
+    def write_means_to_file(self):
+        """Write mean dictionary to file"""
+
+        outputfile = "Population_"+self.ID.zfill(3)+"_meandata.dat"
+
+        header = ""
+        first_time = True
+        for key,value in self.means.items():
+            header = header + " " +key.ljust(10)
+            if first_time:
+                data = value.transpose()
+                first_time=False
+            else:
+                data = vstack((data, value))
+            
+        print (data[:,0])
+        data = transpose(data)
+        print (data[:,0])
+        savetxt(outputfile, data, fmt="%10.4e",header=header)
+  
+
+
+
+
 
 

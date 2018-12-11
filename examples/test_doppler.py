@@ -63,25 +63,7 @@ popn.agents[-1].nu_max = tran.nu*(1.0+6.0e-4)
 popn.add_agent(tran)
 
 
-# Define plot limits
-
-markersize = 0.5
-wedge_length = 5.0
-xmax = 20
-ymax = 20
-
-# Initialise population ready for run
-popn.initialise()
-
-# Test run for multiple steps, outputting to file
-for i in range(popn.nsteps):
-
-    print ("Time: ",popn.time)
-    popn.conduct_observations()
-
-    outputfile = 'population_'+str(i).zfill(3)+'.png'
-    popn.plot(markersize,wedge_length, xmax,ymax, outputfile)
-    popn.update()
+popn.run_simulation(write_detections=True, make_plots=False, fullskymap=True)
 
 
 

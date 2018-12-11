@@ -52,7 +52,7 @@ for irun in range(nruns):
     # 2. Define Population and create observer at origin
     #
 
-    popn = Population(tbegin,tend,dt,seed=runseed)
+    popn = Population(tbegin,tend,dt,index=irun,seed=runseed)
 
     observerID = popn.generate_observer_at_origin(observer_dir,openangle,strat_obs)
 
@@ -86,17 +86,7 @@ for irun in range(nruns):
 
     popn.generate_identical_transmitters(N_transmitters=N_transmitters, strategy=strat,semimajoraxis =None, inclination=None, mean_anomaly=None, longascend=None, nu=freq, bandwidth=band, solidangle=solidangle, power=power, spatial_distribution="random_sphere",tbegin=popn.tbegin, tend=popn.tend)
 
-    # Initialise population ready for run
-    popn.initialise()
-
-    # Test run multiple steps
-    for i in range(popn.nsteps):
-
-        print ("Time: ",popn.time)
-        popn.conduct_observations()
-        popn.update()
-
-    # Collect MCR data - what to collect?
+    popn.run_simulation(write_detections=True, make_plots=False, fullskymap=True)
 
     ndetect_MCR.append(popn.ndetect)
     ntotal_MCR.append(sum(popn.ndetect))
