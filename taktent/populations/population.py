@@ -158,26 +158,7 @@ class Population:
 
 
 
-    def record_detections(self):
-        """
-        For each Observer, write a file containing all detected Transmitters
-        """
-        
-        for a in self.agents:
-            if a.type=="Observer":
-                
-                outputfile = "Observer_"+a.ID+"_time_00"+str(round(self.time,2))+".detections"
-                
-                f_obj = open(outputfile, 'w')
-                
-                f_obj.write("# Type ID x y z nx ny nz nu bandwidth power openingangle pulseduration pulseinterval\n")
-                
-                for key in a.detect.keys():
-                    transmitter = self.find_agent(key)
-                
-                    f_obj.write(transmitter.write_to_file())
 
-        f_obj.close()
 
                 
     
@@ -312,8 +293,6 @@ class Population:
 
             self.add_agent(agent)
 
-
-
     def generate_observer(self, observe_direction, openangle, strategy, spatial_distribution="random_sphere"):
         """Place a single observer object according to a spatial distribution"""
     
@@ -338,7 +317,6 @@ class Population:
     
         return self.agents[-1].ID
 
-
     def define_agent_strategies(self,strategy,agentType):
         """Define strategies of agents in the population (where they are type agentType)"""
         for agent in self.agents:
@@ -352,10 +330,19 @@ class Population:
     def define_observation_strategies(self,strategy):
         """Define strategies of observers"""
         self.define_agent_strategies(self,strategy,"Observer")
-    
+
     
     def run_simulation(self, write_detections=False, make_plots=False, fullskymap=False):
-    
+        """
+        Run Population detection simulation from beginning to end
+        
+        Keyword Arguments:
+        ------------------
+        write_detections - record individual detections to file?
+        make_plots       - Plot xy position and skymaps for all Observers?
+        fullskymap       - Plot all sky maps for each Observer?
+        """
+        
         self.initialise()
         for i in range(self.nsteps):
             
@@ -365,7 +352,12 @@ class Population:
 
         self.write_means_to_file()
     
-    
+    def initialise(self):
+        """
+        Set time to zero, and ensure all Agents in population are correctly up to date
+        """
+        self.time = 0.0
+        self.update_agents()
     
     
     def update(self, write_detections=False, make_plots=False, fullskymap=False):
@@ -411,10 +403,6 @@ class Population:
                 self.ymin = agent.position.y
 
 
-    def initialise(self):
-        """Set time to zero, and ensure all Agents in population are correctly up to date"""
-        self.time = 0.0
-        self.update_agents()
     
     
     def generate_skymaps(self,fullmap=False):
@@ -488,8 +476,30 @@ class Population:
 
         plt.close()
 
+
+    def record_detections(self):
+        """
+        For each Observer, write a file containing all detected Transmitters
+        """
+            
+        for a in self.agents:
+            if a.type=="Observer":
+                
+                outputfile = "Observer_"+a.ID+"_time_00"+str(round(self.time,2))+".detections"
+                
+                f_obj = open(outputfile, 'w')
+                
+                f_obj.write("# Type ID x y z nx ny nz nu bandwidth power openingangle pulseduration pulseinterval\n")
+                
+                for key in a.detect.keys():
+                    transmitter = self.find_agent(key)
+                    
+                    f_obj.write(transmitter.write_to_file())
+                        
+                f_obj.close()
+
     def write_means_to_file(self):
-        """Write mean dictionary to file"""
+        """Write mean population data to file"""
 
         outputfile = "Population_"+self.ID.zfill(3)+"_meandata.dat"
 
