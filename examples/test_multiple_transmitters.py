@@ -54,8 +54,6 @@ popn.agents[-1].nu_min = 1.0e0
 popn.agents[-1].nu_max = 1.0e11
 
 
-
-
 #
 # 3. Define properties of transmitter population
 #
@@ -86,8 +84,6 @@ popn.assign_Gaussian_broadcast_parameters(nu_parameters=[1.42e9,1.0e9], solidang
 
 popn.assign_Gaussian_strategy_parameters()
 
-
-
 # Define plot limits
 
 xmax = 10000
@@ -110,11 +106,14 @@ for i in range(popn.nsteps):
 
     print ("Time: ",str(round(popn.time,2)))
     popn.conduct_observations()
-    
+    popn.record_detections()
     outputfile = 'xy_'+str(i).zfill(3)+'.png'
     popn.plot(markersize,wedge_length, xmax,ymax, outputfile)
     popn.update()
+
     popn.generate_skymaps(fullmap=True)
+
+
 
 
 print (popn.means["distance"])

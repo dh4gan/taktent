@@ -76,7 +76,7 @@ pc_yr_to_ms = 3.08e16/3.15e7
 
 class Observer(Parent):
     
-    def __init__(self,position=zero_vector, velocity=zero_vector, strategy=None, direction_vector=zero_vector, openingangle=piby2, starposition=zero_vector, starvelocity=zero_vector, starmass=1.0, semimajoraxis=1.0, inclination=0.0, longascend=0.0,mean_anomaly=0.0, sensitivity=None, nu_min=1.0e9, nu_max=2.0e9, nchannels=1.0e6):
+    def __init__(self,position=zero_vector, velocity=zero_vector, strategy=None, direction_vector=zero_vector, openingangle=piby2, starposition=zero_vector, starvelocity=zero_vector, starmass=1.0, semimajoraxis=1.0, inclination=0.0, longascend=0.0,mean_anomaly=0.0, sensitivity=0.0, nu_min=1.0e9, nu_max=2.0e9, nchannels=1.0e6):
         
         """
         Initialises an Observer object
@@ -118,6 +118,31 @@ class Observer(Parent):
         self.nchannels = nchannels
         
         self.detect = {}
+    
+    
+    def __str__(self, tags=True):
+        """
+        Prints Observer data to a multi-line string
+        
+        Returns:
+        --------
+        Multi-line string containing Observer data
+        """
+    
+        return "Observer: ID %s: position %f %f %f pointing %f %f %f \nsensitivity %f openingangle %f "% (self.ID, self.position.x, self.position.y, self.position.z,self.n.x, self.n.y,self.n.z, self.sensitivity,self.openingangle)
+
+    
+    
+    def write_to_file(self):
+        """
+        Return a one-line string containing Observer data suitable for writing to file
+        
+        Returns:
+        --------
+        One-line string containing Observer data
+        """
+    
+        return "Observer %s %f %f %f   %f %f %f   %f %f \n"%self.ID, self.position.x, self.position.y, self.position.z, self.n.x, self.n.y,self.n.z, self.sensitivity, self.openingangle
     
     def update(self,time,dt):
         """
@@ -340,6 +365,10 @@ class Observer(Parent):
         outputfile = "skymap_"+self.ID+"_time_00"+str(round(time,2))+".png"
         plt.savefig(outputfile)
         plt.close()
+
+
+
+
 
 
 

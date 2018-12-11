@@ -127,6 +127,31 @@ class Transmitter(Parent):
         self.detected ={} # dictionary tracking detections
         
         self.calc_eirp()
+    
+    
+    def __str__(self):
+        """
+        Prints Transmitter data to a string
+        
+        Returns:
+        --------
+        Multi-line string containing Transmitter data
+        """
+        
+        return "Transmitter: ID %s: position %f %f %f pointing %f %f %f \n nu %f bandwidth %f power %f openingangle %f pulseduration %f pulseinterval %f"% (self.ID, self.position.x, self.position.y, self.position.z,self.n.x, self.n.y,self.n.z, self.nu, self.bandwidth, self.power,self.openingangle, self.pulseduration, self.pulseinterval)
+       
+        return s
+            
+            
+    def write_to_file(self):
+        """
+        Returns a string suitable for writing data to file
+        
+        Returns:
+        --------
+        One-line string containing Transmitter data
+        """
+        return "Transmitter %s %f %f %f   %f %f %f   %f %f %f %f %f %f \n"%(self.ID, self.position.x, self.position.y, self.position.z, self.n.x, self.n.y,self.n.z, self.nu, self.bandwidth, self.power, self.openingangle,self.pulseduration, self.pulseinterval)
 
     def update(self,time,dt):
         """

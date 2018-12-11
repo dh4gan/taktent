@@ -153,6 +153,26 @@ class Population:
 
 
 
+    def record_detections(self):
+        """
+        For each Observer, write a file containing all detected Transmitters
+        """
+        
+        for a in self.agents:
+            if a.type=="Observer":
+                
+                outputfile = "Observer_"+a.ID+"_time_00"+str(round(self.time,2))+".detections"
+                
+                f_obj = open(outputfile, 'w')
+                
+                f_obj.write("# Type ID x y z nx ny nz nu bandwidth power openingangle pulseduration pulseinterval\n")
+                
+                for key in a.detect.keys():
+                    transmitter = self.find_agent(key)
+                
+                    f_obj.write(transmitter.write_to_file())
+
+        f_obj.close()
 
                 
     
