@@ -50,7 +50,7 @@ fourpi = 4.0*pi
 twopi = 2.0*pi
 piby2 = 0.5*pi
 c = 2.99e8 # speed of light in ms-1
-pc = 3.08e16
+pc = 3.08e16 # pc in m
 year = 3.15e7
 c_pc_yr = c*year/pc
 
@@ -81,7 +81,7 @@ class Transmitter(Parent):
         nu -- central frequency of transmission (Hz)
         bandwidth -- bandwidth of transmission (Hz)
         solidangle -- solid angle of transmission (radians)
-        power -- broadcast power
+        power -- broadcast power (W)
         polarisation -- signal polarisation (not currently used)
         
         tbegin -- time at which broadcasting begins (years)
@@ -187,7 +187,7 @@ class Transmitter(Parent):
         Flux
         """
     
-        return self.eirp/(fourpi*power(distance,self.decaylaw))
+        return self.eirp/(fourpi*power(distance*pc,self.decaylaw))
 
     def broadcast(self,time,dt):
         """

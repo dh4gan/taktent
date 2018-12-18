@@ -97,7 +97,7 @@ class Observer(Parent):
         longascend -- longitude of the ascending node of orbit about host star (radians)
         mean_anomaly -- mean anomaly of orbit about host star (radians)
         
-        sensitivity -- the minimum detectable signal power
+        sensitivity -- the minimum detectable signal flux (W m^-2)
         nu_min -- the minimum frequency detectable (Hz)
         nu_max -- the maximum frequency detectable (Hz)
         nchannels -- the number of frequency channels in the detector
@@ -238,7 +238,7 @@ class Observer(Parent):
         if(self.sensitivity==None):
             signal_powerful_enough =True
         else:
-            signal_powerful_enough = transmitter.transmitted_flux(distance,) > self.sensitivity
+            signal_powerful_enough = transmitter.transmitted_flux(distance) > self.sensitivity
         
         # Is transmitter actively broadcasting (given time delay)?
         transmitter_broadcasting = transmitter.broadcast(delay_time,dt)
@@ -323,6 +323,8 @@ class Observer(Parent):
 
             ax1.set_xlim(phi0-self.openingangle, phi0+self.openingangle)
             ax1.set_ylim(theta0-self.openingangle, theta0+self.openingangle)
+            ax1.set_xlabel(r"$\phi$ (rad)")
+            ax1.set_ylabel(r"$\Theta$ (rad)")
 
         for agent in agentlist:
             # If self is in the list, don't plot!
