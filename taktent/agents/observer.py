@@ -76,7 +76,7 @@ pc_yr_to_ms = 3.08e16/3.15e7
 
 class Observer(Parent):
     
-    def __init__(self,position=zero_vector, velocity=zero_vector, strategy=None, direction_vector=zero_vector, openingangle=piby2, starposition=zero_vector, starvelocity=zero_vector, starmass=1.0, semimajoraxis=1.0, inclination=0.0, longascend=0.0,mean_anomaly=0.0, sensitivity=0.0, nu_min=1.0e9, nu_max=2.0e9, nchannels=1.0e6):
+    def __init__(self,counter=None,position=zero_vector, velocity=zero_vector, strategy=None, direction_vector=zero_vector, openingangle=piby2, starposition=zero_vector, starvelocity=zero_vector, starmass=1.0, semimajoraxis=1.0, inclination=0.0, longascend=0.0,mean_anomaly=0.0, sensitivity=0.0, nu_min=1.0e9, nu_max=2.0e9, nchannels=1.0e6):
         
         """
         Initialises an Observer object
@@ -84,6 +84,7 @@ class Observer(Parent):
         Keyword Arguments:
         -----------------
         
+        counter -- iterator to keep track of object IDs between runs
         position -- cartesian position vector (pc)
         velocity -- cartesian velocity vector (pc yr^-1)
         strategy -- Strategy object defining Agent's pointing behaviour
@@ -103,7 +104,7 @@ class Observer(Parent):
         nchannels -- the number of frequency channels in the detector
         
         """
-        Parent.__init__(self, position, velocity, strategy, direction_vector, openingangle, starposition, starvelocity,starmass, semimajoraxis, inclination, longascend, mean_anomaly)
+        Parent.__init__(self, counter,position, velocity, strategy, direction_vector, openingangle, starposition, starvelocity,starmass, semimajoraxis, inclination, longascend, mean_anomaly)
         
         self.type = "Observer"
         #self.success_colour = "#377eb8"

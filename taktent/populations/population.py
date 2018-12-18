@@ -39,7 +39,7 @@ import matplotlib.pyplot as plt
 
 import itertools
 
-newID = itertools.count(1)
+
 
 def gaussian_sample(params):
     '''Return sample from a Gaussian distribution with params=[mu,sigma]'''
@@ -73,7 +73,8 @@ class Population:
         
         """
 
-        self.ID = str(index).zfill(3)
+        self.global_ID_counter = itertools.count(1)
+        self.ID = str(index+1).zfill(3)
         self.agents = []
         
         self.tbegin = tbegin
@@ -140,13 +141,13 @@ class Population:
         
         """
         
+        self.means["time"][self.istep] = self.time
+        
         for a in self.agents:
             if a.type=="Observer":
                 # Loop over detected transmitters in Observer list
                 for key in a.detect.keys():
                     transmitter = self.find_agent(key)
-                    
-                    self.means["time"][self.istep] = self.time
                     
                     self.means["distance"][self.istep] += transmitter.position.subtract(a.position).mag()/float(self.ndetect[self.istep])
 
@@ -157,10 +158,104 @@ class Population:
                     self.means["pulseinterval"][self.istep]+=transmitter.pulseinterval/float(self.ndetect[self.istep])
 
 
+    def generate_identical_transmitters(self, N_transmitters, strategy,semimajoraxis,inclination,longascend, mean_anomaly, nu, bandwidth, solidangle, power, polarisation=None, tbegin=0.0, tend=100.0, pulseduration=0.0, pulseinterval=0.0, spatial_distribution=None):
+        '''
+        Generate a population of transmitters with identical broadcast properties,
+        distributed in space according to a defined distribution
+        
+        Keyword Arguments:
+        ------------------
+        N_transmitters -- number of transmitters
+        strategy -- Strategy Object
+        semimajoraxis -- orbital semimajor axis (AU)
+        inclination -- orbital inclination (radians)
+        longascend -- longitude of the ascending node (radians)
+        mean_anomaly -- mean anomaly (radians)
+        nu -- frequency (Hz)
+        bandwidth -- bandwidth (Hz)
+        solidangle -- solid angle (radians)
+        power -- transmission  power
+        polarisation -- signal polarisation
+        tbegin -- beginning time of broadcast (years)
+        tend -- ending time of broadcast (years)
+        pulseduration -- pulse duration (years)
+        pulseinterval -- pulse interval (years)
+        spatial_distribution -- choice of distribution of transmitters: "GHZ", "random_sphere", "random"
+        
+        '''
+            
+        for i in range(N_transmitters):
+            # Define a transmitter object with fixed broadcast parameters but no initial position
+            agent = transmitter.Transmitter(counter=self.global_ID_counter, semimajoraxis = semimajoraxis, inclination=inclination, longascend=longascend, mean_anomaly=mean_anomaly, nu=nu, strategy=strategy.__copy__(), bandwidth=bandwidth, solidangle=solidangle, power=power, polarisation=polarisation, tbegin=tbegin, tend=tend, pulseduration=pulseduration, pulseinterval=pulseinterval)
+            
+            # Set its position and velocity according to a random sampling
+            if(spatial_distribution=="GHZ"):
+                agent.sample_GHZ()
+            
+            elif(spatial_distribution=="random_sphere"):
+                agent.sample_random_sphere()
+            
+            elif(spatial_distribution=="random" or spatial_distribution==None):
+                agent.sample_random()
+        
+            agent.orbit(self.time,self.dt)
+            
+            # Add to population
+            
+            self.add_agent(agent)
 
+    def generate_observer(self, observe_direction, openangle, strategy, spatial_distribution="random_sphere"):
+        """
+        Place a single observer object according to a spatial distribution
+        
+        Keyword Arguments:
+        ------------------
+        
+        observe_direction  - initial direction of observation
+        openangle -- opening angle of Observer
+        strategy -- observation strategy
+        spatial_distribution -- choice of distribution of transmitters: "GHZ", "random_sphere", "random"
+        
+        Returns
+        -------
+        ID of generated Observer object
+        """
+        
+        agent = observer.Observer(counter=self.global_ID_counter, strategy=strategy, direction_vector=observe_direction, openingangle=openangle,semimajoraxis=None)
+        
+        # Set its position and velocity according to a random sampling
+        if(spatial_distribution=="GHZ"):
+            agent.sample_GHZ()
+        
+        elif(spatial_distribution=="random_sphere"):
+            agent.sample_random_sphere()
+        
+        elif(spatial_distribution=="random" or spatial_distribution==None):
+            agent.sample_random()
+    
+        self.add_agent(agent)
+        
+        return self.agents[-1].ID
 
-
-                
+    def generate_observer_at_origin(self,observe_direction,openangle,strategy):
+        """
+        Place a single observer object at co-ordinates (0.0,0.0,0.0)
+        
+        Keyword Arguments:
+        ------------------
+        
+        observe_direction  - initial direction of observation
+        openangle -- opening angle of Observer
+        strategy -- observation strategy
+        
+        Returns
+        -------
+        ID of generated Observer object
+        """
+        
+        self.add_agent(observer.Observer(strategy=strategy, direction_vector=observe_direction, openingangle=openangle,semimajoraxis=None))
+        
+        return self.agents[-1].ID
     
     
     def assign_Gaussian_broadcast_parameters(self, nu_parameters=[1.42e9,1.0e9], bandwidth_parameters=[1.0e9,1.0e8], solidangle_parameters=[0.1*pi, 0.01*pi], power_parameters=[1.0e20,1.0e15], tbegin_parameters = [0.0, 0.0], tend_parameters=[100.0,0.0], pulseduration_parameters = [1.0,0.1], pulseinterval_parameters=[1.0,0.1] ):
@@ -245,77 +340,9 @@ class Population:
             agent.tend = uniform_sample(tend_parameters)
             agent.pulseduration = uniform_sample(pulseduration_parameters)
             agent.pulseinterval = uniform_sample(pulseinterval_parameters)
-    
-    
-    def generate_identical_transmitters(self, N_transmitters, strategy,semimajoraxis,inclination,longascend, mean_anomaly, nu, bandwidth, solidangle, power, polarisation=None, tbegin=0.0, tend=100.0, pulseduration=0.0, pulseinterval=0.0, spatial_distribution=None):
-        '''
-        Generate a population of transmitters with identical broadcast properties,
-        distributed in space according to a defined distribution
-        
-        Keyword Arguments:
-        ------------------
-        N_transmitters -- number of transmitters
-        strategy -- Strategy Object
-        semimajoraxis -- orbital semimajor axis (AU)
-        inclination -- orbital inclination (radians)
-        longascend -- longitude of the ascending node (radians)
-        mean_anomaly -- mean anomaly (radians)
-        nu -- frequency (Hz)
-        bandwidth -- bandwidth (Hz)
-        solidangle -- solid angle (radians)
-        power -- transmission  power
-        polarisation -- signal polarisation
-        tbegin -- beginning time of broadcast (years)
-        tend -- ending time of broadcast (years)
-        pulseduration -- pulse duration (years)
-        pulseinterval -- pulse interval (years)
-        spatial_distribution -- choice of distribution of transmitters: "GHZ", "random_sphere", "random"
-        
-        '''
-        
-        for i in range(N_transmitters):
-            # Define a transmitter object with fixed broadcast parameters but no initial position
-            agent = transmitter.Transmitter(semimajoraxis = semimajoraxis, inclination=inclination, longascend=longascend, mean_anomaly=mean_anomaly, nu=nu, strategy=strategy.__copy__(), bandwidth=bandwidth, solidangle=solidangle, power=power, polarisation=polarisation, tbegin=tbegin, tend=tend, pulseduration=pulseduration, pulseinterval=pulseinterval)
-        
-            # Set its position and velocity according to a random sampling
-            if(spatial_distribution=="GHZ"):
-                agent.sample_GHZ()
+ 
 
-            elif(spatial_distribution=="random_sphere"):
-                agent.sample_random_sphere()
-            
-            elif(spatial_distribution=="random" or spatial_distribution==None):
-                agent.sample_random()
 
-            agent.orbit(self.time,self.dt)
-
-            # Add to population
-
-            self.add_agent(agent)
-
-    def generate_observer(self, observe_direction, openangle, strategy, spatial_distribution="random_sphere"):
-        """Place a single observer object according to a spatial distribution"""
-    
-        agent = observer.Observer(strategy=strategy, direction_vector=observe_direction, openingangle=openangle,semimajoraxis=None)
-    
-        # Set its position and velocity according to a random sampling
-        if(spatial_distribution=="GHZ"):
-            agent.sample_GHZ()
-            
-        elif(spatial_distribution=="random_sphere"):
-            agent.sample_random_sphere()
-            
-        elif(spatial_distribution=="random" or spatial_distribution==None):
-            agent.sample_random()
-
-        self.add_agent(agent)
-
-    def generate_observer_at_origin(self,observe_direction,openangle,strategy):
-        """Place a single observer object at co-ordinates (0.0,0.0,0.0)"""
-        
-        self.add_agent(observer.Observer(strategy=strategy, direction_vector=observe_direction, openingangle=openangle,semimajoraxis=None))
-    
-        return self.agents[-1].ID
 
     def define_agent_strategies(self,strategy,agentType):
         """Define strategies of agents in the population (where they are type agentType)"""
@@ -452,7 +479,8 @@ class Population:
         ax1 = fig1.add_subplot(111)
         ax1.set_xlim(self.xmin,self.xmax)
         ax1.set_ylim(self.ymin,self.ymax)
-        
+        ax1.set_xlabel("x (pc)")
+        ax1.set_ylabel("y (pc)")
         
         rmax =amax([self.xmax,self.ymax])
         markersize = 0.03*rmax
@@ -485,7 +513,7 @@ class Population:
         for a in self.agents:
             if a.type=="Observer":
                 
-                outputfile = "Observer_"+a.ID+"_time_00"+str(round(self.time,2))+".detections"
+                outputfile = "Population_"+self.ID+"_Observer_"+a.ID+"_time_00"+str(round(self.time,2))+".detections"
                 
                 f_obj = open(outputfile, 'w')
                 
@@ -501,7 +529,7 @@ class Population:
     def write_means_to_file(self):
         """Write mean population data to file"""
 
-        outputfile = "Population_"+self.ID.zfill(3)+"_meandata.dat"
+        outputfile = "Population_"+self.ID+".meandata"
 
         header = ""
         first_time = True
@@ -512,10 +540,8 @@ class Population:
                 first_time=False
             else:
                 data = vstack((data, value))
-            
-        print (data[:,0])
+    
         data = transpose(data)
-        print (data[:,0])
         savetxt(outputfile, data, fmt="%10.4e",header=header)
   
 

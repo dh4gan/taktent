@@ -44,6 +44,7 @@ zero_vector = Vector3D(0.0,0.0,0.0)
 
 newID = itertools.count(1)
 
+
 def get_position_from_orbit(semimajoraxis,inclination,longascend, mean_anomaly):
     """
     Given circular orbit with parameters (a,i,Omega,M), return position vector
@@ -74,16 +75,16 @@ def get_position_from_orbit(semimajoraxis,inclination,longascend, mean_anomaly):
 
     return position
 
-
 class Agent:
 
-    def __init__(self, position=zero_vector, velocity=zero_vector,strategy=None,direction_vector=zero_vector, openingangle=piby2,starposition=zero_vector,starvelocity=zero_vector,starmass=1.0,semimajoraxis=1.0,inclination=0.0, longascend = 0.0, mean_anomaly=0.0):
+    def __init__(self, counter=None, position=zero_vector, velocity=zero_vector,strategy=None,direction_vector=zero_vector, openingangle=piby2,starposition=zero_vector,starvelocity=zero_vector,starmass=1.0,semimajoraxis=1.0,inclination=0.0, longascend = 0.0, mean_anomaly=0.0):
         """
         Initialises a generic Agent object
         
         Keyword Arguments:
         -----------------
         
+        counter -- iterator to keep track of object IDs between runs
         position -- cartesian position vector (pc)
         velocity -- cartesian velocity vector (pc yr^-1)
         strategy -- Strategy object defining Agent's pointing behaviour
@@ -105,12 +106,15 @@ class Agent:
         ID -- Identification number (string)
         colour -- colour for plotting
         active -- Is Agent active? (boolean)
-        period -- period of Agent's orbit about host star
+        period -- period of Agent's orbit about host star (years)
         
         """
     
         self.type = "Agent"
-        self.ID = str(next(newID)).zfill(3)
+        if counter==None:
+            self.ID = str(next(newID)).zfill(3)
+        else:
+            self.ID = str(next(counter)).zfill(3)
         
         self.colour = "black"
         
