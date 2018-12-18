@@ -52,6 +52,7 @@ popn = Population(tbegin,tend,dt,seed=iseed)
 observerID = popn.generate_observer(observer_dir,openangle,strat_obs, spatial_distribution="GHZ")
 popn.agents[-1].nu_min = 1.0e0
 popn.agents[-1].nu_max = 1.0e11
+popn.agents[-1].sensitivity = 1.0e-23
 
 
 #
@@ -75,8 +76,8 @@ longascend = 0.0
 freq = 1.0e10
 band = 1.0e10
 
-solidangle = pi
-power = 100.0
+solidangle = 4.0*pi
+power = 1.0e18
 
 popn.generate_identical_transmitters(N_transmitters=N_transmitters, strategy=strat,semimajoraxis =None, inclination=None, mean_anomaly=None, longascend=None, nu=freq, bandwidth=band, solidangle=solidangle, power=power, spatial_distribution="GHZ",tbegin=popn.tbegin, tend=popn.tend)
 
@@ -84,33 +85,11 @@ popn.assign_Gaussian_broadcast_parameters(nu_parameters=[1.42e9,1.0e9], solidang
 
 popn.assign_Gaussian_strategy_parameters()
 
-# Define plot limits
-
-xmax = 10000
-ymax = 10000
-
-markersize = 0.03*xmax
-wedge_length = 0.15*xmax
-
 # Run simulation
 popn.run_simulation(write_detections=True, make_plots=False, fullskymap=True)
 
-# Test run multiple steps
-#for i in range(popn.nsteps):
 
-#    print ("Time: ",str(round(popn.time,2)))
-#    popn.conduct_observations()
-#    popn.record_detections()
-#    outputfile = 'xy_'+str(i).zfill(3)+'.png'
-#    popn.plot(markersize,wedge_length, xmax,ymax, outputfile)
-#    popn.update()
-
-#    popn.generate_skymaps(fullmap=True)
-
-
-
-
-print (popn.means["distance"])
+print ("Distance: ",popn.means["distance"])
 print (popn.means["frequency"])
 print (popn.means["pulseinterval"])
 print (popn.means["pulseduration"])
