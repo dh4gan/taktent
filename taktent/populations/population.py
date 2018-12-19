@@ -40,6 +40,8 @@ import matplotlib.pyplot as plt
 import itertools
 
 
+piby2 = 0.5*pi
+zero_vector = vector.Vector3D(0.0,0.0,0.0)
 
 def gaussian_sample(params):
     '''Return sample from a Gaussian distribution with params=[mu,sigma]'''
@@ -52,7 +54,7 @@ def uniform_sample(params):
 
 class Population:
 
-    def __init__(self, tbegin, tend, dt,index=1,seed=10):
+    def __init__(self, tbegin, tend, dt,index=0,seed=10):
         """
         Constructor for a Population object (group of agents in a simulation)
             
@@ -204,7 +206,7 @@ class Population:
             
             self.add_agent(agent)
 
-    def generate_observer(self, observe_direction, openangle, strategy, spatial_distribution="random_sphere"):
+    def generate_observer(self, counter=None, strategy=None,direction_vector=zero_vector, openingangle=piby2,starmass=1.0, semimajoraxis=1.0, inclination=0.0, longascend=0.0,mean_anomaly=0.0, sensitivity=0.0, nu_min=1.0e9, nu_max=2.0e9, nchannels=1.0e6, spatial_distribution="origin"):
         """
         Place a single observer object according to a spatial distribution
         
@@ -214,14 +216,14 @@ class Population:
         observe_direction  - initial direction of observation
         openangle -- opening angle of Observer
         strategy -- observation strategy
-        spatial_distribution -- choice of distribution of transmitters: "GHZ", "random_sphere", "random"
+        spatial_distribution -- choice of distribution of transmitters: "GHZ", "random_sphere", "random", "origin" (default is origin)
         
         Returns
         -------
         ID of generated Observer object
         """
-        
-        agent = observer.Observer(counter=self.global_ID_counter, strategy=strategy, direction_vector=observe_direction, openingangle=openangle,semimajoraxis=None)
+    
+        agent = observer.Observer(counter=counter,direction_vector=direction_vector,strategy=strategy, openingangle=openingangle,  starmass=starmass, semimajoraxis=semimajoraxis, inclination=inclination, longascend=longascend,mean_anomaly=mean_anomaly, sensitivity=sensitivity, nu_min=nu_min, nu_max=nu_max, nchannels=nchannels)
         
         # Set its position and velocity according to a random sampling
         if(spatial_distribution=="GHZ"):
@@ -232,28 +234,13 @@ class Population:
         
         elif(spatial_distribution=="random" or spatial_distribution==None):
             agent.sample_random()
+        
+        elif(spatial_distribution=="origin"):
+            agent.starposition = vector.Vector3D(0.0,0.0,0.0)
+
+        # If Observer at origin, don't need to do anything
     
         self.add_agent(agent)
-        
-        return self.agents[-1].ID
-
-    def generate_observer_at_origin(self,observe_direction,openangle,strategy):
-        """
-        Place a single observer object at co-ordinates (0.0,0.0,0.0)
-        
-        Keyword Arguments:
-        ------------------
-        
-        observe_direction  - initial direction of observation
-        openangle -- opening angle of Observer
-        strategy -- observation strategy
-        
-        Returns
-        -------
-        ID of generated Observer object
-        """
-        
-        self.add_agent(observer.Observer(strategy=strategy, direction_vector=observe_direction, openingangle=openangle,semimajoraxis=None))
         
         return self.agents[-1].ID
     
@@ -430,6 +417,13 @@ class Population:
                 self.ymin = agent.position.y
 
 
+        if self.xmax==self.xmin:
+            self.xmax = self.ymax
+            self.xmin = self.ymin
+        if self.ymax==self.ymin:
+            self.ymax = self.xmax
+            self.ymin = self.xmin
+
     
     
     def generate_skymaps(self,fullmap=False):
@@ -477,12 +471,16 @@ class Population:
         """Plot all agents in the system"""
         fig1 = plt.figure()
         ax1 = fig1.add_subplot(111)
-        ax1.set_xlim(self.xmin,self.xmax)
-        ax1.set_ylim(self.ymin,self.ymax)
+        
+        rmax =1.5*amax([self.xmax,self.ymax])
+        
+        ax1.set_xlim(-rmax,rmax)
+        ax1.set_ylim(-rmax,rmax)
+        
         ax1.set_xlabel("x (pc)")
         ax1.set_ylabel("y (pc)")
         
-        rmax =amax([self.xmax,self.ymax])
+        
         markersize = 0.03*rmax
         wedge_length = 0.15*rmax
         
