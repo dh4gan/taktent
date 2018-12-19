@@ -124,8 +124,12 @@ class Agent:
         self.strategy=strategy
         self.n = direction_vector
         
+        
         if(self.n.mag()>1.0e-30):
             self.n = self.n.unit()
+        
+        self.strategy.current_target=self.n
+        
         self.openingangle = openingangle
         self.starposition = starposition
         self.starvelocity = starvelocity

@@ -5,6 +5,7 @@
 
 import itertools
 import copy
+from taktent.agents.vector import Vector3D
 
 newID = itertools.count(1)
 
@@ -14,7 +15,7 @@ class Strategy:
         """ Creates a new Strategy object"""
     
         self.ID = str(next(newID)).zfill(3)
-        self.current_target = None
+        self.current_target = Vector3D(1.0,0.0,0.0)
     
     
     def __copy__(self):
