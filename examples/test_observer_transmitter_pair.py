@@ -73,7 +73,7 @@ strat_obs = strategy.Strategy()
 
 popn = Population(tbegin,tend,dt)
 
-observerID = popn.generate_observer_at_origin(observer_dir,openangle,strat_obs)
+observerID = popn.generate_observer(direction_vector=observer_dir,openingangle=openangle,strategy=strat_obs,semimajoraxis=1.0)
 
 # Add a single agent
 popn.add_agent(tran)
@@ -82,7 +82,7 @@ popn.add_agent(tran)
 # 4. Run simulation
 #
 
-popn.run_simulation(write_detections=True, make_plots=True, fullskymap=True)
+popn.run_simulation(write_detections=False, make_plots=True, fullskymap=True)
 
 
 

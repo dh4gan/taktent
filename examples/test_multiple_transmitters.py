@@ -48,11 +48,7 @@ openangle = 0.1*pi
 
 popn = Population(tbegin,tend,dt,seed=iseed)
 
-#observerID = popn.generate_observer_at_origin(observer_dir,openangle,strat_obs)
-observerID = popn.generate_observer(observer_dir,openangle,strat_obs, spatial_distribution="GHZ")
-popn.agents[-1].nu_min = 1.0e0
-popn.agents[-1].nu_max = 1.0e11
-popn.agents[-1].sensitivity = 1.0e-23
+observerID = popn.generate_observer(direction_vector=observer_dir,openingangle=openangle,strategy=strat_obs,semimajoraxis=1.0, nu_min=1.0e0, nu_max=1.0e11, sensitivity=1.0e-23)
 
 
 #

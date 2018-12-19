@@ -54,11 +54,7 @@ for irun in range(nruns):
 
     popn = Population(tbegin,tend,dt,index=irun,seed=runseed)
 
-    observerID = popn.generate_observer_at_origin(observer_dir,openangle,strat_obs)
-
-    popn.agents[-1].nu_min = 1.0e0
-    popn.agents[-1].nu_max = 1.0e11
-
+    observerID = popn.generate_observer(direction_vector=observer_dir,openingangle=openangle,strategy=strat_obs, nu_min = 1.0e0, nu_max=1.0e11)
 
     #
     # 3. Define properties of transmitter population

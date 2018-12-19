@@ -1,4 +1,7 @@
 
+import sys
+sys.path.append('..')
+
 from taktent.agents import *
 from taktent.populations.population import *
 from taktent.strategies import *
@@ -37,14 +40,7 @@ strat = scanningStrategy.scanningStrategy(transmit_strategy)
 
 # create transmitter object
 
-tran = transmitter.Transmitter(transmitter_pos,transmitter_vel,strat,transmitter_dir,openangle,transmitter_pos.copy(), transmitter_vel.copy(),nu=freq,bandwidth=band,solidangle=solidangle,power=power, tbegin=tbegin, tend=tend)
-
-
-# Define its orbital properties
-transmitter.a = transmitter_a
-transmitter.inclination = transmitter_inc
-transmitter.mean_anomaly = 0.0
-transmitter.longascend = 0.0
+tran = transmitter.Transmitter(position=transmitter_pos,velocity=transmitter_vel,strategy=strat,direction_vector=transmitter_dir,starposition=transmitter_pos.copy(), starvelocity = transmitter_vel.copy(),nu=freq,bandwidth=band,solidangle=solidangle,power=power, tbegin=tbegin,tend=tend,semimajoraxis=transmitter_a, inclination=transmitter_inc, mean_anomaly=0.0, longascend=0.0)
 
 
 # Define Observer properties
@@ -56,14 +52,12 @@ strat_obs = strategy.Strategy()
 
 popn = Population(tbegin, tend,dt)
 
-observerID = popn.generate_observer_at_origin(observer_dir,openangle,strat_obs)
+observerID = popn.generate_observer(direction_vector=observer_dir,openingangle=openangle,strategy=strat_obs,semimajoraxis=1.0, nu_min = tran.nu*(1.0-6.0e-4), nu_max = tran.nu*1.0+6.0e-4)
 
-popn.agents[-1].nu_min = tran.nu*(1.0-6.0e-4)
-popn.agents[-1].nu_max = tran.nu*(1.0+6.0e-4)
 popn.add_agent(tran)
 
 
-popn.run_simulation(write_detections=True, make_plots=False, fullskymap=True)
+popn.run_simulation(write_detections=False, make_plots=True, fullskymap=True)
 
 
 
