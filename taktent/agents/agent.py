@@ -4,15 +4,6 @@
 # Attributes:
 ###############
 
-# self.position - position (Vector3D)               (units: pc)
-# self.velocity - velocity (Vector3D)               (units: km s-1)
-# self.starpos - host star position (Vector3D)      (units: pc)
-# self.mstar - host star mass
-# self.a - semimajor axis of orbit around host star  (units: AU)
-# self.mean_anomaly - mean anomaly
-# self.n - target direction vector
-# self.openingangle - opening angle along target vector (either transmitting or receiving)
-
 # counter -- iterator to keep track of object IDs between runs
 # position -- cartesian position vector (pc)
 # velocity -- cartesian velocity vector (pc yr^-1)
@@ -34,8 +25,6 @@
 # colour -- colour for plotting
 # active -- Is Agent active? (boolean)
 # period -- period of Agent's orbit about host star (years)
-
-
 
 ###########
 # Methods:

@@ -104,7 +104,7 @@ class Transmitter(Parent):
         
         eirp - effective isotropic radiated power
         decaylaw - index of radiation decay (1/r^2 for EM, 1/r for GW etc)
-        broadcastspeed - transmission speed of broadcast (default is lightspped)
+        broadcastspeed - transmission speed of broadcast (default is lightspeed) (units: pc yr-1)
         
         detected -- dictionary tracking which observers have detected it
         """
@@ -126,7 +126,7 @@ class Transmitter(Parent):
         self.pulseduration = pulseduration
         self.pulseinterval = pulseinterval
         
-        self.broadcastspeed = c # assume transmissions move at lightspeed by default
+        self.broadcastspeed = c_pc_yr # assume transmissions move at lightspeed by default
         self.decaylaw = decaylaw # inverse square law of radiation decay by default
         
         # opening angle = fraction of solid angle (opening angle = pi if solid angle = 4 pi)

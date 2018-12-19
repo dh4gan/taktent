@@ -180,11 +180,10 @@ class Observer(Parent):
     
         # radial velocity (in pc yr-1)
         radial_velocity = relative_velocity.dot(relative_position.unit())
-        radial_velocity = radial_velocity*pc_yr_to_ms
     
         # frequency shift
         delta_freq = -transmitter.nu*radial_velocity/transmitter.broadcastspeed
- 
+        print (delta_freq)
         return delta_freq
     
 
@@ -213,7 +212,7 @@ class Observer(Parent):
         distance = separation.mag()
         
         if(time_delay):
-            delay_time = time - distance*pc/(transmitter.broadcastspeed*yr)
+            delay_time = time - distance/(transmitter.broadcastspeed)
         else:
             delay_time = time
         
