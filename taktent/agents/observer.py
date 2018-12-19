@@ -40,10 +40,12 @@
 # observe_transmitter(time,dt,transmitter) - attempt to detect transmitter
 # generate_skymap(time,agentlist,allskymap) - generate a field of view image along observer's current target vector
 
+import matplotlib.pyplot as plt
+
+from taktent.constants import *
 from taktent.agents.agent import Agent as Parent
 from numpy import sin,cos, arccos, pi, arctan2, round, amin,amax, zeros,linspace, arange
 from taktent.agents.vector import Vector3D
-import matplotlib.pyplot as plt
 
 basemap_installed = True
 
@@ -67,12 +69,6 @@ def get_circle_outline(x0,y0,r, npoints=100):
         y[i] = r*sin(t[i]) + y0
             
     return x,y
-
-piby2 = 0.5*pi
-zero_vector = Vector3D(0.0,0.0,0.0)
-pc = 3.08e16
-yr = 3.15e7
-pc_yr_to_ms = pc/yr
 
 class Observer(Parent):
     
@@ -183,7 +179,6 @@ class Observer(Parent):
     
         # frequency shift
         delta_freq = -transmitter.nu*radial_velocity/transmitter.broadcastspeed
-        print (delta_freq)
         return delta_freq
     
 

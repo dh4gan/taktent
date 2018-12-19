@@ -1,3 +1,6 @@
+taktent/*.pyc
+taktent/__pycache__
+
 taktent/*/.pyc
 taktent/*/__pycache__
 examples/*.png

@@ -39,19 +39,13 @@
 
 # plot(radius,wedge_length) - return patches suitable for a matplotlib plot
 
+import itertools
 from numpy import sin,cos,pi,sqrt, arctan2, exp,log
 from numpy.random import random
-
 from matplotlib.patches import Circle, Wedge
-import itertools
+
 from taktent.agents.vector import Vector3D
-
-piby2 = 0.5*pi
-
-GmsolAU = 4.0*pi*pi
-AU_to_pc = 1.0/206265.0
-AUyr_to_kms = 1.496e8/(3.15e7)
-zero_vector = Vector3D(0.0,0.0,0.0)
+from taktent.constants import *
 
 newID = itertools.count(1)
 

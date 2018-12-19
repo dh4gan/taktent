@@ -35,17 +35,16 @@
 # record_detections -- record all detections of Transmitters by Observers
 # plot - plot entire population of Agents (Observers & Transmitters)
 
-import taktent.agents.observer as observer
-import taktent.agents.transmitter as transmitter
-import taktent.agents.vector as vector
+import itertools
 from numpy import zeros, sum, round, random, pi, where, amax, savetxt, vstack, transpose
 import matplotlib.pyplot as plt
 
-import itertools
+import taktent.agents.observer as observer
+import taktent.agents.transmitter as transmitter
+import taktent.agents.vector as vector
+from taktent.constants import *
 
 
-piby2 = 0.5*pi
-zero_vector = vector.Vector3D(0.0,0.0,0.0)
 
 def gaussian_sample(params):
     '''Return sample from a Gaussian distribution with params=[mu,sigma]'''
