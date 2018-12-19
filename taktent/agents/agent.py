@@ -99,7 +99,7 @@ def get_position_from_orbit(semimajoraxis,inclination,longascend, mean_anomaly):
 
 class Agent:
 
-    def __init__(self, counter=None, position=zero_vector, velocity=zero_vector,strategy=None,direction_vector=zero_vector, openingangle=piby2,starposition=zero_vector,starvelocity=zero_vector,starmass=1.0,semimajoraxis=1.0,inclination=0.0, longascend = 0.0, mean_anomaly=0.0):
+    def __init__(self, counter=None, position=zero_vector, velocity=zero_vector,strategy=None,direction_vector=zero_vector, openingangle=piby2,starposition=zero_vector,starvelocity=zero_vector.copy(),starmass=1.0,semimajoraxis=1.0,inclination=0.0, longascend = 0.0, mean_anomaly=0.0):
         """
         Initialises a generic Agent object
         
@@ -155,6 +155,7 @@ class Agent:
         self.openingangle = openingangle
         self.starposition = starposition
         self.starvelocity = starvelocity
+        
         self.starmass = starmass
         self.semimajoraxis = semimajoraxis
         self.inclination = inclination
@@ -241,10 +242,10 @@ class Agent:
         # Rotate according to inclination and longitude of ascending node
         self.velocity = self.velocity.rotate_x(self.inclination)
         self.velocity = self.velocity.rotate_z(self.longascend)
-
+        
         self.velocity = self.velocity.scalarmult(velmag)
         self.velocity = self.velocity.add(self.starvelocity)
-
+        
 
     def sample_random(self,seed=-45, xmin=-10.0, xmax=10.0, ymin=-10.0, ymax=10.0, zmin=0.0, zmax=0.0, vdisp=0.1):
         """
@@ -266,8 +267,8 @@ class Agent:
         self.star_velocity = Vector3D(vdisp*(-1.0+2.0*random()), vdisp*(-1.0+2.0*random()), vdisp*(-1.0+2.0*random()))
     
     
-        self.position = self.starposition
-        self.velocity = self.starvelocity
+        self.position = self.starposition.copy()
+        self.velocity = self.starvelocity.copy()
     
 
     def sample_random_sphere(self, seed=-45, rmin = 10.0, rmax = 20.0, vdisp=0.0, flatsphere=True):
@@ -294,8 +295,8 @@ class Agent:
             self.starposition = Vector3D(r*sin(theta)*cos(phi), r*sin(theta)*sin(phi), r*cos(theta))
             self.starvelocity = Vector3D(vdisp*(-1.0+2.0*random()), vdisp*(-1.0+2.0*random()), vdisp*(-1.0+2.0*random()))
         
-        self.position = self.starposition
-        self.velocity = self.starvelocity
+        self.position = self.starposition.copy()
+        self.velocity = self.starvelocity.copy()
                 
 
     def sample_GHZ(self, seed = 10, inner_radius=6000.0, outer_radius=10000.0, scale_length = 3500, max_inclination = 0.5):
@@ -332,8 +333,8 @@ class Agent:
         self.starposition = get_position_from_orbit(semimajoraxis, inclination, longascend, mean_anomaly)
         self.starvelocity = Vector3D(0.0,0.0,0.0)
         
-        self.position = self.starposition
-        self.velocity = self.starvelocity
+        self.position = self.starposition.copy()
+        self.velocity = self.starvelocity.copy()
     
 
     def plot(self,radius,wedge_length):

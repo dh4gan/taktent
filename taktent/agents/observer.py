@@ -70,8 +70,9 @@ def get_circle_outline(x0,y0,r, npoints=100):
 
 piby2 = 0.5*pi
 zero_vector = Vector3D(0.0,0.0,0.0)
-
-pc_yr_to_ms = 3.08e16/3.15e7
+pc = 3.08e16
+yr = 3.15e7
+pc_yr_to_ms = pc/yr
 
 class Observer(Parent):
     
@@ -141,6 +142,7 @@ class Observer(Parent):
         --------
         One-line string containing Observer data
         """
+        print(Observer)
     
         return "Observer %s %f %f %f   %f %f %f   %f %f \n"%self.ID, self.position.x, self.position.y, self.position.z, self.n.x, self.n.y,self.n.z, self.sensitivity, self.openingangle
     
@@ -177,7 +179,7 @@ class Observer(Parent):
         relative_position = transmitter.position.subtract(self.position)
     
         # radial velocity (in pc yr-1)
-        radial_velocity = relative_velocity.dot(relative_position)
+        radial_velocity = relative_velocity.dot(relative_position.unit())
         radial_velocity = radial_velocity*pc_yr_to_ms
     
         # frequency shift
@@ -186,7 +188,7 @@ class Observer(Parent):
         return delta_freq
     
 
-    def observe_transmitter(self,time,dt,transmitter):
+    def observe_transmitter(self,time,dt,transmitter, time_delay=False):
         """
         Attempt to observe a transmitter, taking into account time delay between transmission and reception, and doppler drift
         
@@ -195,6 +197,7 @@ class Observer(Parent):
         time -- current time (years)
         dt -- timestep (years)
         transmitter -- Transmitter Object
+        time_delay -- Take into account signal travel time? (Default is True)
         
         
         Returns:
@@ -208,7 +211,11 @@ class Observer(Parent):
         # Travel time between observer and transmitter location
         separation = self.position.subtract(transmitter.position)
         distance = separation.mag()
-        delay_time = time - distance/transmitter.broadcastspeed
+        
+        if(time_delay):
+            delay_time = time - distance*pc/(transmitter.broadcastspeed*yr)
+        else:
+            delay_time = time
         
         # Cannot detect transmitters before start of run
         if(delay_time <0.0):
@@ -257,7 +264,6 @@ class Observer(Parent):
             in_frequency_range = freqmin <=self.nu_max and self.nu_min <=freqmax
 
         detected = observer_illuminated and in_observer_field and signal_powerful_enough and in_frequency_range
-        
         if(detected):
             self.colour = self.success_colour
             transmitter.colour = transmitter.success_colour

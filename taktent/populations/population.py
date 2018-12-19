@@ -210,7 +210,7 @@ class Population:
             
             self.add_agent(agent)
 
-    def generate_observer(self, counter=None, strategy=None,direction_vector=zero_vector, openingangle=piby2,starmass=1.0, semimajoraxis=1.0, inclination=0.0, longascend=0.0,mean_anomaly=0.0, sensitivity=0.0, nu_min=1.0e9, nu_max=2.0e9, nchannels=1.0e6, spatial_distribution="origin"):
+    def generate_observer(self, strategy=None,direction_vector=zero_vector, openingangle=piby2,starmass=1.0, semimajoraxis=1.0, inclination=0.0, longascend=0.0,mean_anomaly=0.0, sensitivity=0.0, nu_min=1.0e9, nu_max=2.0e9, nchannels=1.0e6, spatial_distribution="origin"):
         """
         Place a single observer object according to a spatial distribution
         
@@ -227,7 +227,7 @@ class Population:
         ID of generated Observer object
         """
     
-        agent = observer.Observer(counter=counter,direction_vector=direction_vector,strategy=strategy, openingangle=openingangle,  starmass=starmass, semimajoraxis=semimajoraxis, inclination=inclination, longascend=longascend,mean_anomaly=mean_anomaly, sensitivity=sensitivity, nu_min=nu_min, nu_max=nu_max, nchannels=nchannels)
+        agent = observer.Observer(counter=self.global_ID_counter,direction_vector=direction_vector,strategy=strategy, openingangle=openingangle,  starmass=starmass, semimajoraxis=semimajoraxis, inclination=inclination, longascend=longascend,mean_anomaly=mean_anomaly, sensitivity=sensitivity, nu_min=nu_min, nu_max=nu_max, nchannels=nchannels)
         
         # Set its position and velocity according to a random sampling
         if(spatial_distribution=="GHZ"):
@@ -241,6 +241,7 @@ class Population:
         
         elif(spatial_distribution=="origin"):
             agent.starposition = vector.Vector3D(0.0,0.0,0.0)
+            agent.starvelocity = vector.Vector3D(0.0,0.0,0.0)
 
         # If Observer at origin, don't need to do anything
     
@@ -350,7 +351,7 @@ class Population:
         self.define_agent_strategies(self,strategy,"Observer")
 
     
-    def run_simulation(self, write_detections=False, make_plots=False, allskymap=False):
+    def run_simulation(self, write_detections=False, make_plots=False, allskymap=False, delay_time=True):
         """
         Run Population detection simulation from beginning to end
         
@@ -359,13 +360,14 @@ class Population:
         write_detections - record individual detections to file?
         make_plots       - Plot xy position and skymaps for all Observers?
         allskymap       - Plot all sky maps for each Observer?
+        delay_time      - Take account of signal travel time? (Default True)
         """
         
         self.initialise()
         for i in range(self.nsteps):
             
             print ("Simulation ID ",self.ID, "Time: ",str(round(self.time,2)))
-            self.update(write_detections,make_plots,allskymap)
+            self.update(write_detections,make_plots,allskymap,delay_time)
 
 
         self.write_means_to_file()
@@ -378,10 +380,20 @@ class Population:
         self.update_agents()
     
     
-    def update(self, write_detections=False, make_plots=False, allskymap=False):
-        """ Update Population attributes"""
+    def update(self, write_detections=False, make_plots=False, allskymap=False, delay_time=True):
+        """
+        Update Population attributes
         
-        self.conduct_observations()
+        Keyword Arguments:
+        ------------------
+        write_detections - record individual detections to file?
+        make_plots       - Plot xy position and skymaps for all Observers?
+        allskymap       - Plot all sky maps for each Observer?
+        delay_time      - Take account of signal travel time? (Default True)
+        
+        """
+        
+        self.conduct_observations(delay_time)
         
         if(write_detections):
             self.record_detections()
@@ -448,8 +460,15 @@ class Population:
                 agent.generate_skymap(self.time, self.agents,allskymap=allskymap)
     
 
-    def conduct_observations(self):
-        """Loop through all Observers and attempt to observe all Transmitters"""
+    def conduct_observations(self, delay_time=True):
+        """
+        Loop through all Observers and attempt to observe all Transmitters
+        
+        Keyword Arguments:
+        ------------------
+        delay_time      - Take account of signal travel time? (Default True)
+        
+        """
 
         self.success = zeros((self.nagents,self.nagents))
         
@@ -459,10 +478,10 @@ class Population:
                 self.agents[i].detect ={}
 
                 for j in range(self.nagents):
-                    if (i==j): continue
+                    if (i==j or self.agents[j].type=="Observer"): continue
                 
                     if self.agents[j].type=="Transmitter":
-                        observed = self.agents[i].observe_transmitter(self.time,self.dt,self.agents[j])
+                        observed = self.agents[i].observe_transmitter(self.time,self.dt,self.agents[j],delay_time)
                         if(observed):
                             self.success[i,j]=1
                             
@@ -513,6 +532,7 @@ class Population:
         """
             
         for a in self.agents:
+            
             if a.type=="Observer":
                 
                 outputfile = "Population_"+self.ID+"_Observer_"+a.ID+"_time_00"+str(round(self.time,2))+".detections"
@@ -523,7 +543,6 @@ class Population:
                 
                 for key in a.detect.keys():
                     transmitter = self.find_agent(key)
-                    
                     f_obj.write(transmitter.write_to_file())
                         
                 f_obj.close()
