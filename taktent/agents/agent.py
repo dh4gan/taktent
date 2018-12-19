@@ -13,6 +13,28 @@
 # self.n - target direction vector
 # self.openingangle - opening angle along target vector (either transmitting or receiving)
 
+# counter -- iterator to keep track of object IDs between runs
+# position -- cartesian position vector (pc)
+# velocity -- cartesian velocity vector (pc yr^-1)
+# strategy -- Strategy object defining Agent's pointing behaviour
+# direction_vector -- unit vector defining pointing direction of Agent's beam
+# openingangle -- opening angle of beam defined by Agent's pointing (radians)
+# starposition -- cartesian position vector of host star (pc)
+# starvelocity -- cartesian velocity vector of host star (pc yr^-1)
+# starmass -- host star mass (solar masses)
+# semimajoraxis -- semimajor axis of orbit about host star (AU)
+# inclination -- inclination of orbit about host star (radians)
+# longascend -- longitude of the ascending node of orbit about host star (radians)
+# mean_anomaly -- mean anomaly of orbit about host star (radians)
+        
+        
+# Other defined attributes of Agent:
+# type -- Description of agent type (string)
+# ID -- Identification number (string)
+# colour -- colour for plotting
+# active -- Is Agent active? (boolean)
+# period -- period of Agent's orbit about host star (years)
+
 
 
 ###########
@@ -24,7 +46,7 @@
 # orbit(time) - move agent in orbit around host star
 # sample_random(seed,xmin,xmax,ymin,ymax,zmin,zmax,vdisp) - sample position and velocity in uniform cube
 # sample_random_sphere(seed, rmin,rmax,vdisp,flatsphere) - sample position and velocity in uniform sphere
-# sample_GHZ(): sample position and velocity in Galactic Habitable Zone
+# sample_GHZ(seed,inner_radius, outer_radius, scale_length, max_inclination) - sample position and velocity in Galactic Habitable Zone
 
 # plot(radius,wedge_length) - return patches suitable for a matplotlib plot
 

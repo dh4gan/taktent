@@ -34,11 +34,18 @@
 # Methods:
 ###########
 
-# Inherited from agent.py
-# orbit(mstar,a) - move transmitter in orbit around a star at starpos
-# plot(self,radius) - plot transmitter and its beam
+# Inherited/Extended from agent.py
 
-# set_broadcast_direction - set self.n
+# define_strategy(strategy) - define strategy of Agent
+# update(time,dt) - update agent position, velocity and direction vector
+# orbit(time) - move agent in orbit around host star
+# sample_random(seed,xmin,xmax,ymin,ymax,zmin,zmax,vdisp) - sample position and velocity in uniform cube
+# sample_random_sphere(seed, rmin,rmax,vdisp,flatsphere) - sample position and velocity in uniform sphere
+# sample_GHZ(seed,inner_radius, outer_radius, scale_length, max_inclination) - sample position and velocity in Galactic Habitable Zone
+
+
+# transmitted_flux(distance) - compute the flux of radiation from transmitter at a given distance
+# broadcast(time,dt) - determine if transmitter is broadcasting at a specific time
 # calc_eirp - calculate effective isotropic radiated power
 # broadcast(time,dt) - determine if transmitter is transmitting
 

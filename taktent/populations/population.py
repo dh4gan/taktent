@@ -10,25 +10,29 @@
 
 # Methods
 
-# add_agent -- add an agent to the Population
+# add_agent(agent) -- add an agent to the Population
+# find_agent(ID) -- Find an agent by its ID
+# generate_identical_transmitters - create a population of Transmitter objects
+# generate_observer - create a single Observer object
+
 # assign_Gaussian_broadcast_parameters -- randomly sample broadcast parameters from Gaussians
 # assign_uniform_broadcast_parameters -- randomly sample broadcast parameters from uniform distributions
 
 # assign_Gaussian_strategy_parameters -- randomly sample strategy parameters from Gaussians
 
-# generate_identical_transmitters - create a population of Transmitter objects
-# generate_observer_at_origin - creates a single Observer at origin
-
 # define_agent_strategies - set strategies for all agents
 # define_observation_strategies - defines observation strategy for all Observer objects
 # define_transmitter_strategies - defines transmission strategy for all Transmitter objects
+
+# run_simulation -- run simulation of Population from beginning to end
+# initialise - initialise the Population ready for running simulations
 # update -- update the Population object's attributes
 # update_agents -- update all Agents in the Population
-# initialise - initialise the Population ready for running simulations
 
 # generate_skymaps -- generate sky maps for all observers in the simulation
 
 # conduct_observations - goes through each Observer object and attempts to observe Transmitters
+# record_detections -- record all detections of Transmitters by Observers
 # plot - plot entire population of Agents (Observers & Transmitters)
 
 import taktent.agents.observer as observer
@@ -346,7 +350,7 @@ class Population:
         self.define_agent_strategies(self,strategy,"Observer")
 
     
-    def run_simulation(self, write_detections=False, make_plots=False, fullskymap=False):
+    def run_simulation(self, write_detections=False, make_plots=False, allskymap=False):
         """
         Run Population detection simulation from beginning to end
         
@@ -354,14 +358,14 @@ class Population:
         ------------------
         write_detections - record individual detections to file?
         make_plots       - Plot xy position and skymaps for all Observers?
-        fullskymap       - Plot all sky maps for each Observer?
+        allskymap       - Plot all sky maps for each Observer?
         """
         
         self.initialise()
         for i in range(self.nsteps):
             
             print ("Simulation ID ",self.ID, "Time: ",str(round(self.time,2)))
-            self.update(write_detections,make_plots,fullskymap)
+            self.update(write_detections,make_plots,allskymap)
 
 
         self.write_means_to_file()
@@ -374,7 +378,7 @@ class Population:
         self.update_agents()
     
     
-    def update(self, write_detections=False, make_plots=False, fullskymap=False):
+    def update(self, write_detections=False, make_plots=False, allskymap=False):
         """ Update Population attributes"""
         
         self.conduct_observations()
@@ -385,7 +389,7 @@ class Population:
         if(make_plots):
             outputfile = 'xy_'+str(self.istep).zfill(3)+'.png'
             self.plot(outputfile)
-            self.generate_skymaps(fullmap=fullskymap)
+            self.generate_skymaps(allskymap=allskymap)
     
         self.calculate_means()
         self.update_agents()
@@ -426,13 +430,13 @@ class Population:
 
     
     
-    def generate_skymaps(self,fullmap=False):
+    def generate_skymaps(self,allskymap=False):
         """
         Generate a map of the sky as seen by every observer
             
         Keyword Arguments:
         ------------------
-        fullmap -- Boolean determines type of map:
+        allskymap -- Boolean determines type of map:
         
         True - Produce either an all-sky map with observer field of view drawn on. (Requires mpl_toolkits.basemap)
         
@@ -441,7 +445,7 @@ class Population:
     
         for agent in self.agents:
             if(agent.type=="Observer"):
-                agent.generate_skymap(self.time, self.agents,fullmap=fullmap)
+                agent.generate_skymap(self.time, self.agents,allskymap=allskymap)
     
 
     def conduct_observations(self):

@@ -25,21 +25,20 @@
 ###########
 
 # Inherited/Extended from agent.py
+
 # define_strategy(strategy) - define strategy of Agent
-# update(time,dt) - update Agent position, velocity and direction vector
+# update(time,dt) - update agent position, velocity and direction vector
 # orbit(time) - move agent in orbit around host star
 # sample_random(seed,xmin,xmax,ymin,ymax,zmin,zmax,vdisp) - sample position and velocity in uniform cube
 # sample_random_sphere(seed, rmin,rmax,vdisp,flatsphere) - sample position and velocity in uniform sphere
-# sample_GHZ(): sample position and velocity in Galactic Habitable Zones
-
-# plot(radius,wedge_length) - return patches suitable for a matplotlib plot
+# sample_GHZ(seed,inner_radius, outer_radius, scale_length, max_inclination) - sample position and velocity in Galactic Habitable Zone
 
 # Additional Methods:
 
 # calculate_doppler_drift(time,dt,transmitter) - calculate the Doppler drift from a signal emitted by a transmitter
 # set_colour() - set the colour of the observer for plotting
 # observe_transmitter(time,dt,transmitter) - attempt to detect transmitter
-# skymap - generate a field of view image along observer's current target vector
+# generate_skymap(time,agentlist,allskymap) - generate a field of view image along observer's current target vector
 
 from taktent.agents.agent import Agent as Parent
 from numpy import sin,cos, arccos, pi, arctan2, round, amin,amax, zeros,linspace, arange
@@ -276,7 +275,7 @@ class Observer(Parent):
             self.colour = self.fail_colour
     
     
-    def generate_skymap(self, time, agentlist,fullmap=False):
+    def generate_skymap(self, time, agentlist,allskymap=False):
         """
         Given a list of agents, produces a skymap (in standard spherical polar co-ordinates)
         
@@ -284,7 +283,7 @@ class Observer(Parent):
         ------------------
         time -- current time (years)
         dt -- timestep (years)
-        fullmap -- Boolean determines type of map:
+        allskymap -- Boolean determines type of map:
         
                 True - Produce either an all-sky map with observer field of view drawn on. (Requires mpl_toolkits.basemap)
         
@@ -293,7 +292,7 @@ class Observer(Parent):
 
 
         # Boolean checks if user wants an all-sky map and has Basemap installed
-        plot_fullmap = fullmap and basemap_installed
+        plot_allskymap = allskymap and basemap_installed
 
         fig1 = plt.figure()
         ax1 = fig1.add_subplot(111)
@@ -302,7 +301,7 @@ class Observer(Parent):
         # If plotting an all-sky map , get angles in degrees
         # otherwise use radians
         
-        r0,theta0,phi0 = self.n.spherical_polars(degrees=plot_fullmap)
+        r0,theta0,phi0 = self.n.spherical_polars(degrees=plot_allskymap)
         
         # Lists to store agent positions and colours
         thetapoints = []
@@ -310,7 +309,7 @@ class Observer(Parent):
         colourpoints = []
 
         # If plotting an all-sky map, set up Basemap object and draw parallels/meridians
-        if(plot_fullmap):
+        if(plot_allskymap):
 
             parallels = arange(-90,90, 30)
             meridians = arange(-180,180,30)
@@ -336,11 +335,11 @@ class Observer(Parent):
             relative_position = agent.position.subtract(self.position)
 
             # If agent outside the observer's field of view, skip
-            if (plot_fullmap==False and arccos(relative_position.unit().dot(self.n)) >self.openingangle):
+            if (plot_allskymap==False and arccos(relative_position.unit().dot(self.n)) >self.openingangle):
                 continue
 
-            # Convert to spherical polars (if a fullmap, angles will be in degrees)
-            r,theta,phi = relative_position.spherical_polars(degrees=plot_fullmap)
+            # Convert to spherical polars (if a allskymap, angles will be in degrees)
+            r,theta,phi = relative_position.spherical_polars(degrees=plot_allskymap)
             
             # Store data in lists
             thetapoints.append(theta)
@@ -349,7 +348,7 @@ class Observer(Parent):
         
         
         # If creating an all-sky map, plot agents and draw a circle representing observer's FoV
-        if(plot_fullmap):
+        if(plot_allskymap):
             map.scatter(phipoints,thetapoints, color=colourpoints,latlon=True)
             
             xcircle,ycircle = get_circle_outline(phi0, theta0, self.openingangle*180.0/pi)
