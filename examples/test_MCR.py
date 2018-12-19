@@ -82,7 +82,7 @@ for irun in range(nruns):
 
     popn.generate_identical_transmitters(N_transmitters=N_transmitters, strategy=strat,semimajoraxis =None, inclination=None, mean_anomaly=None, longascend=None, nu=freq, bandwidth=band, solidangle=solidangle, power=power, spatial_distribution="random_sphere",tbegin=popn.tbegin, tend=popn.tend)
 
-    popn.run_simulation(write_detections=True, make_plots=False, fullskymap=True)
+    popn.run_simulation(write_detections=True, make_plots=False, allskymap=True)
 
     ndetect_MCR.append(popn.ndetect)
     ntotal_MCR.append(sum(popn.ndetect))

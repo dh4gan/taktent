@@ -57,7 +57,7 @@ observerID = popn.generate_observer(direction_vector=observer_dir,openingangle=o
 popn.add_agent(tran)
 
 
-popn.run_simulation(write_detections=False, make_plots=True, fullskymap=True)
+popn.run_simulation(write_detections=False, make_plots=True, allskymap=True)
 
 
 

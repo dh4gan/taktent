@@ -82,7 +82,7 @@ popn.assign_Gaussian_broadcast_parameters(nu_parameters=[1.42e9,1.0e9], solidang
 popn.assign_Gaussian_strategy_parameters()
 
 # Run simulation
-popn.run_simulation(write_detections=True, make_plots=False, fullskymap=True)
+popn.run_simulation(write_detections=True, make_plots=False, allskymap=True)
 
 
 print ("Distance: ",popn.means["distance"])

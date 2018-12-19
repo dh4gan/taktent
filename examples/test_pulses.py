@@ -85,7 +85,7 @@ popn.add_agent(tran)
 #
 
 # Run simulation
-popn.run_simulation(write_detections=True, make_plots=False, fullskymap=True)
+popn.run_simulation(write_detections=True, make_plots=False, allskymap=True)
 
 
 
