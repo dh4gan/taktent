@@ -1,7 +1,8 @@
 taktent/*/.pyc
 taktent/*/__pycache__
 examples/*.png
-
+examples/*.detections
+examples/*.meandata
 
 dist/
 /*.egg-info
