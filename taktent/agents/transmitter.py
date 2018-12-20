@@ -218,7 +218,7 @@ class Transmitter(Parent):
             period = self.pulseduration + self.pulseinterval
 
             # How many pulse cycles have elapsed (real value)
-            nperiods = (time-self.tbegin)/period
+            nperiods = abs(time-self.tbegin)/period
         
             # fraction of time pulse is on during a cycle
             onfrac = self.pulseduration/period

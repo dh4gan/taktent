@@ -211,8 +211,8 @@ class Observer(Parent):
         else:
             delay_time = time
         
-        # Cannot detect transmitters before start of run
-        if(delay_time <0.0):
+        # Cannot detect transmitters before they start transmitting
+        if(delay_time <transmitter.tbegin):
             return False
 
         #
