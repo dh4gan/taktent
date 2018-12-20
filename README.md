@@ -1,4 +1,4 @@
-taktent: a simulator package for (radio) SETI
+taktent: a simulator package for testing SETI observational strategies
 ==============================================
 [![DOI](https://zenodo.org/badge/157450057.svg)](https://zenodo.org/badge/latestdoi/157450057)
 
@@ -39,6 +39,8 @@ Future Features/Wishlist
 * Sampling of planetary orbits from exoplanet data
 
 * Plotting library for output MCR data
+
+* Polarisation modelling - parameters included but not implemented in detections
 
 
 Installation Instructions
