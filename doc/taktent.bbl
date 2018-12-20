@@ -1,0 +1,37 @@
+\begin{thebibliography}{}
+\makeatletter
+\relax
+\def\mn@urlcharsother{\let\do\@makeother \do\$\do\&\do\#\do\^\do\_\do\%\do\~}
+\def\mn@doi{\begingroup\mn@urlcharsother \@ifnextchar [ {\mn@doi@}
+  {\mn@doi@[]}}
+\def\mn@doi@[#1]#2{\def\@tempa{#1}\ifx\@tempa\@empty \href
+  {http://dx.doi.org/#2} {doi:#2}\else \href {http://dx.doi.org/#2} {#1}\fi
+  \endgroup}
+\def\mn@eprint#1#2{\mn@eprint@#1:#2::\@nil}
+\def\mn@eprint@arXiv#1{\href {http://arxiv.org/abs/#1} {{\tt arXiv:#1}}}
+\def\mn@eprint@dblp#1{\href {http://dblp.uni-trier.de/rec/bibtex/#1.xml}
+  {dblp:#1}}
+\def\mn@eprint@#1:#2:#3:#4\@nil{\def\@tempa {#1}\def\@tempb {#2}\def\@tempc
+  {#3}\ifx \@tempc \@empty \let \@tempc \@tempb \let \@tempb \@tempa \fi \ifx
+  \@tempb \@empty \def\@tempb {arXiv}\fi \@ifundefined
+  {mn@eprint@\@tempb}{\@tempb:\@tempc}{\expandafter \expandafter \csname
+  mn@eprint@\@tempb\endcsname \expandafter{\@tempc}}}
+
+\bibitem[\protect\citeauthoryear{Forgan \& Elvis}{Forgan \&
+  Elvis}{2011}]{asteroid_mining}
+Forgan D.~H.,  Elvis M.,  2011, \mn@doi [International Journal of Astrobiology]
+  {10.1017/S1473550411000127}, 10, 307
+
+\bibitem[\protect\citeauthoryear{Messerschmitt}{Messerschmitt}{2013}]{Messerschmitt2013}
+Messerschmitt D.~G.,  2013, Arxiv e-prints 1305.4684
+
+\bibitem[\protect\citeauthoryear{Messerschmitt}{Messerschmitt}{2015}]{Messerschmitt2015}
+Messerschmitt D.~G.,  2015, Acta Astronautica, 107, 20
+
+\bibitem[\protect\citeauthoryear{Tarter}{Tarter}{2007}]{TarterPlanetsLife2007}
+Tarter J.,  2007, in {Sullivan III} W.~T.,  Baross T.,  eds, , Planets and Life
+  - The Emerging Science of Astrobiology.
+Cambridge University Press, Cambridge, Chapt.~26, pp 513--536
+
+\makeatother
+\end{thebibliography}
