@@ -2,7 +2,7 @@ taktent: a simulator package for (radio) SETI
 ==============================================
 [![DOI](https://zenodo.org/badge/157450057.svg)](https://zenodo.org/badge/latestdoi/157450057)
 
-This Python package allows the user to setup and run an agent-based simulation of a SETI survey.  The package allows the creation of a population of observing and transmitting civilisations.  Each transmitter and observer conducts their activities according to an input strategy.  The success of observers and transmitters can then be recorded, and multiple simulations can be run for Monte Carlo Realisation.
+This Python package allows the user to setup and run an agent-based simulation of a SETI survey.  The package allows the creation of a population of observing and transmitting civilisations.  Each transmitter and observer conducts their activities (pointing and broadcasting) according to an input strategy.  The success of observers and transmitters can then be recorded, and multiple simulations can be run for Monte Carlo Realisation.
 
 This package is therefore a flexible framework in which to simulate and test different SETI strategies, both as an Observer and as a Transmitter.  It is primarily designed with radio SETI in mind, but is sufficiently flexible to simulate all forms of electromagnetic SETI, and potentially neutrino and gravitational wave SETI.
 
@@ -38,6 +38,8 @@ Future Features/Wishlist
 
 * Sampling of planetary orbits from exoplanet data
 
+* Plotting library for output MCR data
+
 
 Installation Instructions
 --------------------------
@@ -48,13 +50,31 @@ This package is hosted on PyPI.  To install with pip:
 
 The code has been developed in Python 3.6, using numpy 1.14.3 and matplotlib 2.2.2, and hence requires these for basic operation.
 
-If the user wishes to generate all-sky maps for their Observer objects, this will also require `mpl_toolkits.basemap` to be installed.  This is an optional requirement, and the package will function without it.
+If the user wishes to generate all-sky maps for their Observer objects, this will also require `mpl_toolkits.basemap` to be installed.  This is an optional requirement, and the package will function without it (producing field-of-view maps instead).
 
 
 Examples of Use
 -------------------
 
-Examples of how to use `taktent` to set up and conduct SETI simulations can be found in the `examples/` folder.
+Examples of how to use `taktent` to set up and conduct SETI simulations can be found in the `examples/` folder.  
+
+
+Physical Units
+-----------------
+
+The "natural" physical units of the package are:
+
+* distance -- parsecs
+
+* time -- years
+
+* speed -- parsecs/year
+
+* frequency -- Hertz
+
+* Power -- Watts
+
+* Flux/Sensitivity -- Watts m^-2
 
 
 How to Contribute
