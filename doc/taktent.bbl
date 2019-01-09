@@ -17,10 +17,37 @@
   {mn@eprint@\@tempb}{\@tempb:\@tempc}{\expandafter \expandafter \csname
   mn@eprint@\@tempb\endcsname \expandafter{\@tempc}}}
 
-\bibitem[\protect\citeauthoryear{Forgan \& Elvis}{Forgan \&
-  Elvis}{2011}]{asteroid_mining}
-Forgan D.~H.,  Elvis M.,  2011, \mn@doi [International Journal of Astrobiology]
-  {10.1017/S1473550411000127}, 10, 307
+\bibitem[\protect\citeauthoryear{Gowanlock, Patton  \& McConnell}{Gowanlock
+  et~al.}{2011}]{Gowanlock2011}
+Gowanlock M.~G.,  Patton D.~R.,   McConnell S.~M.,  2011, Astrobiology, 11, 855
+
+\bibitem[\protect\citeauthoryear{Hunter}{Hunter}{2007}]{Hunter2007}
+Hunter J.~D.,  2007, \mn@doi [Computing in Science {\&} Engineering]
+  {10.1109/MCSE.2007.55}, 9, 90
+
+\bibitem[\protect\citeauthoryear{Isaacson et~al.,}{Isaacson
+  et~al.}{2017}]{Isaacson2017}
+Isaacson H.,  et~al., 2017, eprint arXiv:1701.06227
+
+\bibitem[\protect\citeauthoryear{Korpela, Sallmen  \& Greene}{Korpela
+  et~al.}{2015}]{Korpela2015}
+Korpela E.~J.,  Sallmen S.~M.,   Greene D.~L.,  2015, \mn@doi [ApJ]
+  {10.1088/0004-637X/809/2/139}, 809, 139
+
+\bibitem[\protect\citeauthoryear{Lin, Abad  \& Loeb}{Lin
+  et~al.}{2014}]{Lin2014}
+Lin H.~W.,  Abad G.~G.,   Loeb A.,  2014, \mn@doi [ApJ]
+  {10.1088/2041-8205/792/1/L7}, 792, L7
+
+\bibitem[\protect\citeauthoryear{Lineweaver, Fenner  \& Gibson}{Lineweaver
+  et~al.}{2004}]{GHZ}
+Lineweaver C.~H.,  Fenner Y.,   Gibson B.~K.,  2004, \mn@doi [Science]
+  {10.1126/science.1092322}, 303, 59
+
+\bibitem[\protect\citeauthoryear{Lingam \& Loeb}{Lingam \&
+  Loeb}{2017}]{Lingam2017a}
+Lingam M.,  Loeb A.,  2017, \mn@doi [Monthly Notices of the Royal Astronomical
+  Society: Letters] {10.1093/mnrasl/slx084}, 470, L82
 
 \bibitem[\protect\citeauthoryear{Messerschmitt}{Messerschmitt}{2013}]{Messerschmitt2013}
 Messerschmitt D.~G.,  2013, Arxiv e-prints 1305.4684
@@ -28,10 +55,25 @@ Messerschmitt D.~G.,  2013, Arxiv e-prints 1305.4684
 \bibitem[\protect\citeauthoryear{Messerschmitt}{Messerschmitt}{2015}]{Messerschmitt2015}
 Messerschmitt D.~G.,  2015, Acta Astronautica, 107, 20
 
+\bibitem[\protect\citeauthoryear{Oliphant}{Oliphant}{2006}]{Oliphant2006}
+Oliphant T.~E.,  2006, {A Guide to NumPy}.
+Trelgol Publishing, \url {https://books.google.co.uk/books?id=fKulSgAACAAJ}
+
+\bibitem[\protect\citeauthoryear{Participants}{Participants}{2018}]{Participants2018}
+Participants N. T.~W.,  2018
+
+\bibitem[\protect\citeauthoryear{Socas-Navarro}{Socas-Navarro}{2018}]{Socas-Navarro2018}
+Socas-Navarro H.,  2018, \mn@doi [ApJ] {10.3847/1538-4357/aaae66}, 855, 110
+
 \bibitem[\protect\citeauthoryear{Tarter}{Tarter}{2007}]{TarterPlanetsLife2007}
 Tarter J.,  2007, in {Sullivan III} W.~T.,  Baross T.,  eds, , Planets and Life
   - The Emerging Science of Astrobiology.
 Cambridge University Press, Cambridge, Chapt.~26, pp 513--536
+
+\bibitem[\protect\citeauthoryear{Wright, Kanodia  \& Lubar}{Wright
+  et~al.}{2018}]{Wright2018a}
+Wright J.~T.,  Kanodia S.,   Lubar E.,  2018, \mn@doi [The Astronomical
+  Journal] {10.3847/1538-3881/aae099}, 156, 260
 
 \makeatother
 \end{thebibliography}
