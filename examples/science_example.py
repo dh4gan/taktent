@@ -36,6 +36,7 @@ for irun in range(nruns):
 
     observer_dir = vector.Vector3D(1.0,1.0,0.0).unit()
 
+    iseed = iseed + irun
 
     #
     # Define scanningStrategy object
@@ -60,7 +61,7 @@ for irun in range(nruns):
     # 3. Define properties of transmitter population
     #
 
-    N_transmitters=1000
+    N_transmitters=100
     freq = 1.0e10
     band = 1.0e10
     solidangle = 4.0*pi
@@ -73,15 +74,16 @@ for irun in range(nruns):
     popn.assign_uniform_broadcast_parameters(nu_parameters=[1.40e9,1.5e9], bandwidth_parameters=[1.0e0,1.0e1], pulseduration_parameters=[0.1,5.0], pulseinterval_parameters=[0.1,5.0], power_parameters=[1.0e17,1.0e18],tbegin_parameters=[-100000.0,-50000.0])
 
     # Run simulation
-    popn.run_simulation(write_detections=True, make_plots=False, allskymap=True,delay_time=True)
+    popn.run_simulation(write_detections=True, make_plots=True, allskymap=True,delay_time=True)
 
 
+
+    # Write/plot output data
     print ("Number of Detections: ",popn.ndetect)
     print ("Mean Distance: ",popn.means["distance"])
     print ("Mean Frequency: ",popn.means["frequency"])
     print ("Mean Pulse Duration: ",popn.means["pulseduration"])
     print ("Mean Pulse Interval: ",popn.means["pulseinterval"])
 
-
-
-
+    popn.plot_ndetect_vs_t()
+    popn.plot_meandata_vs_t(variable="distance")

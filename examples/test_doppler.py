@@ -38,10 +38,6 @@ def transmit_strategy(time, tinit=0.0, period_xy=0.0, period_yz=0.0, phase_xy=0.
 # scanningStrategy object
 strat = scanningStrategy.scanningStrategy(transmit_strategy)
 
-# create transmitter object
-
-tran = transmitter.Transmitter(position=transmitter_pos,velocity=transmitter_vel,strategy=strat,direction_vector=transmitter_dir,starposition=transmitter_pos.copy(), starvelocity = transmitter_vel.copy(),nu=freq,bandwidth=band,solidangle=solidangle,power=power, tbegin=tbegin,tend=tend,semimajoraxis=transmitter_a, inclination=transmitter_inc, mean_anomaly=0.0, longascend=0.0)
-
 
 # Define Observer properties
 
@@ -53,6 +49,12 @@ strat_obs = strategy.Strategy()
 popn = Population(tbegin, tend,dt)
 
 observerID = popn.generate_observer(direction_vector=observer_dir,openingangle=openangle,strategy=strat_obs,semimajoraxis=1.0, nu_min = tran.nu*(1.0-6.0e-4), nu_max = tran.nu*1.0+6.0e-4)
+
+# create transmitter object
+
+tran = transmitter.Transmitter(counter=popn.global_ID_counter,position=transmitter_pos,velocity=transmitter_vel,strategy=strat,direction_vector=transmitter_dir,starposition=transmitter_pos.copy(), starvelocity = transmitter_vel.copy(),nu=freq,bandwidth=band,solidangle=solidangle,power=power, tbegin=tbegin,tend=tend,semimajoraxis=transmitter_a, inclination=transmitter_inc, mean_anomaly=0.0, longascend=0.0)
+
+
 
 popn.add_agent(tran)
 

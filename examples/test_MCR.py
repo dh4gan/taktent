@@ -94,5 +94,3 @@ print (ntotal_MCR)
 print (ndetect_MCR)
 
 
-
-

@@ -30,7 +30,7 @@ freq = 1.0e9
 band = 1.0e8
 openangle = 0.1*pi
 solidangle = pi
-power = 100.0
+power = 1.0e30
 
 # Define a scanning transmitter strategy:
 # First, function to define transmitter target vector (sweeps x-y plane with a given period)
@@ -48,11 +48,6 @@ def transmit_strategy(time, tinit=0.0, period_xy=12.0, period_yz=None, phase_xy 
 # Create scanningStrategy object
 scanperiod = 5.0
 strat = scanningStrategy.scanningStrategy(transmit_strategy, tinit = 0.0, period_xy=scanperiod, phase_xy=0.0)
-
-
-# Create transmitter object
-tran = transmitter.Transmitter(position=transmitter_pos,velocity=transmitter_vel,strategy=strat,direction_vector=transmitter_dir,starposition=transmitter_pos.copy(), starvelocity = transmitter_vel.copy(),nu=freq,bandwidth=band,solidangle=solidangle,power=power, tbegin=tbegin,tend=tend)
-
 
 
 #
@@ -75,6 +70,12 @@ popn = Population(tbegin,tend,dt)
 
 observerID = popn.generate_observer(direction_vector=observer_dir,openingangle=openangle,strategy=strat_obs,semimajoraxis=1.0)
 
+# Create transmitter object
+tran = transmitter.Transmitter(counter=popn.global_ID_counter,position=transmitter_pos,velocity=transmitter_vel,strategy=strat,direction_vector=transmitter_dir,starposition=transmitter_pos.copy(), starvelocity = transmitter_vel.copy(),nu=freq,bandwidth=band,solidangle=solidangle,power=power, tbegin=tbegin,tend=tend)
+
+
+
+
 # Add a single agent
 popn.add_agent(tran)
 
@@ -82,7 +83,7 @@ popn.add_agent(tran)
 # 4. Run simulation
 #
 
-popn.run_simulation(write_detections=False, make_plots=True, allskymap=True)
+popn.run_simulation(write_detections=False, make_plots=True, allskymap=True,delay_time=False)
 
 
 
