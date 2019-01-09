@@ -200,8 +200,8 @@ class Observer(Parent):
         
         """
 
-        self.colour = self.fail_colour
-             
+        # Assume transmitter not detected until proven otherwise
+        
         # Travel time between observer and transmitter location
         separation = self.position.subtract(transmitter.position)
         distance = separation.mag()
@@ -258,9 +258,8 @@ class Observer(Parent):
             in_frequency_range = freqmin <=self.nu_max and self.nu_min <=freqmax
 
         detected = observer_illuminated and in_observer_field and signal_powerful_enough and in_frequency_range
+
         if(detected):
-            self.colour = self.success_colour
-            transmitter.colour = transmitter.success_colour
             self.detect[transmitter.ID] = detected
             transmitter.detected[self.ID] = detected
 
@@ -367,13 +366,3 @@ class Observer(Parent):
         outputfile = "skymap_"+self.ID+"_time_00"+str(round(time,2))+".png"
         plt.savefig(outputfile)
         plt.close()
-
-
-
-
-
-
-
-
-  
-

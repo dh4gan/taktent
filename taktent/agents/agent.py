@@ -355,9 +355,3 @@ class Agent:
 
         return circle, wedge
 
-
-
-
-
-
-

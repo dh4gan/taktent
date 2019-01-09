@@ -90,5 +90,3 @@ class scanningStrategy(Parent):
         Parent.update(self,time,dt)
         
         self.current_target= self.get_target(time,dt)
-
-

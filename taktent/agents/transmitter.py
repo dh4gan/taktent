@@ -235,6 +235,3 @@ class Transmitter(Parent):
             self.colour = self.success_colour
         else:
             self.colour = self.fail_colour
-
-
-

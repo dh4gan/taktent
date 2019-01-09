@@ -30,6 +30,3 @@ class Strategy:
     
     def update(self, time,dt):
         '''Update the current strategy to a given time'''
-
-
-

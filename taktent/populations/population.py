@@ -36,7 +36,7 @@
 # plot - plot entire population of Agents (Observers & Transmitters)
 
 import itertools
-from numpy import zeros, sum, round, random, pi, where, amax, savetxt, vstack, transpose
+from numpy import zeros, sum, round, random, pi, where, amax, savetxt, vstack, transpose, linspace
 import matplotlib.pyplot as plt
 
 import taktent.agents.observer as observer
@@ -93,6 +93,7 @@ class Population:
         self.istep = 0
         
         self.ndetect = zeros(self.nsteps)
+        self.alltime = linspace(tbegin,tend, num=self.nsteps)
     
         self.means = {}
         self.means["time"] = zeros(self.nsteps)
@@ -102,6 +103,17 @@ class Population:
         self.means["power"] = zeros(self.nsteps)
         self.means["pulseinterval"] = zeros(self.nsteps)
         self.means["pulseduration"] = zeros(self.nsteps)
+    
+    
+        self.meanlabels = {}
+    
+        self.meanlabels["time"] = "Time (years)"
+        self.meanlabels["distance"] = "Mean Detection Distance (pc)"
+        self.meanlabels["frequency"] = "Mean Detected Frequency (Hz)"
+        self.meanlabels["bandwidth"] = "Mean Detected Bandwidth (Hz)"
+        self.meanlabels["power"] = "Mean Broadcast Power (W)"
+        self.meanlabels["pulseinterval"] = "Mean Detected Pulse Interval (years)"
+        self.meanlabels["pulseduration"] = "Mean Detected Pulse Duration (years)"
 
     def add_agent(self, agent):
         """
@@ -398,7 +410,7 @@ class Population:
             self.record_detections()
         
         if(make_plots):
-            outputfile = 'xy_'+str(self.istep).zfill(3)+'.png'
+            outputfile = "Population_"+self.ID+"_xy_"+str(self.istep).zfill(3)+".png"
             self.plot(outputfile)
             self.generate_skymaps(allskymap=allskymap)
     
@@ -472,9 +484,18 @@ class Population:
         self.success = zeros((self.nagents,self.nagents))
         
         for i in range(self.nagents):
-            
+            self.agents[i].colour = self.agents[i].fail_colour
+        
             if self.agents[i].type=="Observer":
                 self.agents[i].detect ={}
+    
+            elif self.agents[i].type=="Transmitter":
+                self.agents[i].detected ={}
+        
+        
+        for i in range(self.nagents):
+            
+            if self.agents[i].type=="Observer":
 
                 for j in range(self.nagents):
                     if (i==j or self.agents[j].type=="Observer"): continue
@@ -489,40 +510,7 @@ class Population:
         for i in range(self.nagents):
             self.agents[i].set_colour()
 
-    def plot(self,filename=None):
-        """Plot all agents in the system"""
-        fig1 = plt.figure()
-        ax1 = fig1.add_subplot(111)
-        
-        rmax =1.5*amax([self.xmax,self.ymax])
-        
-        ax1.set_xlim(-rmax,rmax)
-        ax1.set_ylim(-rmax,rmax)
-        
-        ax1.set_xlabel("x (pc)")
-        ax1.set_ylabel("y (pc)")
-        
-        
-        markersize = 0.03*rmax
-        wedge_length = 0.15*rmax
-        
-        for agent in self.agents:
-            circle, wedge = agent.plot(markersize,wedge_length)
-            ax1.add_patch(circle)
-            
-            # If actively transmitting/receiving, plot transmission/reception beam
-            if(agent.active): ax1.add_patch(wedge)
 
-        # Add time to plots
-        ax1.text(0.9, 0.9,'t = '+str(round(self.time,2))+' yr', bbox=dict(edgecolor='black', facecolor='none'), horizontalalignment='center', verticalalignment='center', transform = ax1.transAxes)
-        
-        
-        if(filename==None):
-            plt.show()
-        else:
-            fig1.savefig(filename)
-
-        plt.close()
 
 
     def record_detections(self):
@@ -563,10 +551,72 @@ class Population:
     
         data = transpose(data)
         savetxt(outputfile, data, fmt="%10.4e",header=header)
-  
+
+    def plot(self,filename=None):
+        """Plot all agents in the system"""
+        fig1 = plt.figure(figsize=(10,8))
+        ax1 = fig1.add_subplot(111)
+        
+        rmax =1.5*amax([self.xmax,self.ymax])
+        
+        ax1.set_xlim(-rmax,rmax)
+        ax1.set_ylim(-rmax,rmax)
+        
+        ax1.set_xlabel("x (pc)", fontsize=22)
+        ax1.set_ylabel("y (pc)",fontsize=22)
+        
+        
+        markersize = 0.03*rmax
+        wedge_length = 0.15*rmax
+        
+        for agent in self.agents:
+            circle, wedge = agent.plot(markersize,wedge_length)
+            ax1.add_patch(circle)
+            
+            # If actively transmitting/receiving, plot transmission/reception beam
+            if(agent.active): ax1.add_patch(wedge)
+
+        # Add time to plots
+        ax1.text(0.9, 0.9,'t = '+str(round(self.time,2))+' yr', bbox=dict(edgecolor='black', facecolor='none'), horizontalalignment='center', verticalalignment='center', transform = ax1.transAxes)
+        
+        
+        if(filename==None):
+            plt.show()
+        else:
+            fig1.savefig(filename)
+        
+        plt.close()
 
 
+    def plot_ndetect_vs_t(self):
+        """
+        Plot total number of detections vs time
+        """
+
+        outputfile = "Population_"+self.ID+"_ndetect_vs_t.png"
+
+        fig1 = plt.figure(figsize=(10,8))
+        ax1 = fig1.add_subplot(111)
+        ax1.set_xlabel("Time (yr)", fontsize=22)
+        ax1.set_ylabel(r"$N_{\rm detect}$",fontsize=22)
+
+        ax1.plot(self.alltime, self.ndetect)
+
+        fig1.savefig(outputfile)
 
 
+    def plot_meandata_vs_t(self, variable="distance"):
+        """
+        Plot mean detection data as a function of time
+        """
 
+        outputfile = "Population_"+self.ID+"_"+variable+"_vs_t.png"
+        fig1 = plt.figure(figsize=(10,8))
+        ax1 = fig1.add_subplot(111)
+        ax1.set_xlabel(self.meanlabels["time"],fontsize=22)
+        ax1.set_ylabel(self.meanlabels[variable],fontsize=22)
 
+        ax1.plot(self.means["time"],self.means["distance"])
+
+        fig1.savefig(outputfile)
+        plt.close()
