@@ -25,7 +25,7 @@
 %% before everything else. Also place all the emails in the \email
 %% command instead of using multiple \email calls.
 \correspondingauthor{Duncan Forgan}
-\email{dhf3@st-andrews.ac.uk}
+\email{dh4gan@gmail.com}
 
 \author[0000-0003-1175-4388]{Duncan Forgan}
 \affiliation{Centre for Exoplanet Science, SUPA, University of St Andrews, North Haugh, St Andrews, KY16 9SS, UK}
@@ -34,7 +34,7 @@
 %% Note that RNAAS manuscripts DO NOT have abstracts.
 %% See the online documentation for the full list of available subject
 %% keywords and the rules for their use.
-\keywords{}
+\keywords{+++}
 
 %% Start the main body of the article. If no sections in the 
 %% research note leave the \section call blank to make the title.
@@ -53,21 +53,19 @@ In this Note, I introduce a new Python package, \textsc{taktent}(+++)\footnote{T
 
 \section{About the Package}
 
-\noindent \textsc{taktent} is written entirely in object-oriented Python 3.6, using numpy 1.14.3 \citep{Oliphant2006} and matplotlib 2.2.2 \citep{Hunter2007}, and hence requires these for basic operation.  
-
-The package describes several classes of object that drive the agent-based simulation of the SETI problem.  The \texttt{Agent} base class is extended into two subclasses - \texttt{Observer} and \texttt{Transmitter} - which represent an observing and transmitting civilisation, respectively.  Both classes possess a spatial location\footnote{Simulations are conducted in Cartesian co-ordinates, and are mediated by a bespoke \texttt{Vector3D} class} (which includes the possibility of being in orbit around a host star), as well as a pointing vector (for either listening or broadcasting), with a defined opening angle.  This defines a \texttt{Transmitter}'s beam size, and an \texttt{Observer'}s field of view.
+\noindent \textsc{taktent} is written entirely in object-oriented Python 3.6, using \textsc{numpy} 1.14.3 \citep{Oliphant2006} and \textsc{matplotlib} 2.2.2 \citep{Hunter2007}, and hence requires these for basic operation\footnote{Some additional, optional functionality also requires \texttt{mpl\_toolkits.basemap}}.  The package describes several classes of object that drive the agent-based simulation of the SETI problem.  The \texttt{Agent} base class is extended into two subclasses - \texttt{Observer} and \texttt{Transmitter} - which represent an observing and transmitting civilisation, respectively.  Both classes possess a spatial location\footnote{Simulations are conducted in Cartesian co-ordinates, and are mediated by a bespoke \texttt{Vector3D} class} (which includes the possibility of being in orbit around a host star), as well as a pointing vector (for either listening or broadcasting), with a defined opening angle.  This defines a \texttt{Transmitter}'s beam size, and an \texttt{Observer'}s field of view.
 
 \texttt{Observers} possess a range of frequencies which they can listen at, as well as a sensitivity limit (defined as a minimum observable flux per unit frequency).  \texttt{Transmitters} emit radiation at a specific frequency, with a defined bandwidth and solid angle.  They also transmit either continuously or in the form of pulses, with a defined duration and interval between pulses.
 
 The direction of both classes' pointing is governed by a \texttt{Strategy} object, which can either be a series of discrete pointing choices (a \texttt{PointingStrategy}), or a smooth scan across the sky (a \texttt{ScanningStrategy}).
 
-The simulation itself is driven by the \texttt{Population} class, which allows the generation of \texttt{Transmitters} and \texttt{Observers}, and drives the simulation, recording detection data and plotting this where requested.  The github repository's ``examples/'' subdirectory shows several examples of \textsc{taktent} in operation.
+The simulation itself is driven by the \texttt{Population} class, which allows the generation of \texttt{Transmitters} and \texttt{Observers}, and conducts observations, recording and plotting detection data where requested.  For several examples of \textsc{taktent} in operation, please see \url{github.com/dh4gan/taktent/examples}.
 
-\textsc{taktent} models the finite travel time of electromagnetic signals, and their inverse square law ($1/r^2$) decay of flux, as well as the Doppler drift due to the relative motion of the Observer and Transmitter.  It should also be noted that the package's construction is flexible enough that if the user wishes to model SETI signals using a different messenger particle or mechanism, this is also achievable.  For example, one can model gravitational waves (which have a $1/r$ flux decay law) by adjusting the Transmitter object's \texttt{decaylaw} parameter.
+\textsc{taktent} models the finite travel time of electromagnetic signals, and their inverse square law ($1/r^2$) decay of flux, as well as the Doppler drift due to the relative motion of the Observer and Transmitter.  It should also be noted that the package's construction is flexible enough that if the user wishes to model SETI signals using a different messenger particle or mechanism, this is also achievable.  For example, one can model gravitational waves (which have a $1/r$ flux decay law) by adjusting the Transmitter object's \texttt{decaylaw} parameter, or with slower messenger particles by reducing the \texttt{broadcastspeed} parameter.
 
 \section{A Science Example}
 
-\noindent In this example, I simulate a SETI survey in a galaxy populated by 1000 Transmitters and one Observer residing in the Galactic Habitable Zone \citep{GHZ,Gowanlock2011}.  The zone is defined as an annulus between 6 and 10 kpc, with an  surface density of stars that decays as $e^{-R/R_S}$, with the scale length $R_S=3$ kpc. 
+\noindent In this example, I simulate a SETI survey in a galaxy populated by 1000 \texttt{Transmitters} and one \texttt{Observer} residing in the Galactic Habitable Zone \citep{GHZ,Gowanlock2011}.  The zone is defined as an annulus between 6 and 10 kpc, with a surface density of stars that decays as $e^{-R/R_S}$, with the scale length $R_S=3$ kpc. 
 
 Each \texttt{Transmitter} broadcasts isotropically, with frequencies, start times, pulse durations and intervals sampled from uniform distributions.  The \texttt{Observer} object is initialised with a \texttt{scanningStrategy} that sweeps the x-y plane with a period of 10 years.  For the sake of brevity, I do not reproduce all the initial conditions here - the code that defines and runs this simulation can be found in the github repository at \url{github.com/dh4gan/taktent/examples/science\_example.py}.  Four different Monte Carlo Realisations of the simulation are run.
 
@@ -80,7 +78,7 @@ Each \texttt{Transmitter} broadcasts isotropically, with frequencies, start time
 \end{figure}
 
 
-The top panel of Figure \ref{fig:1} shows a snapshot from the simulation, where the \texttt{Observer} object is able to detect  +++ \texttt{Transmitter}s at that instant.  In the bottom panel of Figure \ref{fig:1}, I show the number of detections achieved by the \texttt{Observer} object as a function of time for a single realisation.  
+The top panel of Figure \ref{fig:1} shows a snapshot from the simulation, where the \texttt{Observer} object is able to detect 11 \texttt{Transmitter}s at that instant.  In the bottom panel of Figure \ref{fig:1}, I show the number of detections achieved by the \texttt{Observer} object as a function of time for a single realisation.  
 
 The \texttt{Population} object also records aggregated data from the simulation (mean distance from an \texttt{Observer} to a detected \texttt{Transmitter}, mean pulse duration of detected \texttt{Transmitter}s, and so on), while each \texttt{Observer} and \texttt{Transmitter} can write all detections at any timestep to file.  A key avenue for future development of \textsc{taktent} is determining what data/metrics should be outputted to file, which will depend on the desires of its future userbase.
 
