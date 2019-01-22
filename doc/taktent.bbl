@@ -17,9 +17,23 @@
   {mn@eprint@\@tempb}{\@tempb:\@tempc}{\expandafter \expandafter \csname
   mn@eprint@\@tempb\endcsname \expandafter{\@tempc}}}
 
+\bibitem[\protect\citeauthoryear{Enriquez et~al.,}{Enriquez
+  et~al.}{2017}]{Enriquez2017}
+Enriquez J.~E.,  et~al., 2017, \mn@doi [The Astrophysical Journal]
+  {10.3847/1538-4357/aa8d1b}, 849, 104
+
+\bibitem[\protect\citeauthoryear{Forgan}{Forgan}{2019}]{taktentDOI}
+Forgan D.,  2019, taktent v1.12, \mn@doi{10.5281/zenodo.2217055}
+
 \bibitem[\protect\citeauthoryear{Gowanlock, Patton  \& McConnell}{Gowanlock
   et~al.}{2011}]{Gowanlock2011}
 Gowanlock M.~G.,  Patton D.~R.,   McConnell S.~M.,  2011, Astrobiology, 11, 855
+
+\bibitem[\protect\citeauthoryear{Harp, Richards, Shostak, Tarter, Vakoch  \&
+  Munson}{Harp et~al.}{2016}]{Harp2016}
+Harp G.~R.,  Richards J.,  Shostak S.,  Tarter J.~C.,  Vakoch D.~A.,   Munson
+  C.,  2016, \mn@doi [The Astrophysical Journal] {10.3847/0004-637X/825/2/155},
+  825, 155
 
 \bibitem[\protect\citeauthoryear{Hunter}{Hunter}{2007}]{Hunter2007}
 Hunter J.~D.,  2007, \mn@doi [Computing in Science {\&} Engineering]
@@ -33,6 +47,11 @@ Isaacson H.,  et~al., 2017, eprint arXiv:1701.06227
   et~al.}{2015}]{Korpela2015}
 Korpela E.~J.,  Sallmen S.~M.,   Greene D.~L.,  2015, \mn@doi [ApJ]
   {10.1088/0004-637X/809/2/139}, 809, 139
+
+\bibitem[\protect\citeauthoryear{Lemarchand \& Tarter}{Lemarchand \&
+  Tarter}{1994}]{Lemarchand1994}
+Lemarchand G.~A.,  Tarter D.~E.,  1994, \mn@doi [Space Policy]
+  {10.1016/0265-9646(94)90021-3}, 10, 134
 
 \bibitem[\protect\citeauthoryear{Lin, Abad  \& Loeb}{Lin
   et~al.}{2014}]{Lin2014}
@@ -60,7 +79,15 @@ Oliphant T.~E.,  2006, {A Guide to NumPy}.
 Trelgol Publishing, \url {https://books.google.co.uk/books?id=fKulSgAACAAJ}
 
 \bibitem[\protect\citeauthoryear{Participants}{Participants}{2018}]{Participants2018}
-Participants N. T.~W.,  2018
+Participants 2018, Technical report, {NASA and the Search for Technosignatures:
+  A Report from the NASA Technosignatures Workshop}, \url
+  {http://arxiv.org/abs/1812.08681}.
+NASA, Houston, \url {http://arxiv.org/abs/1812.08681}
+
+\bibitem[\protect\citeauthoryear{Rampadarath, Morgan, Tingay  \&
+  Trott}{Rampadarath et~al.}{2012}]{Rampadarath2012}
+Rampadarath H.,  Morgan J.~S.,  Tingay S.~J.,   Trott C.~M.,  2012, \mn@doi
+  [The Astronomical Journal] {10.1088/0004-6256/144/2/38}, 144, 38
 
 \bibitem[\protect\citeauthoryear{Socas-Navarro}{Socas-Navarro}{2018}]{Socas-Navarro2018}
 Socas-Navarro H.,  2018, \mn@doi [ApJ] {10.3847/1538-4357/aaae66}, 855, 110
@@ -70,10 +97,25 @@ Tarter J.,  2007, in {Sullivan III} W.~T.,  Baross T.,  eds, , Planets and Life
   - The Emerging Science of Astrobiology.
 Cambridge University Press, Cambridge, Chapt.~26, pp 513--536
 
+\bibitem[\protect\citeauthoryear{Vakoch}{Vakoch}{2011}]{Vakoch2011}
+Vakoch D.~A.,  2011, \mn@doi [Acta Astronautica]
+  {10.1016/j.actaastro.2010.03.008}, 68, 476
+
+\bibitem[\protect\citeauthoryear{Wright}{Wright}{2017}]{Wright2017b}
+Wright J.~T.,  2017, in , Handbook of Exoplanets.
+Springer International Publishing, Cham, pp~1--9,
+  \mn@doi{10.1007/978-3-319-30648-3_186-1}, \url
+  {http://link.springer.com/10.1007/978-3-319-30648-3{\_}186-1}
+
 \bibitem[\protect\citeauthoryear{Wright, Kanodia  \& Lubar}{Wright
   et~al.}{2018}]{Wright2018a}
 Wright J.~T.,  Kanodia S.,   Lubar E.,  2018, \mn@doi [The Astronomical
   Journal] {10.3847/1538-3881/aae099}, 156, 260
+
+\bibitem[\protect\citeauthoryear{de
+  Magalh{\~{a}}es}{de~Magalh{\~{a}}es}{2016}]{DeMagalhaes2016}
+de Magalh{\~{a}}es J.~P.,  2016, \mn@doi [Space Policy]
+  {10.1016/j.spacepol.2016.06.001}, 38, 22
 
 \makeatother
 \end{thebibliography}
